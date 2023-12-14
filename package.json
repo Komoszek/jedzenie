@@ -5,17 +5,15 @@
   "scripts": {},
   "private": true,
   "dependencies": {
-    "@nestjs/common": "^10.0.2",
-    "@nestjs/core": "^10.0.2",
-    "@nestjs/platform-express": "^10.0.2",
     "@slack/bolt": "3.16.0",
     "@swc/helpers": "~0.5.2",
-    "axios": "^1.0.0",
+    "axios": "1.6.2",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.0",
     "tslib": "^2.3.0"
   },
   "devDependencies": {
+    "@leancodepl/prettier-config": "7.3.3",
     "@nestjs/schematics": "^10.0.1",
     "@nestjs/testing": "^10.0.2",
     "@nx/eslint": "17.2.0",

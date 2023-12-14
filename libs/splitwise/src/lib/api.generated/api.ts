@@ -697,8 +697,6 @@ export interface CreateGroupPost400ResponseErrors {
  * @interface CreateGroupPostRequest
  */
 export interface CreateGroupPostRequest {
-    [key: string]: string;
-
     /**
      * 
      * @type {string}
