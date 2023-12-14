@@ -1,0 +1,22 @@
+{
+  "$schema": "../../node_modules/@openapitools/openapi-generator-cli/config.schema.json",
+  "spaces": 2,
+  "generator-cli": {
+    "version": "7.1.0",
+    "useDocker": true,
+    "generators": {
+      "splitwise": {
+        "generatorName": "typescript-axios",
+        "output": "#{cwd}/src/lib/api.generated",
+        "glob": "./src/lib/openapi-schema/schema.json",
+        "skipValidateSpec": true,
+        "additionalProperties": {
+          "enumPropertyNaming": "UPPERCASE",
+          "modelFileSuffix": ".model",
+          "stringEnums": true,
+          "supportsES6": true
+        }
+      }
+    }
+  }
+}

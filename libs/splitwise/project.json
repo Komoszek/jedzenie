@@ -1,0 +1,46 @@
+{
+  "name": "splitwise",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/splitwise/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nx/js:swc",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "options": {
+        "outputPath": "dist/libs/splitwise",
+        "tsConfig": "libs/splitwise/tsconfig.lib.json",
+        "packageJson": "libs/splitwise/package.json",
+        "main": "libs/splitwise/src/index.ts",
+        "assets": [
+          "libs/splitwise/*.md"
+        ]
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": [
+        "{options.outputFile}"
+      ]
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": [
+        "{workspaceRoot}/coverage/{projectRoot}"
+      ],
+      "options": {
+        "jestConfig": "libs/splitwise/jest.config.ts"
+      }
+    },
+    "generate": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx --no-install openapi-generator-cli generate",
+        "cwd": "libs/splitwise"
+      }
+    }
+  },
+  "tags": []
+}
