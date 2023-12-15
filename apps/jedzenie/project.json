@@ -14,12 +14,13 @@
         "outputPath": "dist/apps/jedzenie",
         "main": "apps/jedzenie/src/main.ts",
         "tsConfig": "apps/jedzenie/tsconfig.app.json",
-        "assets": ["apps/jedzenie/src/assets"],
         "webpackConfig": "apps/jedzenie/webpack.config.js"
       },
       "configurations": {
         "development": {},
-        "production": {}
+        "production": {
+          "optimization": true
+        }
       }
     },
     "serve": {
