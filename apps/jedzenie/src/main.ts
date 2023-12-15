@@ -98,15 +98,16 @@ app.event("app_mention", async ({ event, say }) => {
         .sort((a, b) => a.balance - b.balance);
 
     const formattedRanking = balances.map(formatRankingPlace).join("\n");
-    const formattedUnconnectedParticipants = `Następujące osoby nie znalazły się w rankingu (brak połączenia konta ze Splitwise'em): ${unconnectedParticipantIds
-        .map(participantId => `<@${participantId}>`)
-        .join(", ")}`;
+    const formattedUnconnectedParticipants =
+        unconnectedParticipantIds.length > 0
+            ? `Następujące osoby nie znalazły się w rankingu (brak połączenia konta ze Splitwise'em): ${unconnectedParticipantIds
+                  .map(participantId => `<@${participantId}>`)
+                  .join(", ")}`
+            : "";
 
     await say({
         thread_ts: ts,
-        text: formattedRanking
-            ? `${formattedRanking}\n\n${formattedUnconnectedParticipants}`
-            : formattedUnconnectedParticipants,
+        text: [formattedRanking, formattedUnconnectedParticipants].filter(Boolean).join("\n\n"),
     });
 });
 
