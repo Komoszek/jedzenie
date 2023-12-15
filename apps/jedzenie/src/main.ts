@@ -17,7 +17,7 @@ const config = new Config(path.resolve(process.cwd(), process.env.CONFIG_PATH));
 
 const app = new App(options);
 
-app.command("/niechktos", async ({ command, ack, respond }) => {
+app.command("/nk", async ({ command, ack, respond }) => {
     await ack();
 
     const [slackUserId, splitwiseEmail] = [...command.text.matchAll(/\s*<@([^|\s]+)|\S+>\s+<mailto:([^\s|]+)|/g)].map(
@@ -25,7 +25,7 @@ app.command("/niechktos", async ({ command, ack, respond }) => {
     );
 
     if (slackUserId === undefined || splitwiseEmail === undefined) {
-        await respond("Niepoprawna komenda. Przykład użycia: /niechktos @user e-mail_ze_Splitwise'a");
+        await respond("Niepoprawna komenda. Przykład użycia: /nk @user e-mail_ze_Splitwise'a");
         return;
     }
 

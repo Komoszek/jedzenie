@@ -7,7 +7,7 @@ features:
     display_name: Niech ktos
     always_online: true
   slash_commands:
-    - command: /niechktos
+    - command: /nk
       description: Połącz użytkownika z kontem na splitewise'ie
       usage_hint: "@user e-mail_ze_splitwise'a"
       should_escape: true
