@@ -100,7 +100,7 @@ app.event("app_mention", async ({ event, say }) => {
     const formattedRanking = balances.map(formatRankingPlace).join("\n");
     const formattedUnconnectedParticipants =
         unconnectedParticipantIds.length > 0
-            ? `Następujące osoby nie znalazły się w rankingu (brak połączenia konta ze Splitwise'em): ${unconnectedParticipantIds
+            ? `Następujące osoby nie znalazły się w rankingu (brak połączenia konta ze Splitwise'em :pepe_police:): ${unconnectedParticipantIds
                   .map(participantId => `<@${participantId}>`)
                   .join(", ")}`
             : "";
