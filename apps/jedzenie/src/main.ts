@@ -25,7 +25,7 @@ app.command("/niechktos", async ({ command, ack, respond }) => {
     );
 
     if (slackUserId === undefined || splitwiseEmail === undefined) {
-        await respond("Niepoprawna komenda. Przykład użycia: /niechktos @user e-mail_ze_splitwise'a");
+        await respond("Niepoprawna komenda. Przykład użycia: /niechktos @user e-mail_ze_Splitwise'a");
         return;
     }
 
@@ -34,7 +34,7 @@ app.command("/niechktos", async ({ command, ack, respond }) => {
     const splitwiseMember = data.group.members.find(({ email }) => email === splitwiseEmail);
 
     if (!splitwiseMember) {
-        await respond("Nie znaleziono takiego e-maila na splitwise'ie");
+        await respond("Nie znaleziono takiego e-maila na Splitwise'ie");
         return;
     }
 
@@ -56,21 +56,37 @@ app.event("app_mention", async ({ event, say }) => {
         ts,
     });
 
-    const userIds = conversation.messages
-        .slice(1)
-        .filter(({ bot_id }) => !bot_id)
-        .map(({ user }) => user);
+    const participantIdsSet = new Set(
+        conversation.messages
+            .slice(1)
+            .filter(({ bot_id }) => !bot_id)
+            .map(({ user }) => user),
+    );
 
-    if (userIds.length === 0) {
+    if (participantIdsSet.size === 0) {
         return;
     }
 
-    const participants = new Set(userIds.map(id => config.getSplitwiseUserId(id)).filter(Boolean));
+    const participantIds = [...participantIdsSet.values()];
+
+    const unconnectedParticipantIds = [];
+
+    const splitwiseParticipantIdsSet = new Set<string>();
+
+    participantIds.forEach(participantId => {
+        const splitwiseParticipantIdId = config.getSplitwiseUserId(participantId);
+
+        if (splitwiseParticipantIdId) {
+            splitwiseParticipantIdsSet.add(splitwiseParticipantIdId);
+        } else {
+            unconnectedParticipantIds.push(participantId);
+        }
+    });
 
     const { data } = await splitwiseGroupsApi.getGroupIdGet(splitwiseGroupId);
 
     const balances = data.group.members
-        .filter(({ id }) => participants.has(id.toString()))
+        .filter(({ id }) => splitwiseParticipantIdsSet.has(id.toString()))
         .map<Balance>(({ first_name, last_name, balance }) => {
             const amount = balance.find(({ currency_code }) => currency_code === "PLN")?.amount ?? 0;
 
@@ -81,9 +97,16 @@ app.event("app_mention", async ({ event, say }) => {
         })
         .sort((a, b) => a.balance - b.balance);
 
+    const formattedRanking = balances.map(formatRankingPlace).join("\n");
+    const formattedUnconnectedParticipants = `Następujące osoby nie znalazły się w rankingu (brak połączenia konta ze Splitwise'em): ${unconnectedParticipantIds
+        .map(participantId => `<@${participantId}>`)
+        .join(", ")}`;
+
     await say({
         thread_ts: ts,
-        text: balances.map(formatRankingPlace).join("\n") || "Nikogo tutaj nie znam",
+        text: formattedRanking
+            ? `${formattedRanking}\n\n${formattedUnconnectedParticipants}`
+            : formattedUnconnectedParticipants,
     });
 });
 
