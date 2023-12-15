@@ -9,7 +9,7 @@ features:
   slash_commands:
     - command: /niechktos
       description: Połącz użytkownika z kontem na splitewise'ie
-      usage_hint: "@user email_ze_splitwise'a"
+      usage_hint: "@user e-mail_ze_splitwise'a"
       should_escape: true
 oauth_config:
   scopes:
