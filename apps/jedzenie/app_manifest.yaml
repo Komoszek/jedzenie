@@ -5,7 +5,7 @@ display_information:
 features:
   bot_user:
     display_name: Niech ktos
-    always_online: true
+    always_online: false
   slash_commands:
     - command: /nk
       description: Połącz użytkownika z kontem na splitewise'ie
