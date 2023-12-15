@@ -24,7 +24,7 @@ app.command("/nk", async ({ command, ack, respond }) => {
         (v, i) => v[i + 1],
     );
 
-    if (slackUserId === undefined || splitwiseEmail === undefined) {
+    if (!slackUserId || !splitwiseEmail) {
         await respond("Niepoprawna komenda. Przykład użycia: /nk @user e-mail_ze_Splitwise'a");
         return;
     }
