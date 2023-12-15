@@ -2313,7 +2313,6 @@
                 "type": "integer",
                 "description": "Number of days in advance to remind involved users about the next occurrence of a new expense.\nOnly applicable if the expense recurs.\n",
                 "enum": [
-                  null,
                   -1,
                   0,
                   1,

@@ -1249,7 +1249,6 @@ export enum ExpenseRepeatIntervalEnum {
     * @enum {string}
     */
 export enum ExpenseEmailReminderInAdvanceEnum {
-    NUMBER_null = null,
     NUMBER_MINUS_1 = -1,
     NUMBER_0 = 0,
     NUMBER_1 = 1,

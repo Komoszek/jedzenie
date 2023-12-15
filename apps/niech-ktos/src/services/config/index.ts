@@ -1,6 +1,7 @@
 import { readFileSync, writeFileSync } from "fs";
 import { writeFile } from "fs/promises";
 import defaultConfig from "./defaultConfig.json";
+import { SplitwiseMatch } from "../splitwise";
 
 export type ConfigSchema = {
     splitwiseIdMap: Record<string, number | undefined>;
@@ -36,8 +37,11 @@ export class Config {
         return this.#value.splitwiseIdMap[slackUserId];
     }
 
-    async updateSplitwiseUserId(slackUserId: string, splitwiseUserId: number) {
-        this.#value.splitwiseIdMap[slackUserId] = splitwiseUserId;
+    async matchManySplitwiseUserIds(matches: SplitwiseMatch[]) {
+        matches.forEach(({ slackId, splitwiseId }) => {
+            this.#value.splitwiseIdMap[slackId] = splitwiseId;
+        });
+
         await this.saveConfig();
     }
 }

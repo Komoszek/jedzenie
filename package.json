@@ -5,6 +5,7 @@
   "scripts": {},
   "private": true,
   "dependencies": {
+    "@leancodepl/utils": "7.3.3",
     "@slack/bolt": "3.16.0",
     "@swc/helpers": "~0.5.2",
     "axios": "1.6.2",

@@ -10,4 +10,4 @@ const placeIcons = {
     0: ":first_place_medal:",
     1: ":second_place_medal:",
     2: ":third_place_medal:",
-};
+} as Record<number, string | undefined>;
