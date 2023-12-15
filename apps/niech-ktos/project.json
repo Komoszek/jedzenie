@@ -1,7 +1,7 @@
 {
-  "name": "jedzenie",
+  "name": "niech-ktos",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "apps/jedzenie/src",
+  "sourceRoot": "apps/niech-ktos/src",
   "projectType": "application",
   "targets": {
     "build": {
@@ -11,10 +11,10 @@
       "options": {
         "target": "node",
         "compiler": "tsc",
-        "outputPath": "dist/apps/jedzenie",
-        "main": "apps/jedzenie/src/main.ts",
-        "tsConfig": "apps/jedzenie/tsconfig.app.json",
-        "webpackConfig": "apps/jedzenie/webpack.config.js"
+        "outputPath": "dist/apps/niech-ktos",
+        "main": "apps/niech-ktos/src/main.ts",
+        "tsConfig": "apps/niech-ktos/tsconfig.app.json",
+        "webpackConfig": "apps/niech-ktos/webpack.config.js"
       },
       "configurations": {
         "development": {},
@@ -27,14 +27,14 @@
       "executor": "@nx/js:node",
       "defaultConfiguration": "development",
       "options": {
-        "buildTarget": "jedzenie:build"
+        "buildTarget": "niech-ktos:build"
       },
       "configurations": {
         "development": {
-          "buildTarget": "jedzenie:build:development"
+          "buildTarget": "niech-ktos:build:development"
         },
         "production": {
-          "buildTarget": "jedzenie:build:production"
+          "buildTarget": "niech-ktos:build:production"
         }
       }
     },
@@ -46,7 +46,7 @@
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "jestConfig": "apps/jedzenie/jest.config.ts"
+        "jestConfig": "apps/niech-ktos/jest.config.ts"
       }
     }
   },
