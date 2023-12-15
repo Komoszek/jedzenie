@@ -38,7 +38,7 @@ app.command("/niechktos", async ({ command, ack, respond }) => {
         return;
     }
 
-    await config.updateSplitwiseUserId(slackUserId, splitwiseMember.id.toString());
+    await config.updateSplitwiseUserId(slackUserId, splitwiseMember.id);
 
     await respond("Zapisano zmiany");
 });
@@ -71,7 +71,7 @@ app.event("app_mention", async ({ event, say }) => {
 
     const unconnectedParticipantIds = [];
 
-    const splitwiseParticipantIdsSet = new Set<string>();
+    const splitwiseParticipantIdsSet = new Set<number>();
 
     participantIds.forEach(participantId => {
         const splitwiseParticipantIdId = config.getSplitwiseUserId(participantId);
@@ -86,7 +86,7 @@ app.event("app_mention", async ({ event, say }) => {
     const { data } = await splitwiseGroupsApi.getGroupIdGet(splitwiseGroupId);
 
     const balances = data.group.members
-        .filter(({ id }) => splitwiseParticipantIdsSet.has(id.toString()))
+        .filter(({ id }) => splitwiseParticipantIdsSet.has(id))
         .map<Balance>(({ first_name, last_name, balance }) => {
             const amount = balance.find(({ currency_code }) => currency_code === "PLN")?.amount ?? 0;
 

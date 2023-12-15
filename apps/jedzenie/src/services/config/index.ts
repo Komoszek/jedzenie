@@ -3,7 +3,7 @@ import { writeFile } from "fs/promises";
 import defaultConfig from "./defaultConfig.json";
 
 export type ConfigSchema = {
-    splitwiseIdMap: Record<string, string | undefined>;
+    splitwiseIdMap: Record<string, number | undefined>;
 };
 
 export class Config {
@@ -36,7 +36,7 @@ export class Config {
         return this.#value.splitwiseIdMap[slackUserId];
     }
 
-    async updateSplitwiseUserId(slackUserId: string, splitwiseUserId: string) {
+    async updateSplitwiseUserId(slackUserId: string, splitwiseUserId: number) {
         this.#value.splitwiseIdMap[slackUserId] = splitwiseUserId;
         await this.saveConfig();
     }
