@@ -1,32 +1,33 @@
 display_information:
-    name: Niech_ktoś
-    description: ":nk:"
-    background_color: "#2c2d30"
+  name: Niech_ktoś
+  description: ':nk:'
+  background_color: '#2c2d30'
 features:
-    bot_user:
-        display_name: Niech ktos
-        always_online: true
-    slash_commands:
-        - command: /nk
-          description: Połącz użytkownika z kontem na splitewise'ie
-          usage_hint: "@user e-mail_ze_splitwise'a"
-          should_escape: true
+  bot_user:
+    display_name: Niech ktos
+    always_online: true
+  slash_commands:
+    - command: /nk
+      description: Wyświetl globalny ranking lub połącz użytkownika ze splitewisem
+      usage_hint: '[ranking] [@user e-mail_ze_splitwise''a]'
+      should_escape: true
 oauth_config:
-    scopes:
-        bot:
-            - app_mentions:read
-            - channels:history
-            - chat:write
-            - commands
-            - reactions:read
-            - groups:history
-            - users:read.email
+  scopes:
+    bot:
+      - 'app_mentions:read'
+      - 'channels:history'
+      - 'chat:write'
+      - commands
+      - 'reactions:read'
+      - 'groups:history'
+      - 'users:read'
+      - 'users:read.email'
 settings:
-    event_subscriptions:
-        bot_events:
-            - app_mention
-    interactivity:
-        is_enabled: true
-    org_deploy_enabled: false
-    socket_mode_enabled: true
-    token_rotation_enabled: false
+  event_subscriptions:
+    bot_events:
+      - app_mention
+  interactivity:
+    is_enabled: true
+  org_deploy_enabled: false
+  socket_mode_enabled: true
+  token_rotation_enabled: false

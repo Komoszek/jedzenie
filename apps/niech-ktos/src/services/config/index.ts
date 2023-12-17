@@ -4,7 +4,7 @@ import defaultConfig from "./defaultConfig.json";
 import { SplitwiseMatch } from "../splitwise";
 
 export type ConfigSchema = {
-    splitwiseIdMap: Record<string, number | undefined>;
+    splitwiseIdMap: Record<string, number>;
 };
 
 export class Config {
@@ -31,6 +31,12 @@ export class Config {
 
     async saveConfig() {
         await writeFile(this.configPath, JSON.stringify(this.#value));
+    }
+
+    getSpltwiseIdToSlackIdMap() {
+        return new Map(
+            Object.entries(this.#value.splitwiseIdMap).map(([slackId, splitwiseId]) => [splitwiseId, slackId]),
+        );
     }
 
     getSplitwiseUserId(slackUserId: string) {

@@ -1,9 +1,12 @@
+import { formatUserMention } from "./formatUserMention";
 import { Balance } from "./types/Balance";
 
-export function formatRankingPlace({ name, balance }: Balance, index: number) {
+export function formatRankingPlace({ name, balance, slackId }: Balance, index: number) {
     const placeIcon = placeIcons[index];
 
-    return `${placeIcon ?? `${index + 1}.`} _${name}_ – ${balance.toFixed(2)} PLN`;
+    const formattedName = slackId ? formatUserMention(slackId) : `_${name}_`;
+
+    return `${placeIcon ?? `${index + 1}.`} ${formattedName} – ${balance.toFixed(2)} PLN`;
 }
 
 const placeIcons = {
