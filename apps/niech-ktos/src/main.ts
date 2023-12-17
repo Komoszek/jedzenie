@@ -7,11 +7,9 @@ import { handlers } from "./handlers";
 const config = new Config(path.resolve(process.cwd(), ensureDefined(process.env.CONFIG_PATH)));
 
 const app = new App({
-    signingSecret: process.env.SLACK_SIGNING_SECRET,
-    token: process.env.SLACK_BOT_TOKEN,
+    token: ensureDefined(process.env.SLACK_BOT_TOKEN, "SLACK_BOT_TOKEN not defined"),
     socketMode: true,
-    appToken: process.env.SLACK_APP_TOKEN,
-    port: Number(process.env.PORT || 3000),
+    appToken: ensureDefined(process.env.SLACK_APP_TOKEN, "SLACK_APP_TOKEN not defined"),
 });
 
 const { nkCommandHandler, appMentionHandler } = handlers({ app, config });
