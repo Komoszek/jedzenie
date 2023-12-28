@@ -60,8 +60,8 @@ async function handleUsersMatch(
         usersToMatch =
             members
                 ?.filter(
-                    ({ is_bot, profile, is_restricted, is_ultra_restricted }) =>
-                        !is_bot && !is_restricted && !is_ultra_restricted && profile?.email,
+                    ({ is_bot, profile, is_restricted, is_ultra_restricted, deleted }) =>
+                        !is_bot && !is_restricted && !is_ultra_restricted && !deleted && profile?.email,
                 )
                 .map<MatchSlackInfo>(({ id, profile }) => ({
                     slackId: ensureDefined(id),
