@@ -1,0 +1,49 @@
+{
+  "name": "tawerna",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/tawerna/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nx/webpack:webpack",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "defaultConfiguration": "production",
+      "options": {
+        "target": "node",
+        "compiler": "tsc",
+        "outputPath": "dist/apps/tawerna",
+        "main": "apps/tawerna/src/main.ts",
+        "tsConfig": "apps/tawerna/tsconfig.app.json",
+        "webpackConfig": "apps/tawerna/webpack.config.js"
+      },
+      "configurations": {
+        "development": {},
+        "production": {}
+      }
+    },
+    "serve": {
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "tawerna:build"
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "tawerna:build:development"
+        },
+        "production": {
+          "buildTarget": "tawerna:build:production"
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": [
+        "{options.outputFile}"
+      ]
+    }
+  },
+  "tags": []
+}
