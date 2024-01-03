@@ -1,5 +1,5 @@
 import { CommandArgs } from "./types";
-import { chromium } from "playwright";
+import { Locator, chromium } from "playwright";
 
 export async function tawernaCommandHandler({ client, ack, command }: CommandArgs) {
     await ack();
@@ -10,14 +10,27 @@ export async function tawernaCommandHandler({ client, ack, command }: CommandArg
         channel: command.channel_id,
         user: command.user_id,
         username: "Tawerna Grecka - Lunch Menu",
-        text: [
-            title,
-            menu
-                .map(({ title, ingredients, price }, i) => `${i + 1}. *${title}* ${ingredients}\n_${price}_`)
-                .join("\n\n"),
-        ]
-            .filter(Boolean)
-            .join("\n\n"),
+        blocks: [
+            {
+                type: "section",
+                text: {
+                    type: "plain_text",
+                    text: title,
+                },
+            },
+            ...menu.map(({ title, ingredients, price, image }, i) => ({
+                type: "section",
+                text: {
+                    type: "mrkdwn",
+                    text: `${i + 1}. *${title}* ${ingredients}\n_${price}_`,
+                },
+                accessory: {
+                    type: "image",
+                    image_url: image,
+                    alt_text: title,
+                },
+            })),
+        ],
     });
 }
 
@@ -50,19 +63,33 @@ async function getLunchMenu() {
     const menu = (
         await Promise.all(
             (
-                await page.locator(".rst-menu-item--inner").all()
-            ).map(async locator =>
-                Promise.all([
+                await page.locator(".rst-menu-item").all()
+            ).map(async locator => {
+                return Promise.all([
                     locator.locator(".the-title").first().innerText(),
                     locator.locator(".the-ingredients").first().innerText(),
                     locator.locator(".the-price").first().innerText(),
-                ]),
-            ),
+                    getMenuItemImage(locator),
+                ]);
+            }),
         )
-    ).map(([title, ingredients, price]) => ({ title, ingredients, price }));
+    ).map(([title, ingredients, price, image]) => ({ title, ingredients, price, image }));
 
     await context.close();
     await browser.close();
 
     return { title, menu };
+}
+
+async function getMenuItemImage(locator: Locator) {
+    try {
+        const imageLocator = (await locator.locator(".the-feature").all()).at(0);
+        const image = await imageLocator.evaluate(el => {
+            return el.style.backgroundImage.slice(5, -2);
+        });
+
+        return image;
+    } catch {
+        return "https://tawernagrecka.pl/wp-content/uploads/2023/05/dinner-scaled.jpg";
+    }
 }
