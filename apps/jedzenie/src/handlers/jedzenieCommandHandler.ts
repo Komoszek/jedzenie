@@ -51,6 +51,7 @@ export async function jedzenieCommandHandler({ ack, client, command }: CommandAr
                         },
                         action_id: departureTimeId,
                         timezone: "Poland",
+                        initial_time: "12:00",
                     },
                     label: {
                         type: "plain_text",
