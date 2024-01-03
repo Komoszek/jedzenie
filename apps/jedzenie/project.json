@@ -1,22 +1,20 @@
 {
-  "name": "tawerna",
+  "name": "jedzenie",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "apps/tawerna/src",
+  "sourceRoot": "apps/jedzenie/src",
   "projectType": "application",
   "targets": {
     "build": {
       "executor": "@nx/webpack:webpack",
-      "outputs": [
-        "{options.outputPath}"
-      ],
+      "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
       "options": {
         "target": "node",
         "compiler": "tsc",
-        "outputPath": "dist/apps/tawerna",
-        "main": "apps/tawerna/src/main.ts",
-        "tsConfig": "apps/tawerna/tsconfig.app.json",
-        "webpackConfig": "apps/tawerna/webpack.config.js"
+        "outputPath": "dist/apps/jedzenie",
+        "main": "apps/jedzenie/src/main.ts",
+        "tsConfig": "apps/jedzenie/tsconfig.app.json",
+        "webpackConfig": "apps/jedzenie/webpack.config.js"
       },
       "configurations": {
         "development": {},
@@ -27,22 +25,20 @@
       "executor": "@nx/js:node",
       "defaultConfiguration": "development",
       "options": {
-        "buildTarget": "tawerna:build"
+        "buildTarget": "jedzenie:build"
       },
       "configurations": {
         "development": {
-          "buildTarget": "tawerna:build:development"
+          "buildTarget": "jedzenie:build:development"
         },
         "production": {
-          "buildTarget": "tawerna:build:production"
+          "buildTarget": "jedzenie:build:production"
         }
       }
     },
     "lint": {
       "executor": "@nx/eslint:lint",
-      "outputs": [
-        "{options.outputFile}"
-      ]
+      "outputs": ["{options.outputFile}"]
     }
   },
   "tags": []

@@ -1,21 +1,24 @@
 import { CommandArgs } from "./types";
 import { chromium } from "playwright";
 
-export async function tawernaCommandHandler(args: CommandArgs) {
-    const { respond, ack } = args;
-
+export async function tawernaCommandHandler({ client, ack, command }: CommandArgs) {
     await ack();
 
     const { title, menu } = await getLunchMenu();
 
-    respond(
-        [
+    await client.chat.postEphemeral({
+        channel: command.channel_id,
+        user: command.user_id,
+        username: "Tawerna Grecka - Lunch Menu",
+        text: [
             title,
             menu
                 .map(({ title, ingredients, price }, i) => `${i + 1}. *${title}* ${ingredients}\n_${price}_`)
                 .join("\n\n"),
-        ].join("\n\n"),
-    );
+        ]
+            .filter(Boolean)
+            .join("\n\n"),
+    });
 }
 
 async function getLunchMenu() {

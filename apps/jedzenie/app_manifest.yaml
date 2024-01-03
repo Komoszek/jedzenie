@@ -1,18 +1,24 @@
 display_information:
-  name: Tawerna
+  name: Jedzenie
+  description: ":peepo_fat:"
   background_color: "#2c2d30"
 features:
   bot_user:
-    display_name: Tawerna Grecka
+    display_name: Jedzenie
     always_online: true
   slash_commands:
     - command: /tawerna
       description: Wyświetl aktualne lunch menu z Tawerny Greckiej
       should_escape: false
+    - command: /jedzenie
+      description: Rozpocznij wątek jedzeniowy
+      should_escape: false
 oauth_config:
   scopes:
     bot:
       - commands
+      - im:write
+      - chat:write
 settings:
   interactivity:
     is_enabled: true

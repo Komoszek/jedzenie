@@ -1,36 +1,36 @@
 import { readFileSync, writeFileSync } from "fs";
 import { writeFile } from "fs/promises";
-import defaultConfig from "./defaultConfig.json";
+import defaultState from "./defaultState.json";
 import { SplitwiseMatch } from "../splitwise";
 
-export type ConfigSchema = {
+type StateSchema = {
     splitwiseIdMap: Record<string, number>;
 };
 
-export class Config {
-    configPath: string;
-    #value: ConfigSchema;
+export class State {
+    statePath: string;
+    #value: StateSchema;
 
-    constructor(configPath: string) {
-        this.configPath = configPath;
-        this.#value = this.readConfigSync();
+    constructor(statePath: string) {
+        this.statePath = statePath;
+        this.#value = this.readStateSync();
     }
 
-    readConfigSync(): ConfigSchema {
+    readStateSync(): StateSchema {
         try {
-            const config = readFileSync(this.configPath, "utf8");
+            const state = readFileSync(this.statePath, "utf8");
 
-            return JSON.parse(config);
+            return JSON.parse(state);
         } catch (e) {
-            writeFileSync(this.configPath, JSON.stringify(defaultConfig));
+            writeFileSync(this.statePath, JSON.stringify(defaultState));
 
             console.error(e);
-            return defaultConfig;
+            return defaultState;
         }
     }
 
-    async saveConfig() {
-        await writeFile(this.configPath, JSON.stringify(this.#value));
+    async saveState() {
+        await writeFile(this.statePath, JSON.stringify(this.#value));
     }
 
     getSpltwiseIdToSlackIdMap() {
@@ -48,6 +48,6 @@ export class Config {
             this.#value.splitwiseIdMap[slackId] = splitwiseId;
         });
 
-        await this.saveConfig();
+        await this.saveState();
     }
 }
