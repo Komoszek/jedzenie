@@ -28,21 +28,10 @@ export async function jedzenieViewSubmissionHandler({ ack, view, client }: ViewA
     const response = await client.chat.postMessage({
         channel,
         blocks: [
+            destination,
             {
-                ...destination,
-                elements: [
-                    ...destination.elements,
-                    {
-                        type: "rich_text_section",
-                        elements: [
-                            {
-                                type: "text",
-                                style: { bold: true },
-                                text: selected_time,
-                            },
-                        ],
-                    },
-                ],
+                type: "section",
+                text: { type: "mrkdwn", text: `*${selected_time}*` },
             },
         ],
     });
