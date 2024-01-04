@@ -18,11 +18,11 @@ export async function tawernaCommandHandler({ client, ack, command }: CommandArg
                     text: title,
                 },
             },
-            ...menu.map(({ title, ingredients, price, image }, i) => ({
+            ...menu.map(({ title, ingredients, price, image }) => ({
                 type: "section",
                 text: {
                     type: "mrkdwn",
-                    text: `${i + 1}. *${title}* ${ingredients}\n_${price}_`,
+                    text: `*${title}* ${ingredients}\n_${price}_`,
                 },
                 accessory: {
                     type: "image",
