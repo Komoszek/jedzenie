@@ -1,3 +1,5 @@
+import { clamp } from "./clamp";
+
 // [hour, minutes]
 export type Time = [number, number];
 
@@ -7,5 +9,5 @@ export function getTimeFromString(timeString: string): Time {
         .slice(0, 2)
         .map(v => parseInt(v));
 
-    return [hour, minutes];
+    return [clamp(0, hour, 23), clamp(0, minutes, 59)];
 }
