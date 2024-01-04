@@ -4,12 +4,10 @@ import { Dependencies, ViewArgs } from "./types";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
-import { Departure } from "../services/state";
-import { handleDeparture } from "../utils/handleDeparture";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
-export async function jedzenieViewSubmissionHandler({ ack, view, client }: ViewArgs, { state }: Dependencies) {
+export async function jedzenieViewSubmissionHandler({ ack, view, client }: ViewArgs, { niechKtosBotId }: Dependencies) {
     const { timezone, selected_time } = view.state.values[departureBlockId][departureTimeId] as ViewStateValue & {
         timezone: string;
     };
@@ -41,15 +39,12 @@ export async function jedzenieViewSubmissionHandler({ ack, view, client }: ViewA
         return;
     }
 
-    const departure: Departure = {
-        id: Math.random().toString(),
-        departureTime: getDepartureTime(selected_time, timezone),
+    await client.chat.scheduleMessage({
+        text: `<@${niechKtosBotId}>`,
+        post_at: getDepartureTime(selected_time, timezone),
         channel,
-        ts: response.ts,
-    };
-
-    await state.saveDeparture(departure);
-    handleDeparture({ departure, client, state });
+        thread_ts: response.ts,
+    });
 }
 
 function getDepartureTime(time: string, timezone: string): number {
@@ -63,5 +58,5 @@ function getDepartureTime(time: string, timezone: string): number {
         departureTime = departureTime.add(1, "days");
     }
 
-    return departureTime.unix() * 1000;
+    return departureTime.unix();
 }
