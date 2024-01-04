@@ -12,13 +12,15 @@ features:
       should_escape: false
     - command: /jedzenie
       description: Rozpocznij wątek jedzeniowy
+      usage_hint: "[hh(:mm)] [opis]"
       should_escape: false
 oauth_config:
   scopes:
     bot:
+      - chat:write
       - commands
       - im:write
-      - chat:write
+      - chat:write.customize
 settings:
   interactivity:
     is_enabled: true
