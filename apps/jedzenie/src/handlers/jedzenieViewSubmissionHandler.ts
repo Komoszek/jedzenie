@@ -66,12 +66,23 @@ export async function startJedzenieThread({
         return;
     }
 
-    await client.chat.scheduleMessage({
+    const message = {
         text: `<@${niechKtosBotId}>`,
-        post_at: getDepartureTime(time, timezone),
         channel,
         thread_ts: response.ts,
-    });
+    };
+
+    try {
+        await client.chat.scheduleMessage({
+            ...message,
+            post_at: getDepartureTime(time, timezone),
+        });
+    } catch (e) {
+        // Probably will never happen but you never know
+        if (e.data.error === "time_in_past") {
+            await client.chat.postMessage(message);
+        }
+    }
 }
 
 function getDepartureTime([hour, minutes]: Time, timezone: string): number {
