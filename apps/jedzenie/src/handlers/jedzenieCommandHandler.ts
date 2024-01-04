@@ -11,7 +11,12 @@ export async function jedzenieCommandHandler(
     const normalizedText = command.text.trim();
 
     if (!normalizedText) {
-        await openJedzenieDialog({ client, trigger_id: command.trigger_id, channel_id: command.channel_id });
+        await openJedzenieDialog({
+            creatorId: command.user_id,
+            client,
+            triggerId: command.trigger_id,
+            channel: command.channel_id,
+        });
         return;
     }
 
@@ -25,6 +30,7 @@ export async function jedzenieCommandHandler(
     const [timeString, destination] = match.slice(1);
 
     await startJedzenieThread({
+        creatorId: command.user_id,
         time: getTimeFromString(timeString),
         client,
         channel: command.channel_id,
@@ -51,18 +57,20 @@ export const departureTimeId = "departure-time";
 const jedzenieTimezone = "Poland";
 
 function openJedzenieDialog({
+    creatorId,
     client,
-    trigger_id,
-    channel_id,
+    triggerId,
+    channel,
 }: {
+    creatorId: string;
     client: WebClient;
-    channel_id: string;
-    trigger_id: string;
+    channel: string;
+    triggerId: string;
 }) {
     return client.views.open({
-        trigger_id,
+        trigger_id: triggerId,
         view: {
-            private_metadata: channel_id,
+            private_metadata: JSON.stringify({ channel, creatorId }),
             callback_id: jedzenieViewId,
             title: {
                 type: "plain_text",

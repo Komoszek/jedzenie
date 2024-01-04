@@ -20,10 +20,13 @@ export async function jedzenieViewSubmissionHandler({ ack, view, client }: ViewA
 
     await ack();
 
+    const { creatorId, channel } = JSON.parse(view.private_metadata);
+
     await startJedzenieThread({
+        creatorId,
         time: getTimeFromString(selected_time),
         destination: view.state.values[destinationBlockId][destinationInputId].rich_text_value,
-        channel: view.private_metadata,
+        channel,
         timezone,
         client,
         niechKtosBotId,
@@ -31,6 +34,7 @@ export async function jedzenieViewSubmissionHandler({ ack, view, client }: ViewA
 }
 
 export async function startJedzenieThread({
+    creatorId,
     channel,
     time,
     timezone,
@@ -38,6 +42,7 @@ export async function startJedzenieThread({
     client,
     niechKtosBotId,
 }: {
+    creatorId: string;
     channel: string;
     time: Time;
     timezone: string;
@@ -51,7 +56,7 @@ export async function startJedzenieThread({
             destination,
             {
                 type: "section",
-                text: { type: "mrkdwn", text: `*${time[0]}:${time[1].toString().padStart(2, "0")}*` },
+                text: { type: "mrkdwn", text: `*${time[0]}:${time[1].toString().padStart(2, "0")}* ~ <@${creatorId}>` },
             },
         ],
     });
