@@ -9,12 +9,14 @@ export async function messageImHandler({ event, say, client }: MessageArgs, { st
 
     const { ts: thread_ts, text } = event;
 
-    const [nk_channel, nk_ts] = ((text ?? "").trim().match(/^nk (\S+) (\S+)$/) ?? []).slice(1);
+    const match = (text ?? "").trim().match(/^nk (\S+) (\S+)$/);
 
-    if (!nk_channel || !nk_ts) {
+    if (!match) {
         await say({ thread_ts, text: getInvalidMessageResponse() });
         return;
     }
+
+    const [nk_channel, nk_ts] = match.slice(1);
 
     await sendRankingToConversation({ channel: nk_channel, ts: nk_ts, client, state });
 }
