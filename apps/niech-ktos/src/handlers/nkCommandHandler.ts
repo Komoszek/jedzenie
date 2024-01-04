@@ -24,8 +24,8 @@ function getEmptyRankingResponse() {
     return sample(["Nie ma tu nic ciekawego", "Nic tu nie ma"]);
 }
 
-async function handleUsersRanking({ respond }: CommandArgs, { config }: Dependencies) {
-    const splitwiseIdMap = config.getSpltwiseIdToSlackIdMap();
+async function handleUsersRanking({ respond }: CommandArgs, { state }: Dependencies) {
+    const splitwiseIdMap = state.getSpltwiseIdToSlackIdMap();
 
     if (splitwiseIdMap.size === 0) {
         return await respond(getEmptyRankingResponse());
@@ -49,13 +49,13 @@ async function handleUsersRanking({ respond }: CommandArgs, { config }: Dependen
 }
 
 async function handleUsersMatch(
-    { respond, normalizedText }: CommandArgs & { normalizedText: string },
-    { app, config }: Dependencies,
+    { respond, normalizedText, client }: CommandArgs & { normalizedText: string },
+    { state }: Dependencies,
 ) {
     let usersToMatch: MatchSlackInfo[] | undefined;
 
     if (normalizedText === "sync") {
-        const { members } = await app.client.users.list();
+        const { members } = await client.users.list();
 
         usersToMatch =
             members
@@ -96,7 +96,7 @@ async function handleUsersMatch(
         return;
     }
 
-    await config.matchManySplitwiseUserIds(matches);
+    await state.matchManySplitwiseUserIds(matches);
 
     await respond("Zapisano zmiany");
 }

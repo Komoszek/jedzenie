@@ -1,23 +1,36 @@
-import { SlackEventMiddlewareArgs, AllMiddlewareArgs } from "@slack/bolt";
-import { Dependencies } from "./types";
+import { SlackEventMiddlewareArgs, AllMiddlewareArgs, SayFn } from "@slack/bolt";
+import { Dependencies, WebClient } from "./types";
 import { ensureDefined } from "@leancodepl/utils";
 import { getSplitwiseGroup } from "../services/splitwise";
 import { formatRankingPlace } from "../utils/formatRankingPlace";
 import { formatUnconnectedParticipants } from "../utils/formatUnconnectedParticipants";
 import { getGroupMemberBalance } from "../utils/getMemberBalancec";
 import { Balance } from "../utils/types/Balance";
+import { State } from "../services/state";
 
 export type AppMentionArgs = SlackEventMiddlewareArgs<"app_mention"> & AllMiddlewareArgs;
 
-export async function appMentionHandler({ event, say }: AppMentionArgs, { app, config }: Dependencies) {
+export async function appMentionHandler({ event, client }: AppMentionArgs, { state }: Dependencies) {
     if (event.thread_ts === undefined) {
         return;
     }
 
-    const ts = event.thread_ts;
+    await sendRankingToConversation({ channel: event.channel, ts: event.thread_ts, client, state });
+}
 
-    const { messages } = await app.client.conversations.replies({
-        channel: event.channel,
+export async function sendRankingToConversation({
+    channel,
+    ts,
+    client,
+    state,
+}: {
+    channel: string;
+    ts: string;
+    client: WebClient;
+    state: State;
+}) {
+    const { messages } = await client.conversations.replies({
+        channel,
         ts,
     });
 
@@ -37,7 +50,7 @@ export async function appMentionHandler({ event, say }: AppMentionArgs, { app, c
     const splitwiseParticipantIdsSet = new Set<number>();
 
     for (const participantId of participantIdsSet) {
-        const splitwiseParticipantId = config.getSplitwiseUserId(participantId);
+        const splitwiseParticipantId = state.getSplitwiseUserId(participantId);
 
         if (splitwiseParticipantId) {
             splitwiseParticipantIdsSet.add(splitwiseParticipantId);
@@ -59,7 +72,8 @@ export async function appMentionHandler({ event, say }: AppMentionArgs, { app, c
 
     const formattedUnconnectedParticipants = formatUnconnectedParticipants(unconnectedParticipantIds);
 
-    await say({
+    await client.chat.postMessage({
+        channel,
         thread_ts: ts,
         text: [formattedRanking, formattedUnconnectedParticipants].filter(Boolean).join("\n\n"),
     });
