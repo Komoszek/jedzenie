@@ -1,16 +1,27 @@
-import { CommandArgs } from "./types";
-import { Locator, chromium } from "playwright";
+import { KnownBlock, SectionBlock } from "@slack/bolt";
+import { CommandArgs, WebClient } from "./types";
+import { Locator } from "playwright";
+import { scrapePage } from "../utils/scrapePage";
 
-export async function tawernaCommandHandler({ client, ack, command }: CommandArgs) {
+export async function tawernaCommandHandler({ client, ack, command: { channel_id, user_id, text } }: CommandArgs) {
     await ack();
 
-    const { title, menu } = await getLunchMenu();
+    const args: Parameters<WebClient["chat"]["postEphemeral"]>[0] = {
+        channel: channel_id,
+        user: user_id,
+    };
 
-    await client.chat.postEphemeral({
-        channel: command.channel_id,
-        user: command.user_id,
-        username: "Tawerna Grecka - Lunch Menu",
-        blocks: [
+    if (text.trim() === "menu") {
+        const menu = await getMenu();
+
+        console.log(menu);
+        args.username = "Tawerna Grecka - Menu";
+        args.blocks = menu.map(mapMenuItemToSectionBlock);
+    } else {
+        const { title, menu } = await getLunchMenu();
+
+        args.username = "Tawerna Grecka - Lunch Menu";
+        args.blocks = [
             {
                 type: "section",
                 text: {
@@ -18,67 +29,93 @@ export async function tawernaCommandHandler({ client, ack, command }: CommandArg
                     text: title,
                 },
             },
-            ...menu.map(({ title, ingredients, price, image }) => ({
-                type: "section",
-                text: {
-                    type: "mrkdwn",
-                    text: `*${title}* ${ingredients}\n_${price}_`,
-                },
-                accessory: {
-                    type: "image",
-                    image_url: image,
-                    alt_text: title,
-                },
-            })),
-        ],
+            ...menu.map(mapMenuItemToSectionBlock),
+        ];
+    }
+
+    await client.chat.postEphemeral(args);
+}
+
+function mapMenuItemToSectionBlock({ title, extra, price, image }): SectionBlock {
+    return {
+        type: "section",
+        text: {
+            type: "mrkdwn",
+            text: `${[`*${title}*`, extra].filter(Boolean).join(" ")}\n_${price}_`,
+        },
+        accessory: {
+            type: "image",
+            image_url: image,
+            alt_text: title,
+        },
+    };
+}
+
+function getMenu(): Promise<MenuItem[]> {
+    return scrapePage(async page => {
+        await page.goto("https://tawernagrecka.pl/menu/");
+        const menuItems: MenuItem[] = [];
+
+        for (;;) {
+            menuItems.push(
+                ...(
+                    await Promise.all(
+                        (
+                            await page.locator(".product").all()
+                        ).map(async locator => {
+                            return Promise.all([
+                                locator.locator(".woocommerce-loop-product__title").first().innerText(),
+                                locator.locator(".price").first().innerText(),
+                                locator.locator(".attachment-woocommerce_thumbnail").first().getAttribute("src"),
+                            ]);
+                        }),
+                    )
+                ).map<MenuItem>(([title, price, image]) => ({ title, price, image })),
+            );
+
+            const nextPageButton = (await page.locator(".next.page-numbers").all()).at(0);
+
+            if (!nextPageButton) {
+                break;
+            }
+
+            const currentUrl = page.url();
+            await nextPageButton.click();
+            await page.waitForURL(url => url.toString() !== currentUrl);
+        }
+
+        return menuItems;
     });
 }
 
-async function getLunchMenu() {
-    const browser = await chromium.launch();
-    const context = await browser.newContext();
-    const page = await context.newPage();
+function getLunchMenu(): Promise<{ title: string; menu: MenuItem[] }> {
+    return scrapePage(async page => {
+        await page.goto("https://tawernagrecka.pl/lunchmenu/");
 
-    await context.route("**/*", route => {
-        switch (route.request().resourceType()) {
-            case "stylesheet":
-            case "image":
-            case "media":
-            case "font":
-                return route.abort();
-            default:
-                return route.continue();
-        }
+        const title = (
+            await page
+                .locator(".ct-section-inner-wrap .ct-div-block", { has: page.locator("h3", { hasText: "Lunch menu" }) })
+                .last()
+                .innerText()
+        ).replace(/\n\n/g, " ");
+
+        const menu = (
+            await Promise.all(
+                (
+                    await page.locator(".rst-menu-item").all()
+                ).map(async locator => {
+                    return Promise.all([
+                        locator.locator(".the-title").first().innerText(),
+                        locator.locator(".the-ingredients").first().innerText(),
+                        locator.locator(".the-price").first().innerText(),
+                        getMenuItemImage(locator),
+                    ]);
+                }),
+            )
+        ).map<MenuItem>(([title, extra, price, image]) => ({ title, extra, price, image }));
+
+        return { title, menu };
     });
-
-    await page.goto("https://tawernagrecka.pl/lunchmenu/");
-
-    const title = (
-        await page
-            .locator(".ct-section-inner-wrap .ct-div-block", { has: page.locator("h3", { hasText: "Lunch menu" }) })
-            .last()
-            .innerText()
-    ).replace(/\n\n/g, " ");
-
-    const menu = (
-        await Promise.all(
-            (
-                await page.locator(".rst-menu-item").all()
-            ).map(async locator => {
-                return Promise.all([
-                    locator.locator(".the-title").first().innerText(),
-                    locator.locator(".the-ingredients").first().innerText(),
-                    locator.locator(".the-price").first().innerText(),
-                    getMenuItemImage(locator),
-                ]);
-            }),
-        )
-    ).map(([title, ingredients, price, image]) => ({ title, ingredients, price, image }));
-
-    await context.close();
-    await browser.close();
-
-    return { title, menu };
 }
 
 async function getMenuItemImage(locator: Locator) {
@@ -93,3 +130,10 @@ async function getMenuItemImage(locator: Locator) {
         return "https://tawernagrecka.pl/wp-content/uploads/2023/05/dinner-scaled.jpg";
     }
 }
+
+type MenuItem = {
+    title: string;
+    extra?: string;
+    price: string;
+    image: string;
+};
