@@ -1,5 +1,4 @@
-import { SlackEventMiddlewareArgs, AllMiddlewareArgs, SayFn } from "@slack/bolt";
-import { Dependencies, WebClient } from "./types";
+import { AppMentionArgs, Dependencies, WebClient } from "./types";
 import { ensureDefined } from "@leancodepl/utils";
 import { getSplitwiseGroup } from "../services/splitwise";
 import { formatRankingPlace } from "../utils/formatRankingPlace";
@@ -8,26 +7,35 @@ import { getGroupMemberBalance } from "../utils/getMemberBalancec";
 import { Balance } from "../utils/types/Balance";
 import { State } from "../services/state";
 
-export type AppMentionArgs = SlackEventMiddlewareArgs<"app_mention"> & AllMiddlewareArgs;
-
-export async function appMentionHandler({ event, client }: AppMentionArgs, { state }: Dependencies) {
-    if (event.thread_ts === undefined) {
+export async function appMentionHandler(
+    { event: { channel, thread_ts }, client }: AppMentionArgs,
+    { state }: Dependencies,
+) {
+    if (thread_ts === undefined) {
         return;
     }
 
-    await sendRankingToConversation({ channel: event.channel, ts: event.thread_ts, client, state });
+    const formattedRanking = await getFormattedRankingOfConversation({ channel, ts: thread_ts, client, state });
+
+    await client.chat.postMessage({
+        channel,
+        thread_ts,
+        text: formattedRanking,
+    });
 }
 
-export async function sendRankingToConversation({
+export async function getFormattedRankingOfConversation({
     channel,
     ts,
     client,
     state,
+    includeFirstMessage,
 }: {
     channel: string;
     ts: string;
     client: WebClient;
     state: State;
+    includeFirstMessage?: boolean;
 }) {
     const { messages } = await client.conversations.replies({
         channel,
@@ -36,7 +44,7 @@ export async function sendRankingToConversation({
 
     const participantIdsSet = new Set(
         messages
-            ?.slice(1)
+            ?.slice(includeFirstMessage ? 0 : 1)
             .filter(({ bot_id }) => !bot_id)
             .map(({ user }) => ensureDefined(user)),
     );
@@ -72,9 +80,5 @@ export async function sendRankingToConversation({
 
     const formattedUnconnectedParticipants = formatUnconnectedParticipants(unconnectedParticipantIds);
 
-    await client.chat.postMessage({
-        channel,
-        thread_ts: ts,
-        text: [formattedRanking, formattedUnconnectedParticipants].filter(Boolean).join("\n\n"),
-    });
+    return [formattedRanking, formattedUnconnectedParticipants].filter(Boolean).join("\n\n");
 }

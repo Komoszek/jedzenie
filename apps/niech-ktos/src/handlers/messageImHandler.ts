@@ -1,5 +1,5 @@
 import { sample } from "../utils/sample";
-import { sendRankingToConversation } from "./appMentionHandler";
+import { getFormattedRankingOfConversation } from "./appMentionHandler";
 import { Dependencies, MessageArgs } from "./types";
 
 export async function messageImHandler({ event, say, client }: MessageArgs, { state }: Dependencies) {
@@ -18,7 +18,13 @@ export async function messageImHandler({ event, say, client }: MessageArgs, { st
 
     const [nk_channel, nk_ts] = match.slice(1);
 
-    await sendRankingToConversation({ channel: nk_channel, ts: nk_ts, client, state });
+    const formattedRanking = await getFormattedRankingOfConversation({ channel: nk_channel, ts: nk_ts, client, state });
+
+    await client.chat.postMessage({
+        channel: nk_channel,
+        thread_ts: nk_ts,
+        text: formattedRanking,
+    });
 }
 
 function getInvalidMessageResponse() {

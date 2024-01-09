@@ -20,7 +20,7 @@ export async function nkCommandHandler(args: CommandArgs, dependencies: Dependen
     }
 }
 
-function getEmptyRankingResponse() {
+export function getEmptyRankingResponse() {
     return sample(["Nie ma tu nic ciekawego", "Nic tu nie ma"]);
 }
 

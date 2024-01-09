@@ -6,6 +6,11 @@ features:
   bot_user:
     display_name: Niech ktos
     always_online: true
+  shortcuts:
+    - name: Ciche @Niech ktos
+      type: message
+      callback_id: silent_nk
+      description: Wyświetla ranking dla danego wątku
   slash_commands:
     - command: /nk
       description: Wyświetl globalny ranking lub połącz użytkownika ze splitewisem

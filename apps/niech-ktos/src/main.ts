@@ -12,11 +12,12 @@ const app = new App({
     appToken: ensureDefined(process.env.SLACK_APP_TOKEN, "SLACK_APP_TOKEN not defined"),
 });
 
-const { nkCommandHandler, appMentionHandler, messageImHandler } = handlers({ state });
+const { nkCommandHandler, appMentionHandler, messageImHandler, silentNkShortcutHandler } = handlers({ state });
 
 app.command("/nk", nkCommandHandler);
 app.event("app_mention", appMentionHandler);
 app.event("message", messageImHandler);
+app.shortcut("silent_nk", silentNkShortcutHandler);
 
 (async () => {
     await app.start();

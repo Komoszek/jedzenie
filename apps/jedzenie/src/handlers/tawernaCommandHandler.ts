@@ -1,4 +1,4 @@
-import { KnownBlock, SectionBlock } from "@slack/bolt";
+import { SectionBlock } from "@slack/bolt";
 import { CommandArgs, WebClient } from "./types";
 import { Locator } from "playwright";
 import { scrapePage } from "../utils/scrapePage";
@@ -14,7 +14,6 @@ export async function tawernaCommandHandler({ client, ack, command: { channel_id
     if (text.trim() === "menu") {
         const menu = await getMenu();
 
-        console.log(menu);
         args.username = "Tawerna Grecka - Menu";
         args.blocks = menu.map(mapMenuItemToSectionBlock);
     } else {
