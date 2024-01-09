@@ -6,7 +6,9 @@
   "targets": {
     "build": {
       "executor": "@nx/webpack:webpack",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "defaultConfiguration": "production",
       "options": {
         "target": "node",
@@ -14,7 +16,8 @@
         "outputPath": "dist/apps/jedzenie",
         "main": "apps/jedzenie/src/main.ts",
         "tsConfig": "apps/jedzenie/tsconfig.app.json",
-        "webpackConfig": "apps/jedzenie/webpack.config.js"
+        "webpackConfig": "apps/jedzenie/webpack.config.js",
+        "generatePackageJson": true
       },
       "configurations": {
         "development": {},
@@ -38,7 +41,15 @@
     },
     "lint": {
       "executor": "@nx/eslint:lint",
-      "outputs": ["{options.outputFile}"]
+      "outputs": [
+        "{options.outputFile}"
+      ]
+    },
+    "docker-build": {
+      "dependsOn": [
+        "build"
+      ],
+      "command": "docker build -f apps/jedzenie/Dockerfile . -t jedzenie"
     }
   },
   "tags": []
