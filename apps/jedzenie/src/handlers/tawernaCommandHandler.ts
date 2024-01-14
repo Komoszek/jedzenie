@@ -6,7 +6,7 @@ import { scrapePage } from "../utils/scrapePage";
 export async function tawernaCommandHandler({ client, ack, command: { channel_id, user_id, text } }: CommandArgs) {
     await ack();
 
-    const args: Parameters<WebClient["chat"]["postEphemeral"]>[0] = {
+    let args: Parameters<WebClient["chat"]["postEphemeral"]>[0] = {
         channel: channel_id,
         user: user_id,
     };
@@ -17,10 +17,18 @@ export async function tawernaCommandHandler({ client, ack, command: { channel_id
         args.username = "Tawerna Grecka - Menu";
         args.blocks = menu.map(mapMenuItemToSectionBlock);
     } else {
-        const { title, menu } = await getLunchMenu();
+        args = { ...args, ...(await getTawernaLunchMenuEphemeralMessageArgs()) };
+    }
 
-        args.username = "Tawerna Grecka - Lunch Menu";
-        args.blocks = [
+    await client.chat.postEphemeral(args);
+}
+
+export async function getTawernaLunchMenuEphemeralMessageArgs() {
+    const { title, menu } = await getLunchMenu();
+
+    return {
+        username: "Tawerna Grecka - Lunch Menu",
+        blocks: [
             {
                 type: "section",
                 text: {
@@ -29,13 +37,11 @@ export async function tawernaCommandHandler({ client, ack, command: { channel_id
                 },
             },
             ...menu.map(mapMenuItemToSectionBlock),
-        ];
-    }
-
-    await client.chat.postEphemeral(args);
+        ],
+    };
 }
 
-function mapMenuItemToSectionBlock({ title, extra, price, image }): SectionBlock {
+function mapMenuItemToSectionBlock({ title, extra, price, image }: MenuItem): SectionBlock {
     return {
         type: "section",
         text: {
@@ -69,7 +75,7 @@ function getMenu(): Promise<MenuItem[]> {
                             ]);
                         }),
                     )
-                ).map<MenuItem>(([title, price, image]) => ({ title, price, image })),
+                ).map<MenuItem>(([title, price, image]) => ({ title, price, image: image ?? tawernaPlaceholder })),
             );
 
             const nextPageButton = (await page.locator(".next.page-numbers").all()).at(0);
@@ -87,8 +93,18 @@ function getMenu(): Promise<MenuItem[]> {
     });
 }
 
-function getLunchMenu(): Promise<{ title: string; menu: MenuItem[] }> {
-    return scrapePage(async page => {
+type Cache<T> = { value: T; expires: number };
+
+type TawernaLunchMenuData = { title: string; menu: MenuItem[] };
+
+let tawernaLunchMenuCache: Cache<TawernaLunchMenuData> | undefined;
+
+async function getLunchMenu(): Promise<TawernaLunchMenuData> {
+    if (tawernaLunchMenuCache && tawernaLunchMenuCache.expires > new Date().getTime()) {
+        return tawernaLunchMenuCache.value;
+    }
+
+    const newTawernaLunchMenuValue = await scrapePage(async page => {
         await page.goto("https://tawernagrecka.pl/lunchmenu/");
 
         const title = (
@@ -115,18 +131,24 @@ function getLunchMenu(): Promise<{ title: string; menu: MenuItem[] }> {
 
         return { title, menu };
     });
+
+    tawernaLunchMenuCache = { value: newTawernaLunchMenuValue, expires: new Date().getTime() + 10 * 60 * 1000 };
+
+    return newTawernaLunchMenuValue;
 }
+
+const tawernaPlaceholder = "https://tawernagrecka.pl/wp-content/uploads/2023/05/dinner-scaled.jpg";
 
 async function getMenuItemImage(locator: Locator) {
     try {
         const imageLocator = (await locator.locator(".the-feature").all()).at(0);
-        const image = await imageLocator.evaluate(el => {
+        const image = await imageLocator?.evaluate(el => {
             return el.style.backgroundImage.slice(5, -2);
         });
 
-        return image;
+        return image ?? tawernaPlaceholder;
     } catch {
-        return "https://tawernagrecka.pl/wp-content/uploads/2023/05/dinner-scaled.jpg";
+        return tawernaPlaceholder;
     }
 }
 

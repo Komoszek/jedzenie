@@ -5,6 +5,10 @@ import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 import { getTimeFromString, Time } from "../utils/getTimeFromString";
+import { knownBlockToText } from "../utils/knownBlockToText";
+import { ensureDefined } from "@leancodepl/utils";
+import { isObject } from "../utils/isObject";
+
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
@@ -25,7 +29,7 @@ export async function jedzenieViewSubmissionHandler({ ack, view, client }: ViewA
     await startJedzenieThread({
         creatorId,
         time: getTimeFromString(selected_time),
-        destination: view.state.values[destinationBlockId][destinationInputId].rich_text_value,
+        destination: ensureDefined(view.state.values[destinationBlockId][destinationInputId].rich_text_value),
         channel,
         timezone,
         client,
@@ -58,6 +62,24 @@ export async function startJedzenieThread({
                 type: "section",
                 text: { type: "mrkdwn", text: `*${time[0]}:${time[1].toString().padStart(2, "0")}* ~ <@${creatorId}>` },
             },
+            ...((isTawernaThread(destination)
+                ? [
+                      {
+                          type: "actions",
+                          elements: [
+                              {
+                                  type: "button",
+                                  text: {
+                                      type: "plain_text",
+                                      text: "Pokaż menu lunchowe",
+                                      emoji: true,
+                                  },
+                                  action_id: showTawernaLunchMenuButtonId,
+                              },
+                          ],
+                      },
+                  ]
+                : []) as KnownBlock[]),
         ],
     });
 
@@ -79,7 +101,7 @@ export async function startJedzenieThread({
         });
     } catch (e) {
         // Probably will never happen but you never know
-        if (e.data.error === "time_in_past") {
+        if (isObject(e) && "data" in e && isObject(e.data) && "error" in e.data && e.data.error === "time_in_past") {
             await client.chat.postMessage(message);
         }
     }
@@ -96,3 +118,11 @@ function getDepartureTime([hour, minutes]: Time, timezone: string): number {
 
     return departureTime.unix();
 }
+
+function isTawernaThread(destination: KnownBlock) {
+    const rawText = knownBlockToText(destination).toLowerCase();
+
+    return ["flag-gr", "tawerna", "twrn"].some(keyword => rawText.includes(keyword));
+}
+
+export const showTawernaLunchMenuButtonId = "show_tawerna_lunch_menu";
