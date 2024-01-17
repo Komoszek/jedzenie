@@ -17,28 +17,25 @@ export async function tawernaCommandHandler({ client, ack, command: { channel_id
         args.username = "Tawerna Grecka - Menu";
         args.blocks = menu.map(mapMenuItemToSectionBlock);
     } else {
-        args = { ...args, ...(await getTawernaLunchMenuEphemeralMessageArgs()) };
+        args = { ...args, blocks: await getTawernaLunchMenuMessageBlocks(), username: "Tawerna Grecka - Lunch Menu" };
     }
 
     await client.chat.postEphemeral(args);
 }
 
-export async function getTawernaLunchMenuEphemeralMessageArgs() {
+export async function getTawernaLunchMenuMessageBlocks() {
     const { title, menu } = await getLunchMenu();
 
-    return {
-        username: "Tawerna Grecka - Lunch Menu",
-        blocks: [
-            {
-                type: "section",
-                text: {
-                    type: "plain_text",
-                    text: title,
-                },
+    return [
+        {
+            type: "section",
+            text: {
+                type: "plain_text",
+                text: title,
             },
-            ...menu.map(mapMenuItemToSectionBlock),
-        ],
-    };
+        },
+        ...menu.map(mapMenuItemToSectionBlock),
+    ];
 }
 
 function mapMenuItemToSectionBlock({ title, extra, price, image }: MenuItem): SectionBlock {
