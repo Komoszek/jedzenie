@@ -2,10 +2,7 @@ import { Dependencies, ShortcutArgs } from "./types";
 import { getFormattedRankingOfConversation } from "./appMentionHandler";
 import { getEmptyRankingResponse } from "./nkCommandHandler";
 
-export async function silentNkShortcutHandler(
-    { ack, client, respond, shortcut }: ShortcutArgs,
-    { state }: Dependencies,
-) {
+export async function silentNkShortcutHandler({ ack, client, shortcut }: ShortcutArgs, { state }: Dependencies) {
     await ack();
 
     if (shortcut.type !== "message_action") {
@@ -26,5 +23,29 @@ export async function silentNkShortcutHandler(
 
     const { permalink } = await client.chat.getPermalink({ channel, message_ts });
 
-    await respond([permalink, formattedRanking ?? getEmptyRankingResponse()].filter(Boolean).join("\n\n"));
+    await client.views.open({
+        trigger_id: shortcut.trigger_id,
+        view: {
+            type: "modal",
+            blocks: [
+                {
+                    type: "section",
+                    text: {
+                        type: "mrkdwn",
+                        text: [permalink, formattedRanking ?? getEmptyRankingResponse()].filter(Boolean).join("\n\n"),
+                    },
+                },
+            ],
+            title: {
+                type: "plain_text",
+                text: "Niech ktoś",
+                emoji: true,
+            },
+            close: {
+                type: "plain_text",
+                text: "Fajno",
+                emoji: true,
+            },
+        },
+    });
 }
