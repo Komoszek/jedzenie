@@ -20,7 +20,7 @@ export async function showTawernaLunchMenuButtonHandler({ ack, client, body }: A
             },
             close: {
                 type: "plain_text",
-                text: "Ok",
+                text: "Fajno",
                 emoji: true,
             },
         },
