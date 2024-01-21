@@ -12,6 +12,4 @@ WORKDIR /app/niech-ktos
 
 RUN npm --omit=dev install
 
-VOLUME /app/niech-ktos/state
-
 CMD [ "node", "." ]
