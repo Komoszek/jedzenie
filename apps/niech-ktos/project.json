@@ -6,7 +6,9 @@
   "targets": {
     "build": {
       "executor": "@nx/webpack:webpack",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "defaultConfiguration": "production",
       "options": {
         "target": "node",
@@ -14,7 +16,8 @@
         "outputPath": "dist/apps/niech-ktos",
         "main": "apps/niech-ktos/src/main.ts",
         "tsConfig": "apps/niech-ktos/tsconfig.app.json",
-        "webpackConfig": "apps/niech-ktos/webpack.config.js"
+        "webpackConfig": "apps/niech-ktos/webpack.config.js",
+        "generatePackageJson": true
       },
       "configurations": {
         "development": {},
@@ -40,14 +43,24 @@
     },
     "lint": {
       "executor": "@nx/eslint:lint",
-      "outputs": ["{options.outputFile}"]
+      "outputs": [
+        "{options.outputFile}"
+      ]
     },
     "test": {
       "executor": "@nx/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "outputs": [
+        "{workspaceRoot}/coverage/{projectRoot}"
+      ],
       "options": {
         "jestConfig": "apps/niech-ktos/jest.config.ts"
       }
+    },
+    "docker-build": {
+      "dependsOn": [
+        "build"
+      ],
+      "command": "docker build -f apps/niech-ktos/Dockerfile . -t niech-ktos"
     }
   },
   "tags": []
