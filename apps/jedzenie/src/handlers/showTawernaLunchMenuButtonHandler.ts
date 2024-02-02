@@ -27,7 +27,15 @@ export async function showTawernaLunchMenuButtonHandler({ ack, client, body }: A
         trigger_id: body.trigger_id,
         view: {
             ...commonViewProps,
-            blocks: [],
+            blocks: [
+                {
+                    type: "section",
+                    text: {
+                        type: "mrkdwn",
+                        text: ":cheemsburger::cheemsburger::cheemsburger:",
+                    },
+                },
+            ],
         },
     });
 
