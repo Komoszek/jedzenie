@@ -7,13 +7,12 @@
   "dependencies": {
     "@leancodepl/utils": "7.3.3",
     "@playwright/browser-chromium": "1.40.1",
-    "@slack/bolt": "3.16.0",
+    "@slack/bolt": "3.17.1",
     "@swc/helpers": "~0.5.2",
     "axios": "1.6.2",
     "dayjs": "1.11.10",
     "playwright": "1.40.1",
     "reflect-metadata": "^0.1.13",
-    "rxjs": "^7.8.0",
     "tslib": "^2.3.0"
   },
   "devDependencies": {

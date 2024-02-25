@@ -1,8 +1,9 @@
 import { App } from "@slack/bolt";
 import { ensureDefined } from "@leancodepl/utils";
-import { jedzenieViewId } from "./handlers/jedzenieCommandHandler";
+import { startJedzenieThreadViewId } from "./handlers/jedzenieCommandHandler";
 import { handlers } from "./handlers";
-import { showTawernaLunchMenuButtonId } from "./handlers/jedzenieViewSubmissionHandler";
+import { editJedzenieThreadViewId } from "./handlers/editThreadButtonHandler";
+import { editThreadButtonId, showTawernaLunchMenuButtonId } from "./utils/getJedzenieThreadBlock";
 
 const niechKtosBotId = ensureDefined(process.env.NIECH_KTOS_BOT_ID, "NIECH_KTOS_BOT_ID not defined");
 
@@ -14,16 +15,20 @@ const app = new App({
 
 const {
     tawernaCommandHandler,
+    editThreadButtonHandler,
     showTawernaLunchMenuButtonHandler,
     jedzenieCommandHandler,
-    jedzenieViewSubmissionHandler,
+    startJedzenieThreadViewHandler,
+    editJedzenieThreadViewHandler,
 } = handlers({
     niechKtosBotId,
 });
 
 app.command("/tawerna", tawernaCommandHandler);
 app.command("/jedzenie", jedzenieCommandHandler);
-app.view(jedzenieViewId, jedzenieViewSubmissionHandler);
+app.view(startJedzenieThreadViewId, startJedzenieThreadViewHandler);
+app.view(editJedzenieThreadViewId, editJedzenieThreadViewHandler);
+app.action(editThreadButtonId, editThreadButtonHandler);
 app.action(showTawernaLunchMenuButtonId, showTawernaLunchMenuButtonHandler);
 
 (async () => {

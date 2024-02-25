@@ -26,7 +26,7 @@ function richTextElementsToText(richTextElements: RichTextElement[]) {
     return richTextElements.reduce((accumulator, current) => {
         switch (current.type) {
             case "emoji":
-                return accumulator + current.name;
+                return accumulator + `:${current.name}:`;
             case "text":
                 return accumulator + current.text;
             default:

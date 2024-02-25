@@ -14,12 +14,10 @@ export async function showTawernaLunchMenuButtonHandler({ ack, client, body }: A
         title: {
             type: "plain_text",
             text: "Tawerna - Lunch Menu",
-            emoji: true,
         },
         close: {
             type: "plain_text",
             text: "Fajno",
-            emoji: true,
         },
     } as const satisfies Partial<View>;
 

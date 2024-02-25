@@ -39,12 +39,10 @@ export async function silentNkShortcutHandler({ ack, client, shortcut }: Shortcu
             title: {
                 type: "plain_text",
                 text: "Niech ktoś",
-                emoji: true,
             },
             close: {
                 type: "plain_text",
                 text: "Fajno",
-                emoji: true,
             },
         },
     });
