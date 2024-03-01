@@ -31,7 +31,7 @@ export async function startJedzenieThreadViewHandler(
 
     await ack();
 
-    const channel = JSON.parse(view.private_metadata);
+    const channel = view.private_metadata;
 
     await startJedzenieThread({
         creatorId: body.user.id,
