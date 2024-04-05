@@ -20,7 +20,17 @@ export async function appMentionHandler(
     await client.chat.postMessage({
         channel,
         thread_ts,
-        text: formattedRanking,
+        ...(formattedRanking
+            ? { text: formattedRanking }
+            : {
+                  blocks: [
+                      {
+                          type: "image",
+                          image_url: "https://media3.giphy.com/media/VfyC5j7sR4cso/giphy.gif",
+                          alt_text: "So lonely",
+                      },
+                  ],
+              }),
     });
 }
 
