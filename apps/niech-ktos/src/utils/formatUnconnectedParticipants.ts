@@ -5,7 +5,7 @@ export function formatUnconnectedParticipants(unconnectedParticipantIds: string[
         return "";
     }
 
-    return `Następujące osoby nie znalazły się w rankingu (brak połączenia konta ze Splitwise'em :pepe_police:): ${unconnectedParticipantIds
+    return `Następujące osoby nie znalazły się w rankingu (brak połączenia konta ze Splitwisem :pepe_police:): ${unconnectedParticipantIds
         .map(formatUserMention)
         .join(", ")}`;
 }
