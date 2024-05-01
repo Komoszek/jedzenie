@@ -27,11 +27,10 @@ export async function showTawernaLunchMenuButtonHandler({ ack, client, body }: A
             ...commonViewProps,
             blocks: [
                 {
-                    type: "section",
-                    text: {
-                        type: "mrkdwn",
-                        text: ":cheemsburger::cheemsburger::cheemsburger:",
-                    },
+                    type: "image",
+                    image_url:
+                        "https://lh3.googleusercontent.com/drive-viewer/AKGpihbx3Jd-BcvjAnHZ9A5wghllUcwRgVL0abGk0cuyrQ7B8GAEHabBMkeF74oBCAxQE6haB4QsmaJQeC-J36s9nK462CwScAUd7zU",
+                    alt_text: "Lołding",
                 },
             ],
         },
