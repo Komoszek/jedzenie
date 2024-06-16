@@ -13,6 +13,7 @@
     "dayjs": "1.11.10",
     "playwright": "1.40.1",
     "reflect-metadata": "^0.1.13",
+    "rxjs": "7.8.1",
     "tslib": "^2.3.0"
   },
   "devDependencies": {
