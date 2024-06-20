@@ -90,7 +90,7 @@ export function attachEditThreadButton({
 function isTawernaThread(destination: KnownBlock) {
     const rawText = knownBlockToText(destination).toLowerCase();
 
-    return [":flag-gr:", "tawerna", "twrn"].some(keyword => rawText.includes(keyword));
+    return [":flag-gr:", "tawerna", "twrn", "cyklady"].some(keyword => rawText.includes(keyword));
 }
 
 export const showTawernaLunchMenuButtonId = "show_tawerna_lunch_menu";
