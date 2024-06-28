@@ -18,20 +18,16 @@ export function getTimeFromString(timeString: string): Time {
     }
 
     if (timeParsts.length === 1) {
-        const hourString = timeParsts[0];
+        const time = timeParsts[0];
 
-        if (hourString.length === 3) {
-            throw new Error("Invalid time string");
-        }
-
-        hour = parseInt(hourString.slice(0, 2));
-
-        if (hourString.length === 4) {
-            minutes = parseInt(hourString.slice(-2));
+        if (time.length <= 2) {
+            hour = parseInt(time);
+        } else {
+            hour = parseInt(time.slice(0, -2));
+            minutes = parseInt(time.slice(-2));
         }
     } else {
-        hour = parseInt(timeParsts[0]);
-        minutes = parseInt(timeParsts[1]);
+        [hour, minutes] = timeParsts.map(part => parseInt(part));
     }
 
     return [clamp(0, hour, 23), clamp(0, minutes, 59)];
