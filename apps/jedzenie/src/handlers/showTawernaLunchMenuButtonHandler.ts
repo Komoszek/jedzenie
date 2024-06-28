@@ -1,6 +1,7 @@
 import { ActionArgs, Dependencies } from "./types";
 import { getTawernaLunchMenuMessageBlocks } from "./tawernaCommandHandler";
 import { View } from "@slack/bolt";
+import { firstValueFrom, forkJoin, map, of, timer } from "rxjs";
 
 export async function showTawernaLunchMenuButtonHandler(
     { ack, client, body }: ActionArgs,
@@ -40,6 +41,13 @@ export async function showTawernaLunchMenuButtonHandler(
 
     client.views.update({
         view_id: view?.id,
-        view: { ...commonViewProps, blocks: await getTawernaLunchMenuMessageBlocks(tawernaMenuService) },
+        view: {
+            ...commonViewProps,
+            blocks: await firstValueFrom(
+                forkJoin({ blocks: getTawernaLunchMenuMessageBlocks(tawernaMenuService), timer: timer(200) }).pipe(
+                    map(({ blocks }) => blocks),
+                ),
+            ),
+        },
     });
 }
