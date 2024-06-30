@@ -13,13 +13,14 @@ import {
     destinationInputId,
 } from "../utils/getJedzenieDialogBlocks";
 import { tryScheduleNiechktosMessage } from "../utils/tryScheduleNiechktosMessage";
+import { RestaurantsService } from "../services/RestaurantsService";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
 export async function editJedzenieThreadViewHandler(
     { ack, view, client, body }: ViewArgs,
-    { niechKtosBotId }: Dependencies,
+    { niechKtosBotId, restaurantsService }: Dependencies,
 ) {
     const { timezone, selected_time } = view.state.values[departureBlockId][departureTimeId] as ViewStateValue & {
         timezone: string;
@@ -47,6 +48,7 @@ export async function editJedzenieThreadViewHandler(
         niechKtosBotId,
         scheduledMessageId,
         ack,
+        restaurantsService,
     });
 }
 
@@ -61,6 +63,7 @@ async function editJedzenieThread({
     niechKtosBotId,
     scheduledMessageId,
     ack,
+    restaurantsService,
 }: {
     ts: string;
     creatorId: string;
@@ -72,6 +75,7 @@ async function editJedzenieThread({
     niechKtosBotId: string;
     scheduledMessageId: string;
     ack: ViewArgs["ack"];
+    restaurantsService: RestaurantsService;
 }) {
     try {
         await client.chat.deleteScheduledMessage({
@@ -89,7 +93,7 @@ async function editJedzenieThread({
 
     await ack();
 
-    const blocks = getJedzenieThreadBlocks({ destination, time, creatorId });
+    const blocks = getJedzenieThreadBlocks({ destination, time, creatorId, restaurantsService });
 
     const response = await client.chat.update({
         channel,

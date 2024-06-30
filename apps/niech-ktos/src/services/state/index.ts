@@ -8,15 +8,15 @@ type StateSchema = {
 };
 
 export class State {
-    statePath: string;
-    #value: StateSchema;
+    private statePath: string;
+    private value: StateSchema;
 
     constructor(statePath: string) {
         this.statePath = statePath;
-        this.#value = this.readStateSync();
+        this.value = this.readState();
     }
 
-    readStateSync(): StateSchema {
+    private readState(): StateSchema {
         try {
             const state = readFileSync(this.statePath, "utf8");
 
@@ -29,23 +29,23 @@ export class State {
         }
     }
 
-    async saveState() {
-        await writeFile(this.statePath, JSON.stringify(this.#value));
+    private async saveState() {
+        await writeFile(this.statePath, JSON.stringify(this.value));
     }
 
     getSpltwiseIdToSlackIdMap() {
         return new Map(
-            Object.entries(this.#value.splitwiseIdMap).map(([slackId, splitwiseId]) => [splitwiseId, slackId]),
+            Object.entries(this.value.splitwiseIdMap).map(([slackId, splitwiseId]) => [splitwiseId, slackId]),
         );
     }
 
     getSplitwiseUserId(slackUserId: string) {
-        return this.#value.splitwiseIdMap[slackUserId];
+        return this.value.splitwiseIdMap[slackUserId];
     }
 
     async matchManySplitwiseUserIds(matches: SplitwiseMatch[]) {
         matches.forEach(({ slackId, splitwiseId }) => {
-            this.#value.splitwiseIdMap[slackId] = splitwiseId;
+            this.value.splitwiseIdMap[slackId] = splitwiseId;
         });
 
         await this.saveState();

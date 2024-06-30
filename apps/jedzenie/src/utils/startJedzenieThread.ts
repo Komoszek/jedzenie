@@ -4,6 +4,7 @@ import { Time } from "./getTimeFromString";
 import { DestinationBlock, getJedzenieThreadBlocks, attachEditThreadButton } from "./getJedzenieThreadBlock";
 import { ensureDefined } from "@leancodepl/utils";
 import { tryScheduleNiechktosMessage } from "./tryScheduleNiechktosMessage";
+import { RestaurantsService } from "../services/RestaurantsService";
 
 export async function startJedzenieThread({
     creatorId,
@@ -13,6 +14,7 @@ export async function startJedzenieThread({
     destination,
     client,
     niechKtosBotId,
+    restaurantsService,
 }: {
     creatorId: string;
     channel: string;
@@ -21,11 +23,14 @@ export async function startJedzenieThread({
     destination: DestinationBlock;
     client: WebClient;
     niechKtosBotId: string;
+    restaurantsService: RestaurantsService;
 }) {
-    const blocks = getJedzenieThreadBlocks({ destination, time, creatorId });
+    const blocks = getJedzenieThreadBlocks({ destination, time, creatorId, restaurantsService });
 
     const response = await client.chat.postMessage({
         channel,
+        unfurl_links: false,
+        unfurl_media: false,
         blocks: blocks as unknown as KnownBlock[],
     });
 

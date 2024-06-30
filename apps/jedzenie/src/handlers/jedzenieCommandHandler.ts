@@ -5,7 +5,7 @@ import { startJedzenieThread } from "../utils/startJedzenieThread";
 
 export async function jedzenieCommandHandler(
     { ack, client, command, respond }: CommandArgs,
-    { niechKtosBotId }: Dependencies,
+    { niechKtosBotId, restaurantsService }: Dependencies,
 ) {
     await ack();
 
@@ -43,6 +43,7 @@ export async function jedzenieCommandHandler(
         },
         niechKtosBotId,
         timezone: jedzenieTimezone,
+        restaurantsService,
     });
 }
 

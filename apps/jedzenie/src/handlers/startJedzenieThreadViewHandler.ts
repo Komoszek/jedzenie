@@ -18,7 +18,7 @@ dayjs.extend(timezone);
 
 export async function startJedzenieThreadViewHandler(
     { ack, view, client, body }: ViewArgs,
-    { niechKtosBotId }: Dependencies,
+    { niechKtosBotId, restaurantsService }: Dependencies,
 ) {
     const { timezone, selected_time } = view.state.values[departureBlockId][departureTimeId] as ViewStateValue & {
         timezone: string;
@@ -41,5 +41,6 @@ export async function startJedzenieThreadViewHandler(
         timezone,
         client,
         niechKtosBotId,
+        restaurantsService,
     });
 }

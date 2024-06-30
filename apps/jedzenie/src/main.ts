@@ -5,6 +5,7 @@ import { handlers } from "./handlers";
 import { editJedzenieThreadViewId } from "./handlers/editThreadButtonHandler";
 import { editThreadButtonId, showTawernaLunchMenuButtonId } from "./utils/getJedzenieThreadBlock";
 import { TawernaMenuService } from "./services/TawernaMenuService";
+import { RestaurantsService } from "./services/RestaurantsService";
 
 const niechKtosBotId = ensureDefined(process.env.NIECH_KTOS_BOT_ID, "NIECH_KTOS_BOT_ID not defined");
 
@@ -24,6 +25,9 @@ const {
 } = handlers({
     niechKtosBotId,
     tawernaMenuService: new TawernaMenuService(),
+    restaurantsService: new RestaurantsService(
+        ensureDefined(process.env.RESTAURANTS_PATH, "RESTAURANTS_PATH not defined"),
+    ),
 });
 
 app.command("/tawerna", tawernaCommandHandler);
