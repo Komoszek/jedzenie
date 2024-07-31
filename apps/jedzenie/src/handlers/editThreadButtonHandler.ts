@@ -26,7 +26,7 @@ export async function editThreadButtonHandler({ ack, client, body, payload }: Ac
     const initialDestination: RichTextBlock =
         blocks[0].type === "rich_text" ? blocks[0] : getRichTextFromMrkdwn(blocks[0].text?.text ?? "");
 
-    const initialTime = blocks[1].text.text.slice(1, 6);
+    const initialTime = blocks[1].text.text.slice(1, 6).padStart(5, "0");
 
     await client.views.open({
         trigger_id: body.trigger_id,
