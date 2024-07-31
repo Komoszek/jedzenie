@@ -1,7 +1,7 @@
 import { KnownBlock, RichTextBlock } from "@slack/bolt";
 
 export function getJedzenieDialogBlocks(
-    { initialTime, initialDestination }: { initialTime: string; initialDestination?: RichTextBlock } = {
+    { initialTime, initialDestination }: { initialTime?: string; initialDestination?: RichTextBlock } = {
         initialTime: "12:00",
     },
 ): KnownBlock[] {
