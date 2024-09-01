@@ -1,9 +1,9 @@
-import { ActionsBlock, Button, ContextBlock, KnownBlock, RichTextBlock, SectionBlock } from "@slack/bolt";
-import { Time } from "./getTimeFromString";
-import { knownBlockToText } from "./knownBlockToText";
-import { RestaurantsService } from "../services/RestaurantsService";
+import { ActionsBlock, Button, ContextBlock, RichTextBlock, SectionBlock } from "@slack/bolt"
+import { RestaurantsService } from "../services/RestaurantsService"
+import { Time } from "./getTimeFromString"
+import { knownBlockToText } from "./knownBlockToText"
 
-export type DestinationBlock = RichTextBlock | SectionBlock;
+export type DestinationBlock = RichTextBlock | SectionBlock
 
 export function getJedzenieThreadBlocks({
     destination,
@@ -11,13 +11,13 @@ export function getJedzenieThreadBlocks({
     creatorId,
     restaurantsService,
 }: {
-    destination: DestinationBlock;
-    time: Time;
-    creatorId: string;
-    restaurantsService: RestaurantsService;
+    destination: DestinationBlock
+    time: Time
+    creatorId: string
+    restaurantsService: RestaurantsService
 }) {
-    const destinationText = knownBlockToText(destination).trim().toLowerCase().replace(/\s+/g, " ");
-    const restaurant = restaurantsService.recognizeRestaurant(destinationText);
+    const destinationText = knownBlockToText(destination).trim().toLowerCase().replace(/\s+/g, " ")
+    const restaurant = restaurantsService.recognizeRestaurant(destinationText)
 
     return [
         destination,
@@ -43,7 +43,7 @@ export function getJedzenieThreadBlocks({
                       ],
                   },
               ]
-            : []) as [ActionsBlock] | []),
+            : []) as [] | [ActionsBlock]),
         ...((restaurant && restaurant.links.length > 0
             ? [
                   {
@@ -56,16 +56,16 @@ export function getJedzenieThreadBlocks({
                       ],
                   },
               ]
-            : []) as [ContextBlock] | []),
-    ] as const;
+            : []) as [] | [ContextBlock]),
+    ] as const
 }
 
 export function getEditThreadButtonBlock({
     creatorId,
     scheduledMessageId,
 }: {
-    creatorId: string;
-    scheduledMessageId: string;
+    creatorId: string
+    scheduledMessageId: string
 }): Button {
     return {
         type: "button",
@@ -76,7 +76,7 @@ export function getEditThreadButtonBlock({
         },
         value: JSON.stringify({ creatorId, scheduledMessageId }),
         action_id: editThreadButtonId,
-    };
+    }
 }
 
 export function attachEditThreadButton({
@@ -84,21 +84,21 @@ export function attachEditThreadButton({
     creatorId,
     scheduledMessageId,
 }: {
-    blocks: JedzenieThreadBlocks;
-    creatorId: string;
-    scheduledMessageId: string;
+    blocks: JedzenieThreadBlocks
+    creatorId: string
+    scheduledMessageId: string
 }) {
-    let newBlocks = JSON.parse(JSON.stringify(blocks)) as JedzenieThreadBlocks;
+    const newBlocks = JSON.parse(JSON.stringify(blocks)) as JedzenieThreadBlocks
 
-    const editThreadButton = getEditThreadButtonBlock({ creatorId, scheduledMessageId });
+    const editThreadButton = getEditThreadButtonBlock({ creatorId, scheduledMessageId })
     const actions = newBlocks.find(
         block => block.type === "actions" && block.block_id === threadActionsBlockId,
-    ) as ActionsBlock;
+    ) as ActionsBlock
 
     if (actions) {
-        actions.elements = [editThreadButton, ...actions.elements];
+        actions.elements = [editThreadButton, ...actions.elements]
 
-        return newBlocks;
+        return newBlocks
     }
 
     return [
@@ -109,13 +109,13 @@ export function attachEditThreadButton({
             elements: [editThreadButton],
         },
         ...newBlocks.slice(2),
-    ];
+    ]
 }
 
-const tawernaId = "tawerna";
+const tawernaId = "tawerna"
 
-const threadActionsBlockId = "thread_actions";
-export const showTawernaLunchMenuButtonId = "show_tawerna_lunch_menu";
-export const editThreadButtonId = "edit_thread";
+const threadActionsBlockId = "thread_actions"
+export const showTawernaLunchMenuButtonId = "show_tawerna_lunch_menu"
+export const editThreadButtonId = "edit_thread"
 
-export type JedzenieThreadBlocks = ReturnType<typeof getJedzenieThreadBlocks>;
+export type JedzenieThreadBlocks = ReturnType<typeof getJedzenieThreadBlocks>

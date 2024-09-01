@@ -1,7 +1,7 @@
-import { WebClient } from "../handlers/types";
-import { getDepartureTime } from "./getDepartureTime";
-import { Time } from "./getTimeFromString";
-import { tryScheduleMessage } from "./tryScheduleMessage";
+import { WebClient } from "../handlers/types"
+import { getDepartureTime } from "./getDepartureTime"
+import { Time } from "./getTimeFromString"
+import { tryScheduleMessage } from "./tryScheduleMessage"
 
 export function tryScheduleNiechktosMessage({
     client,
@@ -11,12 +11,12 @@ export function tryScheduleNiechktosMessage({
     time,
     timezone,
 }: {
-    client: WebClient;
-    niechKtosBotId: string;
-    channel: string;
-    time: Time;
-    timezone: string;
-    thread_ts: string;
+    client: WebClient
+    niechKtosBotId: string
+    channel: string
+    time: Time
+    timezone: string
+    thread_ts: string
 }) {
     return tryScheduleMessage({
         client,
@@ -26,5 +26,5 @@ export function tryScheduleNiechktosMessage({
             thread_ts,
         },
         post_at: getDepartureTime(time, timezone),
-    });
+    })
 }

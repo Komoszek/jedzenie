@@ -1,16 +1,16 @@
-import { ActionArgs, Dependencies } from "./types";
-import { getTawernaLunchMenuMessageBlocks } from "./tawernaCommandHandler";
-import { View } from "@slack/bolt";
-import { firstValueFrom, forkJoin, map, of, timer } from "rxjs";
+import { View } from "@slack/bolt"
+import { firstValueFrom, forkJoin, map, timer } from "rxjs"
+import { getTawernaLunchMenuMessageBlocks } from "./tawernaCommandHandler"
+import { ActionArgs, Dependencies } from "./types"
 
 export async function showTawernaLunchMenuButtonHandler(
     { ack, client, body }: ActionArgs,
     { tawernaMenuService }: Dependencies,
 ) {
-    await ack();
+    await ack()
 
     if (body.type !== "block_actions") {
-        return;
+        return
     }
 
     const commonViewProps = {
@@ -23,7 +23,7 @@ export async function showTawernaLunchMenuButtonHandler(
             type: "plain_text",
             text: "Fajno",
         },
-    } as const satisfies Partial<View>;
+    } as const satisfies Partial<View>
 
     const { view } = await client.views.open({
         trigger_id: body.trigger_id,
@@ -37,7 +37,7 @@ export async function showTawernaLunchMenuButtonHandler(
                 },
             ],
         },
-    });
+    })
 
     client.views.update({
         view_id: view?.id,
@@ -49,5 +49,5 @@ export async function showTawernaLunchMenuButtonHandler(
                 ),
             ),
         },
-    });
+    })
 }

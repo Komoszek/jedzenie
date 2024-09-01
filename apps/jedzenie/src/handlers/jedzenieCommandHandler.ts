@@ -1,33 +1,33 @@
-import { getTimeFromString } from "../utils/getTimeFromString";
-import { CommandArgs, Dependencies, WebClient } from "./types";
-import { getJedzenieDialogBlocks, jedzenieTimezone } from "../utils/getJedzenieDialogBlocks";
-import { startJedzenieThread } from "../utils/startJedzenieThread";
+import { getJedzenieDialogBlocks, jedzenieTimezone } from "../utils/getJedzenieDialogBlocks"
+import { getTimeFromString } from "../utils/getTimeFromString"
+import { startJedzenieThread } from "../utils/startJedzenieThread"
+import { CommandArgs, Dependencies, WebClient } from "./types"
 
 export async function jedzenieCommandHandler(
     { ack, client, command, respond }: CommandArgs,
     { niechKtosBotId, restaurantsService }: Dependencies,
 ) {
-    await ack();
+    await ack()
 
-    const normalizedText = command.text.trim();
+    const normalizedText = command.text.trim()
 
     if (!normalizedText) {
         await openJedzenieDialog({
             client,
             triggerId: command.trigger_id,
             channel: command.channel_id,
-        });
-        return;
+        })
+        return
     }
 
-    const match = normalizedText.match(/^(\d{1,4}|\d{1,2}:\d{2})\s+(.+)$/);
+    const match = normalizedText.match(/^(\d{1,4}|\d{1,2}:\d{2})\s+(.+)$/)
 
     if (!match) {
-        await respond("Niepoprawne parametry. Przykład użycia: /jedzenie 12:00 :flag-gr:");
-        return;
+        await respond("Niepoprawne parametry. Przykład użycia: /jedzenie 12:00 :flag-gr:")
+        return
     }
 
-    const [timeString, destination] = match.slice(1);
+    const [timeString, destination] = match.slice(1)
 
     await startJedzenieThread({
         creatorId: command.user_id,
@@ -44,10 +44,10 @@ export async function jedzenieCommandHandler(
         niechKtosBotId,
         timezone: jedzenieTimezone,
         restaurantsService,
-    });
+    })
 }
 
-export const startJedzenieThreadViewId = "start-jedzenie-thread-view";
+export const startJedzenieThreadViewId = "start-jedzenie-thread-view"
 
 function openJedzenieDialog({ client, triggerId, channel }: { client: WebClient; channel: string; triggerId: string }) {
     return client.views.open({
@@ -70,5 +70,5 @@ function openJedzenieDialog({ client, triggerId, channel }: { client: WebClient;
             },
             blocks: getJedzenieDialogBlocks(),
         },
-    });
+    })
 }

@@ -1,32 +1,32 @@
-import { RichTextBlock, View } from "@slack/bolt";
-import { ActionArgs } from "./types";
-import { JedzenieThreadBlocks } from "../utils/getJedzenieThreadBlock";
-import { getJedzenieDialogBlocks } from "../utils/getJedzenieDialogBlocks";
-import { ensureDefined } from "@leancodepl/utils";
+import { RichTextBlock, View } from "@slack/bolt"
+import { ensureDefined } from "@leancodepl/utils"
+import { getJedzenieDialogBlocks } from "../utils/getJedzenieDialogBlocks"
+import { JedzenieThreadBlocks } from "../utils/getJedzenieThreadBlock"
+import { ActionArgs } from "./types"
 
 export async function editThreadButtonHandler({ ack, client, body, payload }: ActionArgs) {
-    await ack();
+    await ack()
 
     if (body.type !== "block_actions" || payload.type !== "button" || !body.message) {
-        return;
+        return
     }
 
-    const { creatorId, scheduledMessageId } = JSON.parse(payload.value);
+    const { creatorId, scheduledMessageId } = JSON.parse(payload.value)
 
     if (body.user.id !== creatorId) {
         await client.views.open({
             trigger_id: body.trigger_id,
             view: getUserUnathorizedView(body.user.id),
-        });
-        return;
+        })
+        return
     }
 
-    const blocks = body.message.blocks as JedzenieThreadBlocks;
+    const blocks = body.message.blocks as JedzenieThreadBlocks
 
     const initialDestination: RichTextBlock =
-        blocks[0].type === "rich_text" ? blocks[0] : getRichTextFromMrkdwn(blocks[0].text?.text ?? "");
+        blocks[0].type === "rich_text" ? blocks[0] : getRichTextFromMrkdwn(blocks[0].text?.text ?? "")
 
-    const initialTime = blocks[1].text.text.match(/^\*(\d+:\d+)\*/)?.[1].padStart(5, "0");
+    const initialTime = blocks[1].text.text.match(/^\*(\d+:\d+)\*/)?.[1].padStart(5, "0")
 
     await client.views.open({
         trigger_id: body.trigger_id,
@@ -52,7 +52,7 @@ export async function editThreadButtonHandler({ ack, client, body, payload }: Ac
                 text: "Zapisz",
             },
         },
-    });
+    })
 }
 
 function getUserUnathorizedView(userId: string): View {
@@ -76,10 +76,10 @@ function getUserUnathorizedView(userId: string): View {
             text: ":scream:",
             emoji: true,
         },
-    };
+    }
 }
 
-export const editJedzenieThreadViewId = "edit-jedzenie-thread-view";
+export const editJedzenieThreadViewId = "edit-jedzenie-thread-view"
 
 // It doesn't really work because it treats mrkdwn as plain_text but it is good enough for now
 function getRichTextFromMrkdwn(mrkdwn: string): RichTextBlock {
@@ -91,5 +91,5 @@ function getRichTextFromMrkdwn(mrkdwn: string): RichTextBlock {
                 elements: [{ type: "text", text: mrkdwn }],
             },
         ],
-    };
+    }
 }

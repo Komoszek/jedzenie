@@ -1,30 +1,30 @@
-import { readFileSync } from "fs";
+import { readFileSync } from "fs"
 
 export class RestaurantsService {
-    private restaurants: Restaurant[];
+    private restaurants: Restaurant[]
 
     constructor(restaurantsPath: string) {
-        this.restaurants = this.readState(restaurantsPath);
+        this.restaurants = this.readState(restaurantsPath)
     }
 
     private readState(restaurantsPath: string): Restaurant[] {
         try {
-            const state = readFileSync(restaurantsPath, "utf8");
+            const state = readFileSync(restaurantsPath, "utf8")
 
-            return JSON.parse(state);
+            return JSON.parse(state)
         } catch (e) {
-            console.error(e);
-            return [];
+            console.error(e)
+            return []
         }
     }
 
     recognizeRestaurant(text: string): Restaurant | undefined {
-        return this.restaurants.find(({ patterns }) => patterns.some(pattern => new RegExp(pattern).test(text)));
+        return this.restaurants.find(({ patterns }) => patterns.some(pattern => new RegExp(pattern).test(text)))
     }
 }
 
 type Restaurant = {
-    id: string;
-    patterns: string[];
-    links: string[];
-};
+    id: string
+    patterns: string[]
+    links: string[]
+}

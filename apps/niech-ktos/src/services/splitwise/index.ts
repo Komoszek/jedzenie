@@ -1,2 +1,2 @@
-export { getSplitwiseGroup } from "./getSplitwiseGroup";
-export { getUsersSplitwiseMatches, type SplitwiseMatch, type MatchSlackInfo } from "./getUsersSplitwiseMatches";
+export { getSplitwiseGroup } from "./getSplitwiseGroup"
+export { type MatchSlackInfo, type SplitwiseMatch, getUsersSplitwiseMatches } from "./getUsersSplitwiseMatches"

@@ -1,37 +1,37 @@
-import { SectionBlock } from "@slack/bolt";
-import { CommandArgs, Dependencies, WebClient } from "./types";
-import { TawernaMenuService } from "../services/TawernaMenuService";
-import { MenuItem } from "../types/MenuItem";
+import { SectionBlock } from "@slack/bolt"
+import { TawernaMenuService } from "../services/TawernaMenuService"
+import { MenuItem } from "../types/MenuItem"
+import { CommandArgs, Dependencies, WebClient } from "./types"
 
 export async function tawernaCommandHandler(
     { client, ack, command: { channel_id, user_id, text } }: CommandArgs,
     { tawernaMenuService }: Dependencies,
 ) {
-    await ack();
+    await ack()
 
     let args: Parameters<WebClient["chat"]["postEphemeral"]>[0] = {
         channel: channel_id,
         user: user_id,
-    };
+    }
 
     if (text.trim() === "menu") {
-        const menu = await tawernaMenuService.getMenu();
+        const menu = await tawernaMenuService.getMenu()
 
-        args.username = "Tawerna Grecka - Menu";
-        args.blocks = menu.map(mapMenuItemToSectionBlock);
+        args.username = "Tawerna Grecka - Menu"
+        args.blocks = menu.map(mapMenuItemToSectionBlock)
     } else {
         args = {
             ...args,
             blocks: await getTawernaLunchMenuMessageBlocks(tawernaMenuService),
             username: "Tawerna Grecka - Lunch Menu",
-        };
+        }
     }
 
-    await client.chat.postEphemeral(args);
+    await client.chat.postEphemeral(args)
 }
 
 export async function getTawernaLunchMenuMessageBlocks(tawernaMenuService: TawernaMenuService) {
-    const { title, menu } = await tawernaMenuService.getLunchMenu();
+    const { title, menu } = await tawernaMenuService.getLunchMenu()
 
     return [
         {
@@ -42,7 +42,7 @@ export async function getTawernaLunchMenuMessageBlocks(tawernaMenuService: Tawer
             },
         },
         ...menu.map(mapMenuItemToSectionBlock),
-    ];
+    ]
 }
 
 function mapMenuItemToSectionBlock({ title, extra, price, image }: MenuItem): SectionBlock {
@@ -57,5 +57,5 @@ function mapMenuItemToSectionBlock({ title, extra, price, image }: MenuItem): Se
             image_url: image,
             alt_text: title,
         },
-    };
+    }
 }

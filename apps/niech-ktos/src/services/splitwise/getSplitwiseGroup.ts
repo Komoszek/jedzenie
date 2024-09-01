@@ -1,7 +1,7 @@
-import { splitwiseGroupsApi } from "./api";
+import { splitwiseGroupsApi } from "./api"
 
-const splitwiseGroupId = Number(process.env.SPLITWISE_GROUP_ID);
+const splitwiseGroupId = Number(process.env.SPLITWISE_GROUP_ID)
 
 export function getSplitwiseGroup() {
-    return splitwiseGroupsApi.getGroupIdGet(splitwiseGroupId);
+    return splitwiseGroupsApi.getGroupIdGet(splitwiseGroupId)
 }

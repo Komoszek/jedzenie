@@ -1,18 +1,18 @@
 import {
-    SlackCommandMiddlewareArgs,
     AllMiddlewareArgs,
     App,
+    SlackCommandMiddlewareArgs,
     SlackEventMiddlewareArgs,
     SlackShortcut,
     SlackShortcutMiddlewareArgs,
-} from "@slack/bolt";
-import { State } from "../services/state";
-import { StringIndexed } from "@slack/bolt/dist/types/helpers";
+} from "@slack/bolt"
+import { StringIndexed } from "@slack/bolt/dist/types/helpers"
+import { State } from "../services/state"
 
-export type AppMentionArgs = SlackEventMiddlewareArgs<"app_mention"> & AllMiddlewareArgs;
-export type CommandArgs = SlackCommandMiddlewareArgs & AllMiddlewareArgs;
-export type MessageArgs = SlackEventMiddlewareArgs<"message"> & AllMiddlewareArgs;
-export type ShortcutArgs = SlackShortcutMiddlewareArgs<SlackShortcut> & AllMiddlewareArgs;
+export type AppMentionArgs = AllMiddlewareArgs & SlackEventMiddlewareArgs<"app_mention">
+export type CommandArgs = AllMiddlewareArgs & SlackCommandMiddlewareArgs
+export type MessageArgs = AllMiddlewareArgs & SlackEventMiddlewareArgs<"message">
+export type ShortcutArgs = AllMiddlewareArgs & SlackShortcutMiddlewareArgs<SlackShortcut>
 
-export type Dependencies = { state: State };
-export type WebClient = App<StringIndexed>["client"];
+export type Dependencies = { state: State }
+export type WebClient = App<StringIndexed>["client"]

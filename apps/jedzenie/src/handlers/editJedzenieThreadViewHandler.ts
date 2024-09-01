@@ -1,41 +1,41 @@
-import { KnownBlock, ViewStateValue } from "@slack/bolt";
-import { Dependencies, ViewArgs, WebClient } from "./types";
-import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc";
-import timezone from "dayjs/plugin/timezone";
-import { Time, getTimeFromString } from "../utils/getTimeFromString";
-import { ensureDefined } from "@leancodepl/utils";
-import { DestinationBlock, attachEditThreadButton, getJedzenieThreadBlocks } from "../utils/getJedzenieThreadBlock";
+import { KnownBlock, ViewStateValue } from "@slack/bolt"
+import dayjs from "dayjs"
+import timezone from "dayjs/plugin/timezone"
+import utc from "dayjs/plugin/utc"
+import { ensureDefined } from "@leancodepl/utils"
+import { RestaurantsService } from "../services/RestaurantsService"
 import {
     departureBlockId,
     departureTimeId,
     destinationBlockId,
     destinationInputId,
-} from "../utils/getJedzenieDialogBlocks";
-import { tryScheduleNiechktosMessage } from "../utils/tryScheduleNiechktosMessage";
-import { RestaurantsService } from "../services/RestaurantsService";
+} from "../utils/getJedzenieDialogBlocks"
+import { DestinationBlock, attachEditThreadButton, getJedzenieThreadBlocks } from "../utils/getJedzenieThreadBlock"
+import { Time, getTimeFromString } from "../utils/getTimeFromString"
+import { tryScheduleNiechktosMessage } from "../utils/tryScheduleNiechktosMessage"
+import { Dependencies, ViewArgs, WebClient } from "./types"
 
-dayjs.extend(utc);
-dayjs.extend(timezone);
+dayjs.extend(utc)
+dayjs.extend(timezone)
 
 export async function editJedzenieThreadViewHandler(
     { ack, view, client, body }: ViewArgs,
     { niechKtosBotId, restaurantsService }: Dependencies,
 ) {
-    const { timezone, selected_time } = view.state.values[departureBlockId][departureTimeId] as ViewStateValue & {
-        timezone: string;
-    };
+    const { timezone, selected_time } = view.state.values[departureBlockId][departureTimeId] as {
+        timezone: string
+    } & ViewStateValue
 
     if (!selected_time) {
         await ack({
             view: view.id,
             response_action: "errors",
             errors: { [departureBlockId]: "Godzina odjazdu jest wymagana" },
-        });
-        return;
+        })
+        return
     }
 
-    const { channel, ts, scheduledMessageId } = JSON.parse(view.private_metadata);
+    const { channel, ts, scheduledMessageId } = JSON.parse(view.private_metadata)
 
     await editJedzenieThread({
         ts,
@@ -49,7 +49,7 @@ export async function editJedzenieThreadViewHandler(
         scheduledMessageId,
         ack,
         restaurantsService,
-    });
+    })
 }
 
 async function editJedzenieThread({
@@ -65,45 +65,45 @@ async function editJedzenieThread({
     ack,
     restaurantsService,
 }: {
-    ts: string;
-    creatorId: string;
-    channel: string;
-    time: Time;
-    timezone: string;
-    destination: DestinationBlock;
-    client: WebClient;
-    niechKtosBotId: string;
-    scheduledMessageId: string;
-    ack: ViewArgs["ack"];
-    restaurantsService: RestaurantsService;
+    ts: string
+    creatorId: string
+    channel: string
+    time: Time
+    timezone: string
+    destination: DestinationBlock
+    client: WebClient
+    niechKtosBotId: string
+    scheduledMessageId: string
+    ack: ViewArgs["ack"]
+    restaurantsService: RestaurantsService
 }) {
     try {
         await client.chat.deleteScheduledMessage({
             channel,
             scheduled_message_id: scheduledMessageId,
-        });
+        })
     } catch (e) {
-        console.error(e);
+        console.error(e)
         await ack({
             response_action: "errors",
             errors: { [departureBlockId]: "Sorki memorki, nie da się już zmienić godziny odjazdu." },
-        });
-        return;
+        })
+        return
     }
 
-    await ack();
+    await ack()
 
-    const blocks = getJedzenieThreadBlocks({ destination, time, creatorId, restaurantsService });
+    const blocks = getJedzenieThreadBlocks({ destination, time, creatorId, restaurantsService })
 
     const response = await client.chat.update({
         channel,
         ts,
         blocks: blocks as unknown as KnownBlock[],
-    });
+    })
 
     if (!response.ok) {
-        console.error(response.error);
-        return;
+        console.error(response.error)
+        return
     }
 
     const newScheduledMessageId = await tryScheduleNiechktosMessage({
@@ -113,10 +113,10 @@ async function editJedzenieThread({
         thread_ts: ensureDefined(response.ts),
         time,
         timezone,
-    });
+    })
 
     if (!newScheduledMessageId) {
-        return;
+        return
     }
 
     await client.chat.update({
@@ -127,5 +127,5 @@ async function editJedzenieThread({
             creatorId,
             scheduledMessageId: newScheduledMessageId,
         }) as unknown as KnownBlock[],
-    });
+    })
 }

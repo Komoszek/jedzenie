@@ -1,4 +1,4 @@
-import { KnownBlock, RichTextBlock } from "@slack/bolt";
+import { KnownBlock, RichTextBlock } from "@slack/bolt"
 
 export function getJedzenieDialogBlocks(
     { initialTime, initialDestination }: { initialTime?: string; initialDestination?: RichTextBlock } = {
@@ -41,13 +41,13 @@ export function getJedzenieDialogBlocks(
                 emoji: true,
             },
         },
-    ];
+    ]
 }
 
-export const destinationBlockId = "destination-block";
-export const destinationInputId = "destination";
+export const destinationBlockId = "destination-block"
+export const destinationInputId = "destination"
 
-export const departureBlockId = "departure-block";
-export const departureTimeId = "departure-time";
+export const departureBlockId = "departure-block"
+export const departureTimeId = "departure-time"
 
-export const jedzenieTimezone = "Poland";
+export const jedzenieTimezone = "Poland"

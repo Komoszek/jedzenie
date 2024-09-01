@@ -1,37 +1,37 @@
-import { ViewStateValue } from "@slack/bolt";
-import { Dependencies, ViewArgs } from "./types";
-import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc";
-import timezone from "dayjs/plugin/timezone";
-import { getTimeFromString } from "../utils/getTimeFromString";
-import { ensureDefined } from "@leancodepl/utils";
-import { startJedzenieThread } from "../utils/startJedzenieThread";
+import { ViewStateValue } from "@slack/bolt"
+import dayjs from "dayjs"
+import timezone from "dayjs/plugin/timezone"
+import utc from "dayjs/plugin/utc"
+import { ensureDefined } from "@leancodepl/utils"
 import {
     departureBlockId,
     departureTimeId,
     destinationBlockId,
     destinationInputId,
-} from "../utils/getJedzenieDialogBlocks";
+} from "../utils/getJedzenieDialogBlocks"
+import { getTimeFromString } from "../utils/getTimeFromString"
+import { startJedzenieThread } from "../utils/startJedzenieThread"
+import { Dependencies, ViewArgs } from "./types"
 
-dayjs.extend(utc);
-dayjs.extend(timezone);
+dayjs.extend(utc)
+dayjs.extend(timezone)
 
 export async function startJedzenieThreadViewHandler(
     { ack, view, client, body }: ViewArgs,
     { niechKtosBotId, restaurantsService }: Dependencies,
 ) {
-    const { timezone, selected_time } = view.state.values[departureBlockId][departureTimeId] as ViewStateValue & {
-        timezone: string;
-    };
+    const { timezone, selected_time } = view.state.values[departureBlockId][departureTimeId] as {
+        timezone: string
+    } & ViewStateValue
 
     if (!selected_time) {
-        await ack({ response_action: "errors", errors: { [departureBlockId]: "Godzina odjazdu jest wymagana" } });
-        return;
+        await ack({ response_action: "errors", errors: { [departureBlockId]: "Godzina odjazdu jest wymagana" } })
+        return
     }
 
-    await ack();
+    await ack()
 
-    const channel = view.private_metadata;
+    const channel = view.private_metadata
 
     await startJedzenieThread({
         creatorId: body.user.id,
@@ -42,5 +42,5 @@ export async function startJedzenieThreadViewHandler(
         client,
         niechKtosBotId,
         restaurantsService,
-    });
+    })
 }

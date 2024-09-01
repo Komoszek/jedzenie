@@ -1,17 +1,17 @@
-import { Dependencies, ShortcutArgs } from "./types";
-import { getFormattedRankingOfConversation } from "./appMentionHandler";
-import { getEmptyRankingResponse } from "./nkCommandHandler";
+import { getFormattedRankingOfConversation } from "./appMentionHandler"
+import { getEmptyRankingResponse } from "./nkCommandHandler"
+import { Dependencies, ShortcutArgs } from "./types"
 
 export async function silentNkShortcutHandler({ ack, client, shortcut }: ShortcutArgs, { state }: Dependencies) {
-    await ack();
+    await ack()
 
     if (shortcut.type !== "message_action") {
-        return;
+        return
     }
     const {
         message_ts,
         channel: { id: channel },
-    } = shortcut;
+    } = shortcut
 
     const formattedRanking = await getFormattedRankingOfConversation({
         channel,
@@ -19,9 +19,9 @@ export async function silentNkShortcutHandler({ ack, client, shortcut }: Shortcu
         client,
         state,
         includeFirstMessage: true,
-    });
+    })
 
-    const { permalink } = await client.chat.getPermalink({ channel, message_ts });
+    const { permalink } = await client.chat.getPermalink({ channel, message_ts })
 
     await client.views.open({
         trigger_id: shortcut.trigger_id,
@@ -45,5 +45,5 @@ export async function silentNkShortcutHandler({ ack, client, shortcut }: Shortcu
                 text: "Fajno",
             },
         },
-    });
+    })
 }

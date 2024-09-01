@@ -1,4 +1,4 @@
-import { KnownBlock, RichTextElement } from "@slack/bolt";
+import { KnownBlock, RichTextElement } from "@slack/bolt"
 
 export function knownBlockToText(block: KnownBlock): string {
     if (block.type === "rich_text") {
@@ -7,30 +7,30 @@ export function knownBlockToText(block: KnownBlock): string {
                 switch (element.type) {
                     case "rich_text_section":
                     case "rich_text_quote":
-                        return richTextElementsToText(element.elements);
+                        return richTextElementsToText(element.elements)
                     case "rich_text_list":
-                        return element.elements.map(({ elements }) => richTextElementsToText(elements));
+                        return element.elements.map(({ elements }) => richTextElementsToText(elements))
                     case "rich_text_preformatted":
-                        return element.elements.map(r => r.text);
+                        return element.elements.map(r => r.text)
                 }
             })
-            .join(" ");
+            .join(" ")
     } else if (block.type === "section") {
-        return block.fields?.map(v => v.text).join(" ") ?? block.text?.text ?? "";
+        return block.fields?.map(v => v.text).join(" ") ?? block.text?.text ?? ""
     }
 
-    return "";
+    return ""
 }
 
 function richTextElementsToText(richTextElements: RichTextElement[]) {
     return richTextElements.reduce((accumulator, current) => {
         switch (current.type) {
             case "emoji":
-                return accumulator + `:${current.name}:`;
+                return accumulator + `:${current.name}:`
             case "text":
-                return accumulator + current.text;
+                return accumulator + current.text
             default:
-                return accumulator;
+                return accumulator
         }
-    }, "");
+    }, "")
 }

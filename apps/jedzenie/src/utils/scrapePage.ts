@@ -1,10 +1,10 @@
-import { Page, chromium } from "playwright";
+import { Page, chromium } from "playwright"
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function scrapePage<TScraper extends (page: Page) => Promise<any>>(scraper: TScraper) {
-    const browser = await chromium.launch();
-    const context = await browser.newContext();
-    const page = await context.newPage();
+    const browser = await chromium.launch()
+    const context = await browser.newContext()
+    const page = await context.newPage()
 
     await context.route("**/*", route => {
         switch (route.request().resourceType()) {
@@ -12,16 +12,16 @@ export async function scrapePage<TScraper extends (page: Page) => Promise<any>>(
             case "image":
             case "media":
             case "font":
-                return route.abort();
+                return route.abort()
             default:
-                return route.continue();
+                return route.continue()
         }
-    });
+    })
 
-    const result = await scraper(page);
+    const result = await scraper(page)
 
-    await context.close();
-    await browser.close();
+    await context.close()
+    await browser.close()
 
-    return result;
+    return result
 }

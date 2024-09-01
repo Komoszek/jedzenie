@@ -1,21 +1,21 @@
-import { AppMentionArgs, Dependencies, WebClient } from "./types";
-import { ensureDefined } from "@leancodepl/utils";
-import { getSplitwiseGroup } from "../services/splitwise";
-import { formatRankingPlace } from "../utils/formatRankingPlace";
-import { formatUnconnectedParticipants } from "../utils/formatUnconnectedParticipants";
-import { getGroupMemberBalance } from "../utils/getMemberBalancec";
-import { Balance } from "../utils/types/Balance";
-import { State } from "../services/state";
+import { ensureDefined } from "@leancodepl/utils"
+import { getSplitwiseGroup } from "../services/splitwise"
+import { State } from "../services/state"
+import { formatRankingPlace } from "../utils/formatRankingPlace"
+import { formatUnconnectedParticipants } from "../utils/formatUnconnectedParticipants"
+import { getGroupMemberBalance } from "../utils/getMemberBalancec"
+import { Balance } from "../utils/types/Balance"
+import { AppMentionArgs, Dependencies, WebClient } from "./types"
 
 export async function appMentionHandler(
     { event: { channel, thread_ts }, client }: AppMentionArgs,
     { state }: Dependencies,
 ) {
     if (thread_ts === undefined) {
-        return;
+        return
     }
 
-    const formattedRanking = await getFormattedRankingOfConversation({ channel, ts: thread_ts, client, state });
+    const formattedRanking = await getFormattedRankingOfConversation({ channel, ts: thread_ts, client, state })
 
     await client.chat.postMessage({
         channel,
@@ -31,7 +31,7 @@ export async function appMentionHandler(
                       },
                   ],
               }),
-    });
+    })
 }
 
 export async function getFormattedRankingOfConversation({
@@ -41,54 +41,54 @@ export async function getFormattedRankingOfConversation({
     state,
     includeFirstMessage,
 }: {
-    channel: string;
-    ts: string;
-    client: WebClient;
-    state: State;
-    includeFirstMessage?: boolean;
+    channel: string
+    ts: string
+    client: WebClient
+    state: State
+    includeFirstMessage?: boolean
 }) {
     const { messages } = await client.conversations.replies({
         channel,
         ts,
-    });
+    })
 
     const participantIdsSet = new Set(
         messages
             ?.slice(includeFirstMessage ? 0 : 1)
             .filter(({ bot_id }) => !bot_id)
             .map(({ user }) => ensureDefined(user)),
-    );
+    )
 
     if (participantIdsSet.size === 0) {
-        return;
+        return
     }
 
-    const unconnectedParticipantIds: string[] = [];
+    const unconnectedParticipantIds: string[] = []
 
-    const splitwiseParticipantIdsSet = new Set<number>();
+    const splitwiseParticipantIdsSet = new Set<number>()
 
     for (const participantId of participantIdsSet) {
-        const splitwiseParticipantId = state.getSplitwiseUserId(participantId);
+        const splitwiseParticipantId = state.getSplitwiseUserId(participantId)
 
         if (splitwiseParticipantId) {
-            splitwiseParticipantIdsSet.add(splitwiseParticipantId);
+            splitwiseParticipantIdsSet.add(splitwiseParticipantId)
         } else {
-            unconnectedParticipantIds.push(participantId);
+            unconnectedParticipantIds.push(participantId)
         }
     }
 
     const {
         data: { group },
-    } = await getSplitwiseGroup();
+    } = await getSplitwiseGroup()
 
     const formattedRanking = group?.members
         ?.filter(({ id }) => splitwiseParticipantIdsSet.has(ensureDefined(id)))
         .map<Balance>(member => getGroupMemberBalance(member))
         .sort((a, b) => a.balance - b.balance)
         .map(formatRankingPlace)
-        .join("\n");
+        .join("\n")
 
-    const formattedUnconnectedParticipants = formatUnconnectedParticipants(unconnectedParticipantIds);
+    const formattedUnconnectedParticipants = formatUnconnectedParticipants(unconnectedParticipantIds)
 
-    return [formattedRanking, formattedUnconnectedParticipants].filter(Boolean).join("\n\n");
+    return [formattedRanking, formattedUnconnectedParticipants].filter(Boolean).join("\n\n")
 }

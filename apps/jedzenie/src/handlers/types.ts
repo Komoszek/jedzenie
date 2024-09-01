@@ -6,17 +6,17 @@ import {
     SlackCommandMiddlewareArgs,
     SlackViewAction,
     SlackViewMiddlewareArgs,
-} from "@slack/bolt";
-import { TawernaMenuService } from "../services/TawernaMenuService";
-import { RestaurantsService } from "../services/RestaurantsService";
+} from "@slack/bolt"
+import { RestaurantsService } from "../services/RestaurantsService"
+import { TawernaMenuService } from "../services/TawernaMenuService"
 
-export type CommandArgs = SlackCommandMiddlewareArgs & AllMiddlewareArgs;
-export type ViewArgs = SlackViewMiddlewareArgs<SlackViewAction> & AllMiddlewareArgs;
-export type ActionArgs = SlackActionMiddlewareArgs<SlackAction> & AllMiddlewareArgs;
+export type CommandArgs = AllMiddlewareArgs & SlackCommandMiddlewareArgs
+export type ViewArgs = AllMiddlewareArgs & SlackViewMiddlewareArgs<SlackViewAction>
+export type ActionArgs = AllMiddlewareArgs & SlackActionMiddlewareArgs<SlackAction>
 
 export type Dependencies = {
-    niechKtosBotId: string;
-    tawernaMenuService: TawernaMenuService;
-    restaurantsService: RestaurantsService;
-};
-export type WebClient = App["client"];
+    niechKtosBotId: string
+    tawernaMenuService: TawernaMenuService
+    restaurantsService: RestaurantsService
+}
+export type WebClient = App["client"]
