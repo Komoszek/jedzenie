@@ -12,12 +12,22 @@ const app = new App({
     appToken: ensureDefined(process.env.SLACK_APP_TOKEN, "SLACK_APP_TOKEN not defined"),
 })
 
-const { nkCommandHandler, appMentionHandler, messageImHandler, silentNkShortcutHandler } = handlers({ state })
+const watchedChannelIds = process.env.WATCHED_CHANNEL_IDS?.split(";") ?? []
+
+const { nkCommandHandler, appMentionHandler, messageImHandler, silentNkShortcutHandler, memberJoinedChannelHandler } =
+    handlers({
+        state,
+        watchedChannelIds,
+    })
 
 app.command("/nk", nkCommandHandler)
+app.shortcut("silent_nk", silentNkShortcutHandler)
 app.event("app_mention", appMentionHandler)
 app.event("message", messageImHandler)
-app.shortcut("silent_nk", silentNkShortcutHandler)
+
+if (watchedChannelIds.length > 0) {
+    app.event("member_joined_channel", memberJoinedChannelHandler)
+}
 
 await app.start()
 

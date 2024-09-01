@@ -1,4 +1,4 @@
-import { getFormattedRankingOfConversation } from "./appMentionHandler"
+import { getFormattedRankingOfConversation } from "../utils/getFormattedRankingOfConversation"
 import { getEmptyRankingResponse } from "./nkCommandHandler"
 import { Dependencies, ShortcutArgs } from "./types"
 
@@ -18,7 +18,7 @@ export async function silentNkShortcutHandler({ ack, client, shortcut }: Shortcu
         ts: message_ts,
         client,
         state,
-        includeFirstMessage: true,
+        additionalParticipants: [shortcut.user.id],
     })
 
     const { permalink } = await client.chat.getPermalink({ channel, message_ts })

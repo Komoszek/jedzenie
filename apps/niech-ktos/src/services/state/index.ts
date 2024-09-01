@@ -4,7 +4,7 @@ import { SplitwiseMatch } from "../splitwise"
 import defaultState from "./defaultState.json"
 
 type StateSchema = {
-    splitwiseIdMap: Record<string, number>
+    splitwiseIdMap: Record<string, number | undefined>
 }
 
 export class State {
@@ -43,7 +43,7 @@ export class State {
         return this.value.splitwiseIdMap[slackUserId]
     }
 
-    async matchManySplitwiseUserIds(matches: SplitwiseMatch[]) {
+    async matchSplitwiseUserIds(matches: SplitwiseMatch[]) {
         matches.forEach(({ slackId, splitwiseId }) => {
             this.value.splitwiseIdMap[slackId] = splitwiseId
         })

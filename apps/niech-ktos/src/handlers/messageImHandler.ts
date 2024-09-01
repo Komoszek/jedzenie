@@ -1,5 +1,5 @@
+import { getFormattedRankingOfConversation } from "../utils/getFormattedRankingOfConversation"
 import { sample } from "../utils/sample"
-import { getFormattedRankingOfConversation } from "./appMentionHandler"
 import { Dependencies, MessageArgs } from "./types"
 
 export async function messageImHandler({ event, say, client }: MessageArgs, { state }: Dependencies) {

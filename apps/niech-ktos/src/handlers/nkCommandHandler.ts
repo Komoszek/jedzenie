@@ -1,5 +1,5 @@
 import { ensureDefined } from "@leancodepl/utils"
-import { MatchSlackInfo, getSplitwiseGroup, getUsersSplitwiseMatches } from "../services/splitwise"
+import { MatchSlackInfo, splitwiseService } from "../services/splitwise"
 import { formatRankingPlace } from "../utils/formatRankingPlace"
 import { getGroupMemberBalance } from "../utils/getMemberBalancec"
 import { sample } from "../utils/sample"
@@ -33,7 +33,7 @@ async function handleUsersRanking({ respond }: CommandArgs, { state }: Dependenc
 
     const {
         data: { group },
-    } = await getSplitwiseGroup()
+    } = await splitwiseService.getGroup()
 
     const formattedRanking = group?.members
         ?.filter(({ id }) => splitwiseIdMap.has(ensureDefined(id)))
@@ -84,7 +84,7 @@ async function handleUsersMatch(
         usersToMatch = [{ slackId, email }]
     }
 
-    const matches = await getUsersSplitwiseMatches(usersToMatch)
+    const matches = await splitwiseService.getUsersSplitwiseMatches(usersToMatch)
 
     if (matches.length === 0) {
         await respond(
@@ -96,7 +96,7 @@ async function handleUsersMatch(
         return
     }
 
-    await state.matchManySplitwiseUserIds(matches)
+    await state.matchSplitwiseUserIds(matches)
 
     await respond("Zapisano zmiany")
 }

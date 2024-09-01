@@ -20,10 +20,12 @@ oauth_config:
     scopes:
         bot:
             - app_mentions:read
+            - channels:read
             - channels:history
             - chat:write
             - commands
             - groups:history
+            - groups:read
             - reactions:read
             - users:read
             - users:read.email
@@ -33,6 +35,7 @@ settings:
     event_subscriptions:
         bot_events:
             - app_mention
+            - member_joined_channel
             - message.im
     interactivity:
         is_enabled: true
