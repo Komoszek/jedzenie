@@ -1,3 +1,4 @@
+import { cancelThreadButtonHandler } from "./cancelThreadButtonHandler"
 import { editJedzenieThreadViewHandler } from "./editJedzenieThreadViewHandler"
 import { editThreadButtonHandler } from "./editThreadButtonHandler"
 import { jedzenieCommandHandler } from "./jedzenieCommandHandler"
@@ -11,6 +12,7 @@ export function handlers(dependencies: Dependencies) {
         tawernaCommandHandler: (args: CommandArgs) => tawernaCommandHandler(args, dependencies),
         showTawernaLunchMenuButtonHandler: (args: ActionArgs) => showTawernaLunchMenuButtonHandler(args, dependencies),
         editThreadButtonHandler,
+        cancelThreadButtonHandler,
         jedzenieCommandHandler: (args: CommandArgs) => jedzenieCommandHandler(args, dependencies),
         startJedzenieThreadViewHandler: (args: ViewArgs) => startJedzenieThreadViewHandler(args, dependencies),
         editJedzenieThreadViewHandler: (args: ViewArgs) => editJedzenieThreadViewHandler(args, dependencies),

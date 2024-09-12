@@ -1,7 +1,9 @@
 import { App } from "@slack/bolt"
 import { ensureDefined } from "@leancodepl/utils"
 import { handlers } from "./handlers"
-import { editJedzenieThreadViewId } from "./handlers/editThreadButtonHandler"
+import { cancelJedzenieThreadViewHandler } from "./handlers/cancelJedzenieThreadViewHandler"
+import { cancelJedzenieThreadViewId } from "./handlers/cancelThreadButtonHandler"
+import { cancelThreadButtonId, editJedzenieThreadViewId } from "./handlers/editThreadButtonHandler"
 import { startJedzenieThreadViewId } from "./handlers/jedzenieCommandHandler"
 import { RestaurantsService } from "./services/RestaurantsService"
 import { TawernaMenuService } from "./services/TawernaMenuService"
@@ -18,6 +20,7 @@ const app = new App({
 const {
     tawernaCommandHandler,
     editThreadButtonHandler,
+    cancelThreadButtonHandler,
     showTawernaLunchMenuButtonHandler,
     jedzenieCommandHandler,
     startJedzenieThreadViewHandler,
@@ -34,7 +37,9 @@ app.command("/tawerna", tawernaCommandHandler)
 app.command("/jedzenie", jedzenieCommandHandler)
 app.view(startJedzenieThreadViewId, startJedzenieThreadViewHandler)
 app.view(editJedzenieThreadViewId, editJedzenieThreadViewHandler)
+app.view(cancelJedzenieThreadViewId, cancelJedzenieThreadViewHandler)
 app.action(editThreadButtonId, editThreadButtonHandler)
+app.action(cancelThreadButtonId, cancelThreadButtonHandler)
 app.action(showTawernaLunchMenuButtonId, showTawernaLunchMenuButtonHandler)
 
 await app.start()

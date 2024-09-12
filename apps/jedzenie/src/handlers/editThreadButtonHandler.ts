@@ -1,4 +1,4 @@
-import { RichTextBlock, View } from "@slack/bolt"
+import { ActionsBlock, RichTextBlock, View } from "@slack/bolt"
 import { ensureDefined } from "@leancodepl/utils"
 import { getJedzenieDialogBlocks } from "../utils/getJedzenieDialogBlocks"
 import { JedzenieThreadBlocks } from "../utils/getJedzenieThreadBlock"
@@ -11,12 +11,15 @@ export async function editThreadButtonHandler({ ack, client, body, payload }: Ac
         return
     }
 
-    const { creatorId, scheduledMessageId } = JSON.parse(payload.value)
+    const { creatorId, scheduledMessageId = "" } = (payload.value ? JSON.parse(payload.value) : {}) as Record<
+        string,
+        string | undefined
+    >
 
     if (body.user.id !== creatorId) {
         await client.views.open({
             trigger_id: body.trigger_id,
-            view: getUserUnathorizedView(body.user.id),
+            view: getUserUnauthorizedView(body.user.id),
         })
         return
     }
@@ -28,16 +31,21 @@ export async function editThreadButtonHandler({ ack, client, body, payload }: Ac
 
     const initialTime = blocks[1].text.text.match(/^\*(\d+:\d+)\*/)?.[1].padStart(5, "0")
 
+    const updateMetadata = {
+        channel: ensureDefined(body.channel).id,
+        ts: body.message.ts,
+        scheduledMessageId,
+    }
+
     await client.views.open({
         trigger_id: body.trigger_id,
         view: {
-            private_metadata: JSON.stringify({
-                channel: ensureDefined(body.channel).id,
-                ts: body.message.ts,
-                scheduledMessageId,
-            }),
+            private_metadata: JSON.stringify(updateMetadata),
             type: "modal",
-            blocks: getJedzenieDialogBlocks({ initialTime, initialDestination }),
+            blocks: [
+                ...getJedzenieDialogBlocks({ initialTime, initialDestination }),
+                getCancelButtonBlock(updateMetadata),
+            ],
             title: {
                 type: "plain_text",
                 text: "Edytuj wątek",
@@ -55,7 +63,7 @@ export async function editThreadButtonHandler({ ack, client, body, payload }: Ac
     })
 }
 
-function getUserUnathorizedView(userId: string): View {
+function getUserUnauthorizedView(userId: string): View {
     return {
         type: "modal",
         blocks: [
@@ -81,7 +89,7 @@ function getUserUnathorizedView(userId: string): View {
 
 export const editJedzenieThreadViewId = "edit-jedzenie-thread-view"
 
-// It doesn't really work because it treats mrkdwn as plain_text but it is good enough for now
+// TODO: It doesn't really work because it treats mrkdwn as plain_text but it is good enough for now
 function getRichTextFromMrkdwn(mrkdwn: string): RichTextBlock {
     return {
         type: "rich_text",
@@ -93,3 +101,24 @@ function getRichTextFromMrkdwn(mrkdwn: string): RichTextBlock {
         ],
     }
 }
+
+function getCancelButtonBlock(props: { scheduledMessageId: string; channel: string; ts: string }): ActionsBlock {
+    return {
+        type: "actions",
+        elements: [
+            {
+                type: "button",
+                text: {
+                    type: "plain_text",
+                    text: "Anuluj wątek",
+                    emoji: true,
+                },
+                style: "danger",
+                value: JSON.stringify(props),
+                action_id: cancelThreadButtonId,
+            },
+        ],
+    }
+}
+
+export const cancelThreadButtonId = "cancel_thread"
