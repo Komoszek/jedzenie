@@ -38,10 +38,12 @@ export async function memberJoinedWatchedChannelHandler(
         email: ensureDefined(user.profile.email, "User email is missing"),
     })
 
-    if (!data.success || data.errors || !data.user?.id) {
+    if (!data.success) {
         console.error("Failed to invite user to Splitwise", data.errors)
         return
     }
 
-    state.matchSplitwiseUserIds([{ slackId: userId, splitwiseId: data.user.id }])
+    if (data.user?.id) {
+        state.matchSplitwiseUserIds([{ slackId: userId, splitwiseId: data.user.id }])
+    }
 }
