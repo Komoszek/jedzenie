@@ -1,5 +1,6 @@
 import { getFormattedRankingOfConversation } from "../utils/getFormattedRankingOfConversation"
 import { sample } from "../utils/sample"
+import { getEmptyRankingResponse } from "./nkCommandHandler"
 import { Dependencies, MessageArgs } from "./types"
 
 export async function messageImHandler({ event, say, client }: MessageArgs, { state }: Dependencies) {
@@ -23,7 +24,7 @@ export async function messageImHandler({ event, say, client }: MessageArgs, { st
     await client.chat.postMessage({
         channel: nk_channel,
         thread_ts: nk_ts,
-        text: formattedRanking,
+        text: formattedRanking || getEmptyRankingResponse(),
     })
 }
 

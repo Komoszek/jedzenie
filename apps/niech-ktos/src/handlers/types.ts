@@ -6,7 +6,6 @@ import {
     SlackShortcut,
     SlackShortcutMiddlewareArgs,
 } from "@slack/bolt"
-import { StringIndexed } from "@slack/bolt/dist/types/helpers"
 import { State } from "../services/state"
 
 export type AppMentionArgs = AllMiddlewareArgs & SlackEventMiddlewareArgs<"app_mention">
@@ -16,4 +15,4 @@ export type MemberJoinedChannelArgs = AllMiddlewareArgs & SlackEventMiddlewareAr
 export type ShortcutArgs = AllMiddlewareArgs & SlackShortcutMiddlewareArgs<SlackShortcut>
 
 export type Dependencies = { state: State; watchedChannelIds: string[] }
-export type WebClient = App<StringIndexed>["client"]
+export type WebClient = App["client"]

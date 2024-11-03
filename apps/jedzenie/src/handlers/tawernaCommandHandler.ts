@@ -1,7 +1,7 @@
-import { SectionBlock } from "@slack/bolt"
 import { TawernaMenuService } from "../services/TawernaMenuService"
 import { MenuItem } from "../types/MenuItem"
-import { CommandArgs, Dependencies, WebClient } from "./types"
+import { CommandArgs, Dependencies } from "./types"
+import type { SectionBlock } from "@slack/types"
 
 export async function tawernaCommandHandler(
     { client, ack, command: { channel_id, user_id, text } }: CommandArgs,
@@ -9,25 +9,19 @@ export async function tawernaCommandHandler(
 ) {
     await ack()
 
-    let args: Parameters<WebClient["chat"]["postEphemeral"]>[0] = {
+    await client.chat.postEphemeral({
         channel: channel_id,
         user: user_id,
-    }
-
-    if (text.trim() === "menu") {
-        const menu = await tawernaMenuService.getMenu()
-
-        args.username = "Tawerna Grecka - Menu"
-        args.blocks = menu.map(mapMenuItemToSectionBlock)
-    } else {
-        args = {
-            ...args,
-            blocks: await getTawernaLunchMenuMessageBlocks(tawernaMenuService),
-            username: "Tawerna Grecka - Lunch Menu",
-        }
-    }
-
-    await client.chat.postEphemeral(args)
+        ...(text.trim() === "menu"
+            ? {
+                  username: "Tawerna Grecka - Menu",
+                  blocks: (await tawernaMenuService.getMenu()).map(mapMenuItemToSectionBlock),
+              }
+            : {
+                  username: "Tawerna Grecka - Lunch Menu",
+                  blocks: await getTawernaLunchMenuMessageBlocks(tawernaMenuService),
+              }),
+    })
 }
 
 export async function getTawernaLunchMenuMessageBlocks(tawernaMenuService: TawernaMenuService) {

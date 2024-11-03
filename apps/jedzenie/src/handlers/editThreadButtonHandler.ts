@@ -1,8 +1,8 @@
-import { ActionsBlock, RichTextBlock, View } from "@slack/bolt"
 import { ensureDefined } from "@leancodepl/utils"
 import { getJedzenieDialogBlocks } from "../utils/getJedzenieDialogBlocks"
 import { JedzenieThreadBlocks } from "../utils/getJedzenieThreadBlock"
 import { ActionArgs } from "./types"
+import type { ActionsBlock, RichTextBlock, View } from "@slack/types"
 
 export async function editThreadButtonHandler({ ack, client, body, payload }: ActionArgs) {
     await ack()

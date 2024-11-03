@@ -1,4 +1,4 @@
-import { KnownBlock, RichTextElement } from "@slack/bolt"
+import type { KnownBlock, RichTextElement } from "@slack/types"
 
 export function knownBlockToText(block: KnownBlock): string {
     if (block.type === "rich_text") {

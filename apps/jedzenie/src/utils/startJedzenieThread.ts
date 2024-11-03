@@ -1,10 +1,10 @@
-import { KnownBlock } from "@slack/bolt"
 import { ensureDefined } from "@leancodepl/utils"
 import { WebClient } from "../handlers/types"
 import { RestaurantsService } from "../services/RestaurantsService"
 import { DestinationBlock, attachEditThreadButton, getJedzenieThreadBlocks } from "./getJedzenieThreadBlock"
 import { Time } from "./getTimeFromString"
 import { tryScheduleNiechktosMessage } from "./tryScheduleNiechktosMessage"
+import type { KnownBlock } from "@slack/types"
 
 export async function startJedzenieThread({
     creatorId,

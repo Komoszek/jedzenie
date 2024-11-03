@@ -1,7 +1,7 @@
-import { ActionsBlock, Button, ContextBlock, RichTextBlock, SectionBlock } from "@slack/bolt"
 import { RestaurantsService } from "../services/RestaurantsService"
 import { Time } from "./getTimeFromString"
 import { knownBlockToText } from "./knownBlockToText"
+import type { ActionsBlock, Button, ContextBlock, RichTextBlock, SectionBlock } from "@slack/types"
 
 export type DestinationBlock = RichTextBlock | SectionBlock
 

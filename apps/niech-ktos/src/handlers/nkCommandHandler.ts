@@ -55,7 +55,7 @@ async function handleUsersMatch(
     let usersToMatch: MatchSlackInfo[] | undefined
 
     if (normalizedText === "sync") {
-        const { members } = await client.users.list()
+        const { members } = await client.users.list({})
 
         usersToMatch =
             members

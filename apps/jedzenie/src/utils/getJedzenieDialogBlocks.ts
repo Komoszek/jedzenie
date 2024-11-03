@@ -1,4 +1,4 @@
-import { KnownBlock, RichTextBlock } from "@slack/bolt"
+import type { KnownBlock, RichTextBlock } from "@slack/types"
 
 export function getJedzenieDialogBlocks(
     { initialTime, initialDestination }: { initialTime?: string; initialDestination?: RichTextBlock } = {

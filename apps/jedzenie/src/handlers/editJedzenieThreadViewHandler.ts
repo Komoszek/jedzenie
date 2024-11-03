@@ -1,4 +1,3 @@
-import { KnownBlock, ViewStateValue } from "@slack/bolt"
 import dayjs from "dayjs"
 import timezone from "dayjs/plugin/timezone"
 import utc from "dayjs/plugin/utc"
@@ -14,6 +13,8 @@ import { DestinationBlock, attachEditThreadButton, getJedzenieThreadBlocks } fro
 import { Time, getTimeFromString } from "../utils/getTimeFromString"
 import { tryScheduleNiechktosMessage } from "../utils/tryScheduleNiechktosMessage"
 import { Dependencies, ViewArgs, WebClient } from "./types"
+import type { ViewStateValue } from "@slack/bolt"
+import type { KnownBlock } from "@slack/types"
 
 dayjs.extend(utc)
 dayjs.extend(timezone)
