@@ -18,14 +18,22 @@ dayjs.extend(timezone)
 
 export async function startJedzenieThreadViewHandler(
     { ack, view, client, body }: ViewArgs,
-    { niechKtosBotId, restaurantsService }: Dependencies,
+    { niechKtosBotId, restaurantsService, intlService }: Dependencies,
 ) {
     const { timezone, selected_time } = view.state.values[departureBlockId][departureTimeId] as {
         timezone: string
     } & ViewStateValue
 
     if (!selected_time) {
-        await ack({ response_action: "errors", errors: { [departureBlockId]: "Godzina odjazdu jest wymagana" } })
+        await ack({
+            response_action: "errors",
+            errors: {
+                [departureBlockId]: intlService.intl.formatMessage({
+                    defaultMessage: "Godzina odjazdu jest wymagana",
+                    id: "jedzenieThreadHandler.error.departureTimeIsRequired",
+                }),
+            },
+        })
         return
     }
 

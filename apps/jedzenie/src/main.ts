@@ -5,6 +5,7 @@ import { cancelJedzenieThreadViewHandler } from "./handlers/cancelJedzenieThread
 import { cancelJedzenieThreadViewId } from "./handlers/cancelThreadButtonHandler"
 import { cancelThreadButtonId, editJedzenieThreadViewId } from "./handlers/editThreadButtonHandler"
 import { startJedzenieThreadViewId } from "./handlers/jedzenieCommandHandler"
+import { IntlService } from "./services/IntlService"
 import { RestaurantsService } from "./services/RestaurantsService"
 import { TawernaMenuService } from "./services/TawernaMenuService"
 import { editThreadButtonId, showTawernaLunchMenuButtonId } from "./utils/getJedzenieThreadBlock"
@@ -31,6 +32,7 @@ const {
     restaurantsService: new RestaurantsService(
         ensureDefined(process.env.RESTAURANTS_PATH, "RESTAURANTS_PATH not defined"),
     ),
+    intlService: new IntlService(),
 })
 
 app.command("/tawerna", tawernaCommandHandler)

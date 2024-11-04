@@ -2,6 +2,7 @@ import dayjs from "dayjs"
 import timezone from "dayjs/plugin/timezone"
 import utc from "dayjs/plugin/utc"
 import { ensureDefined } from "@leancodepl/utils"
+import { IntlService } from "../services/IntlService"
 import { RestaurantsService } from "../services/RestaurantsService"
 import {
     departureBlockId,
@@ -21,7 +22,7 @@ dayjs.extend(timezone)
 
 export async function editJedzenieThreadViewHandler(
     { ack, view, client, body }: ViewArgs,
-    { niechKtosBotId, restaurantsService }: Dependencies,
+    { niechKtosBotId, restaurantsService, intlService }: Dependencies,
 ) {
     const { timezone, selected_time } = view.state.values[departureBlockId][departureTimeId] as {
         timezone: string
@@ -31,7 +32,12 @@ export async function editJedzenieThreadViewHandler(
         await ack({
             view: view.id,
             response_action: "errors",
-            errors: { [departureBlockId]: "Godzina odjazdu jest wymagana" },
+            errors: {
+                [departureBlockId]: intlService.intl.formatMessage({
+                    defaultMessage: "Godzina odjazdu jest wymagana",
+                    id: "jedzenieThreadHandler.error.departureTimeIsRequired",
+                }),
+            },
         })
         return
     }
@@ -50,6 +56,7 @@ export async function editJedzenieThreadViewHandler(
         scheduledMessageId,
         ack,
         restaurantsService,
+        intlService,
     })
 }
 
@@ -65,6 +72,7 @@ async function editJedzenieThread({
     scheduledMessageId,
     ack,
     restaurantsService,
+    intlService,
 }: {
     ts: string
     creatorId: string
@@ -77,6 +85,7 @@ async function editJedzenieThread({
     scheduledMessageId: string
     ack: ViewArgs["ack"]
     restaurantsService: RestaurantsService
+    intlService: IntlService
 }) {
     try {
         await client.chat.deleteScheduledMessage({
@@ -87,7 +96,12 @@ async function editJedzenieThread({
         console.error(e)
         await ack({
             response_action: "errors",
-            errors: { [departureBlockId]: "Sorki memorki, nie da się już zmienić godziny odjazdu." },
+            errors: {
+                [departureBlockId]: intlService.intl.formatMessage({
+                    defaultMessage: "Sorki memorki, nie da się już zmienić godziny odjazdu.",
+                    id: "jedzenieHandler.error.departureTimeCanNoLongerBeChanged",
+                }),
+            },
         })
         return
     }

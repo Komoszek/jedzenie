@@ -5,7 +5,7 @@ import type { View } from "@slack/types"
 
 export async function showTawernaLunchMenuButtonHandler(
     { ack, client, body }: ActionArgs,
-    { tawernaMenuService }: Dependencies,
+    { tawernaMenuService, intlService }: Dependencies,
 ) {
     await ack()
 
@@ -17,11 +17,17 @@ export async function showTawernaLunchMenuButtonHandler(
         type: "modal",
         title: {
             type: "plain_text",
-            text: "Tawerna - Lunch Menu",
+            text: intlService.intl.formatMessage({
+                defaultMessage: "Tawerna - Lunch Menu",
+                id: "showTawernaLunchMenuHandler.view.title",
+            }),
         },
         close: {
             type: "plain_text",
-            text: "Fajno",
+            text: intlService.intl.formatMessage({
+                defaultMessage: "Fajno",
+                id: "showTawernaLunchMenuHandler.view.close",
+            }),
         },
     } as const satisfies Partial<View>
 
@@ -33,7 +39,10 @@ export async function showTawernaLunchMenuButtonHandler(
                 {
                     type: "image",
                     image_url: "https://i.imgur.com/JXZHwU5.gif",
-                    alt_text: "Lołding",
+                    alt_text: intlService.intl.formatMessage({
+                        defaultMessage: "Lołding",
+                        id: "showTawernaLunchMenuHandler.view.loader.alt",
+                    }),
                 },
             ],
         },

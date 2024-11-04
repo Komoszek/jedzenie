@@ -5,7 +5,7 @@ import type { SectionBlock } from "@slack/types"
 
 export async function tawernaCommandHandler(
     { client, ack, command: { channel_id, user_id, text } }: CommandArgs,
-    { tawernaMenuService }: Dependencies,
+    { tawernaMenuService, intlService }: Dependencies,
 ) {
     await ack()
 
@@ -14,11 +14,17 @@ export async function tawernaCommandHandler(
         user: user_id,
         ...(text.trim() === "menu"
             ? {
-                  username: "Tawerna Grecka - Menu",
+                  username: intlService.intl.formatMessage({
+                      defaultMessage: "Tawerna Grecka - Menu",
+                      id: "tawernaCommandHandler.menu.username",
+                  }),
                   blocks: (await tawernaMenuService.getMenu()).map(mapMenuItemToSectionBlock),
               }
             : {
-                  username: "Tawerna Grecka - Lunch Menu",
+                  username: intlService.intl.formatMessage({
+                      defaultMessage: "Tawerna Grecka - Lunch Menu",
+                      id: "tawernaCommandHandler.lunchMenu.username",
+                  }),
                   blocks: await getTawernaLunchMenuMessageBlocks(tawernaMenuService),
               }),
     })

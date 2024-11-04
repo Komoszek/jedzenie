@@ -1,6 +1,9 @@
-import { ActionArgs } from "./types"
+import { ActionArgs, Dependencies } from "./types"
 
-export async function cancelThreadButtonHandler({ ack, client, body, payload }: ActionArgs) {
+export async function cancelThreadButtonHandler(
+    { ack, client, body, payload }: ActionArgs,
+    { intlService }: Dependencies,
+) {
     await ack()
 
     if (body.type !== "block_actions" || payload.type !== "button") {
@@ -15,17 +18,26 @@ export async function cancelThreadButtonHandler({ ack, client, body, payload }: 
                 blocks: [],
                 title: {
                     type: "plain_text",
-                    text: "Anuluj wątek",
+                    text: intlService.intl.formatMessage({
+                        defaultMessage: "Anuluj wątek",
+                        id: "cancelThreadView.title",
+                    }),
                 },
                 close: {
                     type: "plain_text",
-                    text: "Wróć do edycji",
+                    text: intlService.intl.formatMessage({
+                        defaultMessage: "Wróć do edycji",
+                        id: "cancelThreadView.close",
+                    }),
                 },
                 private_metadata: payload.value,
                 callback_id: cancelJedzenieThreadViewId,
                 submit: {
                     type: "plain_text",
-                    text: "Usuń to",
+                    text: intlService.intl.formatMessage({
+                        defaultMessage: "Usuń to",
+                        id: "cancelThreadView.submit",
+                    }),
                 },
             },
         })

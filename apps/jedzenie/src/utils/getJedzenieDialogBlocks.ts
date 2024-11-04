@@ -1,10 +1,15 @@
+import { IntlService } from "../services/IntlService"
 import type { KnownBlock, RichTextBlock } from "@slack/types"
 
-export function getJedzenieDialogBlocks(
-    { initialTime, initialDestination }: { initialTime?: string; initialDestination?: RichTextBlock } = {
-        initialTime: "12:00",
-    },
-): KnownBlock[] {
+export function getJedzenieDialogBlocks({
+    initialTime = "12:00",
+    initialDestination,
+    intlService,
+}: {
+    initialTime?: string
+    initialDestination?: RichTextBlock
+    intlService: IntlService
+}): KnownBlock[] {
     return [
         {
             block_id: destinationBlockId,
@@ -16,7 +21,7 @@ export function getJedzenieDialogBlocks(
             },
             label: {
                 type: "plain_text",
-                text: "Opis",
+                text: intlService.intl.formatMessage({ defaultMessage: "Opis", id: "jedzenieTheadView.destination" }),
                 emoji: true,
             },
         },
@@ -28,7 +33,10 @@ export function getJedzenieDialogBlocks(
                 type: "timepicker",
                 placeholder: {
                     type: "plain_text",
-                    text: "Wybierz godzinę odjazdu",
+                    text: intlService.intl.formatMessage({
+                        defaultMessage: "Wybierz godzinę odjazdu",
+                        id: "jedzenieTheadView.departureTime.placeholder",
+                    }),
                     emoji: true,
                 },
                 action_id: departureTimeId,
@@ -37,7 +45,10 @@ export function getJedzenieDialogBlocks(
             },
             label: {
                 type: "plain_text",
-                text: "Godzina odjazdu",
+                text: intlService.intl.formatMessage({
+                    defaultMessage: "Godzina odjazdu",
+                    id: "jedzenieTheadView.departureTime",
+                }),
                 emoji: true,
             },
         },
