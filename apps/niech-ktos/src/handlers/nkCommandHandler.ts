@@ -1,3 +1,4 @@
+import { defineMessages } from "@formatjs/intl"
 import { ensureDefined } from "@leancodepl/utils"
 import { MatchSlackInfo, splitwiseService } from "../services/splitwise"
 import { formatRankingPlace } from "../utils/formatRankingPlace"
@@ -21,14 +22,25 @@ export async function nkCommandHandler(args: CommandArgs, dependencies: Dependen
 }
 
 export function getEmptyRankingResponse() {
-    return sample(["Nie ma tu nic ciekawego", "Nic tu nie ma"])
+    return sample(Object.values(emptyRankingMessages))
 }
 
-async function handleUsersRanking({ respond }: CommandArgs, { state }: Dependencies) {
+const emptyRankingMessages = defineMessages({
+    empty_one: {
+        defaultMessage: "Nie ma tu nic ciekawego",
+        id: "ranking.empty_one",
+    },
+    empty_two: {
+        defaultMessage: "Nic tu nie ma",
+        id: "ranking.empty_two",
+    },
+})
+
+async function handleUsersRanking({ respond }: CommandArgs, { state, intlService }: Dependencies) {
     const splitwiseIdMap = state.getSpltwiseIdToSlackIdMap()
 
     if (splitwiseIdMap.size === 0) {
-        return await respond(getEmptyRankingResponse())
+        return await respond(intlService.intl.formatMessage(getEmptyRankingResponse()))
     }
 
     const {
@@ -42,19 +54,21 @@ async function handleUsersRanking({ respond }: CommandArgs, { state }: Dependenc
             slackId: splitwiseIdMap.get(ensureDefined(member.id)),
         }))
         .sort((a, b) => a.balance - b.balance)
-        .map(formatRankingPlace)
+        .map((balance, index) => formatRankingPlace(balance, index + 1, intlService))
         .join("\n")
 
-    await respond(formattedRanking || getEmptyRankingResponse())
+    await respond(formattedRanking || intlService.intl.formatMessage(getEmptyRankingResponse()))
 }
 
 async function handleUsersMatch(
     { respond, normalizedText, client }: { normalizedText: string } & CommandArgs,
-    { state }: Dependencies,
+    { state, intlService }: Dependencies,
 ) {
     let usersToMatch: MatchSlackInfo[] | undefined
 
-    if (normalizedText === "sync") {
+    const isSync = normalizedText === "sync"
+
+    if (isSync) {
         const { members } = await client.users.list({})
 
         usersToMatch =
@@ -77,7 +91,12 @@ async function handleUsersMatch(
         )
 
         if (!slackId || !email) {
-            await respond("Niepoprawna komenda. Przykład użycia: /nk @user e-mail_ze_Splitwise'a")
+            await respond(
+                intlService.intl.formatMessage({
+                    defaultMessage: "Niepoprawna komenda. Przykład użycia: /nk @user e-mail_ze_Splitwise'a",
+                    id: "nkCommand.error.invalidParams",
+                }),
+            )
             return
         }
 
@@ -86,11 +105,12 @@ async function handleUsersMatch(
 
     const matches = await splitwiseService.getUsersSplitwiseMatches(usersToMatch)
 
-    if (matches.length === 0) {
+    if (!isSync && matches.length === 0) {
         await respond(
-            usersToMatch.length === 1
-                ? "Nie znaleziono takiego e-maila na Splitwise'ie"
-                : "Nie znaleziono żadnego z podanych użytkowników na Splitwise'ie",
+            intlService.intl.formatMessage({
+                defaultMessage: "Nie znaleziono takiego e-maila na Splitwise'ie",
+                id: "usersMatch.error.one",
+            }),
         )
 
         return
@@ -98,5 +118,5 @@ async function handleUsersMatch(
 
     await state.matchSplitwiseUserIds(matches)
 
-    await respond("Zapisano zmiany")
+    await respond(intlService.intl.formatMessage({ defaultMessage: "Zapisano zmiany", id: "usersMatch.success" }))
 }

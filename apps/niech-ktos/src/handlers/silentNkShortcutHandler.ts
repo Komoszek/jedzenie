@@ -2,7 +2,10 @@ import { getFormattedRankingOfConversation } from "../utils/getFormattedRankingO
 import { getEmptyRankingResponse } from "./nkCommandHandler"
 import { Dependencies, ShortcutArgs } from "./types"
 
-export async function silentNkShortcutHandler({ ack, client, shortcut }: ShortcutArgs, { state }: Dependencies) {
+export async function silentNkShortcutHandler(
+    { ack, client, shortcut }: ShortcutArgs,
+    { state, intlService }: Dependencies,
+) {
     await ack()
 
     if (shortcut.type !== "message_action") {
@@ -19,6 +22,7 @@ export async function silentNkShortcutHandler({ ack, client, shortcut }: Shortcu
         client,
         state,
         additionalParticipants: [shortcut.user.id],
+        intlService,
     })
 
     const { permalink } = await client.chat.getPermalink({ channel, message_ts })
@@ -32,17 +36,19 @@ export async function silentNkShortcutHandler({ ack, client, shortcut }: Shortcu
                     type: "section",
                     text: {
                         type: "mrkdwn",
-                        text: [permalink, formattedRanking ?? getEmptyRankingResponse()].filter(Boolean).join("\n\n"),
+                        text: [permalink, formattedRanking ?? intlService.intl.formatMessage(getEmptyRankingResponse())]
+                            .filter(Boolean)
+                            .join("\n\n"),
                     },
                 },
             ],
             title: {
                 type: "plain_text",
-                text: "Niech ktoś",
+                text: intlService.intl.formatMessage({ defaultMessage: "Niech ktoś", id: "silentNkView.title" }),
             },
             close: {
                 type: "plain_text",
-                text: "Fajno",
+                text: intlService.intl.formatMessage({ defaultMessage: "Fajno", id: "silentNkView.close" }),
             },
         },
     })

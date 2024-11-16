@@ -45,7 +45,6 @@
       "dependsOn": ["build"],
       "command": "docker build -f apps/jedzenie/Dockerfile . -t jedzenie"
     },
-
     "i18n": {
       "executor": "nx:run-commands",
       "defaultConfiguration": "full",

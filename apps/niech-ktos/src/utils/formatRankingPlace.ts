@@ -1,16 +1,14 @@
+import { IntlService } from "../services/IntlService"
 import { formatUserMention } from "./formatUserMention"
 import { Balance } from "./types/Balance"
 
-export function formatRankingPlace({ name, balance, slackId }: Balance, index: number) {
-    const placeIcon = placeIcons[index]
-
-    const formattedName = slackId ? formatUserMention(slackId) : `_${name}_`
-
-    return `${placeIcon ?? `${index + 1}.`} ${formattedName} – ${balance.toFixed(2)} PLN`
+export function formatRankingPlace({ name, balance, slackId }: Balance, place: number, intlService: IntlService) {
+    return intlService.intl.formatMessage(
+        {
+            defaultMessage:
+                "{place, select, 1 {:first_place_medal:} 2 {:second_place_medal:} 3 {:third_place_medal:} other {{place}.}} {name} – {balance, number,:: currency/PLN}",
+            id: "rankingPlace",
+        },
+        { place, name: slackId ? formatUserMention(slackId) : `_${name}_`, balance },
+    )
 }
-
-const placeIcons = {
-    0: ":first_place_medal:",
-    1: ":second_place_medal:",
-    2: ":third_place_medal:",
-} as Record<number, string | undefined>
