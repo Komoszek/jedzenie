@@ -51,6 +51,7 @@ export async function jedzenieCommandHandler(
         niechKtosBotId,
         timezone: jedzenieTimezone,
         restaurantsService,
+        intlService,
     })
 }
 

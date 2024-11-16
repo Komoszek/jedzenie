@@ -50,5 +50,6 @@ export async function startJedzenieThreadViewHandler(
         client,
         niechKtosBotId,
         restaurantsService,
+        intlService,
     })
 }

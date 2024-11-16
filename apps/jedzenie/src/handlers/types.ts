@@ -4,6 +4,7 @@ import {
     SlackAction,
     SlackActionMiddlewareArgs,
     SlackCommandMiddlewareArgs,
+    SlackEventMiddlewareArgs,
     SlackViewAction,
     SlackViewMiddlewareArgs,
 } from "@slack/bolt"
@@ -14,6 +15,7 @@ import { TawernaMenuService } from "../services/TawernaMenuService"
 export type CommandArgs = AllMiddlewareArgs & SlackCommandMiddlewareArgs
 export type ViewArgs = AllMiddlewareArgs & SlackViewMiddlewareArgs<SlackViewAction>
 export type ActionArgs = AllMiddlewareArgs & SlackActionMiddlewareArgs<SlackAction>
+export type AppMentionArgs = AllMiddlewareArgs & SlackEventMiddlewareArgs<"app_mention">
 
 export type Dependencies = {
     niechKtosBotId: string

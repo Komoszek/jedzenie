@@ -26,6 +26,7 @@ const {
     jedzenieCommandHandler,
     startJedzenieThreadViewHandler,
     editJedzenieThreadViewHandler,
+    appMentionHandler,
 } = handlers({
     niechKtosBotId,
     tawernaMenuService: new TawernaMenuService(),
@@ -43,6 +44,7 @@ app.view(cancelJedzenieThreadViewId, cancelJedzenieThreadViewHandler)
 app.action(editThreadButtonId, editThreadButtonHandler)
 app.action(cancelThreadButtonId, cancelThreadButtonHandler)
 app.action(showTawernaLunchMenuButtonId, showTawernaLunchMenuButtonHandler)
+app.event("app_mention", appMentionHandler)
 
 await app.start()
 

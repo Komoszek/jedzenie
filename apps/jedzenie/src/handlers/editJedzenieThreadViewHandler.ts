@@ -108,7 +108,7 @@ async function editJedzenieThread({
 
     await ack()
 
-    const blocks = getJedzenieThreadBlocks({ destination, time, creatorId, restaurantsService })
+    const blocks = getJedzenieThreadBlocks({ destination, time, creatorId, restaurantsService, intlService })
 
     const response = await client.chat.update({
         channel,
@@ -141,6 +141,7 @@ async function editJedzenieThread({
             blocks,
             creatorId,
             scheduledMessageId: newScheduledMessageId,
+            intlService,
         }) as unknown as KnownBlock[],
     })
 }

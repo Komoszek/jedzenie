@@ -1,3 +1,4 @@
+import { IntlService } from "../services/IntlService"
 import { RestaurantsService } from "../services/RestaurantsService"
 import { Time } from "./getTimeFromString"
 import { knownBlockToText } from "./knownBlockToText"
@@ -10,14 +11,16 @@ export function getJedzenieThreadBlocks({
     time,
     creatorId,
     restaurantsService,
+    intlService,
 }: {
     destination: DestinationBlock
     time: Time
     creatorId: string
     restaurantsService: RestaurantsService
+    intlService: IntlService
 }) {
     const destinationText = knownBlockToText(destination).trim().toLowerCase().replace(/\s+/g, " ")
-    const restaurant = restaurantsService.recognizeRestaurant(destinationText)
+    const restaurant = restaurantsService.matchRestaurant(destinationText)
 
     return [
         destination,
@@ -35,7 +38,10 @@ export function getJedzenieThreadBlocks({
                               type: "button",
                               text: {
                                   type: "plain_text",
-                                  text: "Pokaż menu lunchowe",
+                                  text: intlService.intl.formatMessage({
+                                      defaultMessage: "Pokaż menu lunchowe",
+                                      id: "jedzenieThreadBlocks.showTawernaLunchMenu",
+                                  }),
                                   emoji: true,
                               },
                               action_id: showTawernaLunchMenuButtonId,
@@ -63,15 +69,17 @@ export function getJedzenieThreadBlocks({
 export function getEditThreadButtonBlock({
     creatorId,
     scheduledMessageId,
+    intlService,
 }: {
     creatorId: string
     scheduledMessageId: string
+    intlService: IntlService
 }): Button {
     return {
         type: "button",
         text: {
             type: "plain_text",
-            text: "Edytuj",
+            text: intlService.intl.formatMessage({ defaultMessage: "Edytuj", id: "jedzenieThreadBlocks.edit" }),
             emoji: true,
         },
         value: JSON.stringify({ creatorId, scheduledMessageId }),
@@ -83,14 +91,16 @@ export function attachEditThreadButton({
     blocks,
     creatorId,
     scheduledMessageId,
+    intlService,
 }: {
     blocks: JedzenieThreadBlocks
     creatorId: string
     scheduledMessageId: string
+    intlService: IntlService
 }) {
     const newBlocks = JSON.parse(JSON.stringify(blocks)) as JedzenieThreadBlocks
 
-    const editThreadButton = getEditThreadButtonBlock({ creatorId, scheduledMessageId })
+    const editThreadButton = getEditThreadButtonBlock({ creatorId, scheduledMessageId, intlService })
     const actions = newBlocks.find(
         block => block.type === "actions" && block.block_id === threadActionsBlockId,
     ) as ActionsBlock
