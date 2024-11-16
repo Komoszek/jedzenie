@@ -20,7 +20,15 @@ export class RestaurantsService {
     }
 
     matchRestaurant(text: string): Restaurant | undefined {
-        return this.restaurants.find(({ patterns }) => patterns.some(pattern => new RegExp(pattern).test(text)))
+        const normalizedText = text.toLowerCase().trim().replace(/\s+/g, " ")
+
+        return this.restaurants.find(({ patterns }) =>
+            patterns.some(pattern => new RegExp(pattern).test(normalizedText)),
+        )
+    }
+
+    getRestaurants(): Restaurant[] {
+        return this.restaurants
     }
 }
 
@@ -31,4 +39,4 @@ const restaurantSchema = z.object({
     links: z.array(z.string()),
 })
 
-type Restaurant = z.infer<typeof restaurantSchema>
+export type Restaurant = z.infer<typeof restaurantSchema>

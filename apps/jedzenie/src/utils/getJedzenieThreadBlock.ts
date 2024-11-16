@@ -19,8 +19,7 @@ export function getJedzenieThreadBlocks({
     restaurantsService: RestaurantsService
     intlService: IntlService
 }) {
-    const destinationText = knownBlockToText(destination).trim().toLowerCase().replace(/\s+/g, " ")
-    const restaurant = restaurantsService.matchRestaurant(destinationText)
+    const restaurant = restaurantsService.matchRestaurant(knownBlockToText(destination))
 
     return [
         destination,

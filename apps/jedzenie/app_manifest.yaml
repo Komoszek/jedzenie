@@ -14,6 +14,9 @@ features:
           description: Rozpocznij wątek jedzeniowy
           usage_hint: "[hh(:mm)] [opis]"
           should_escape: false
+        - command: /restauracje
+          description: Wyświetl listę znanych restauracji
+          should_escape: false
 oauth_config:
     scopes:
         bot:

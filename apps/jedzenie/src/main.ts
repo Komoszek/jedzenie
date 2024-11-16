@@ -27,6 +27,7 @@ const {
     startJedzenieThreadViewHandler,
     editJedzenieThreadViewHandler,
     appMentionHandler,
+    restauracjeCommandHandler,
 } = handlers({
     niechKtosBotId,
     tawernaMenuService: new TawernaMenuService(),
@@ -38,6 +39,7 @@ const {
 
 app.command("/tawerna", tawernaCommandHandler)
 app.command("/jedzenie", jedzenieCommandHandler)
+app.command("/restauracje", restauracjeCommandHandler)
 app.view(startJedzenieThreadViewId, startJedzenieThreadViewHandler)
 app.view(editJedzenieThreadViewId, editJedzenieThreadViewHandler)
 app.view(cancelJedzenieThreadViewId, cancelJedzenieThreadViewHandler)

@@ -3,6 +3,7 @@ import { cancelThreadButtonHandler } from "./cancelThreadButtonHandler"
 import { editJedzenieThreadViewHandler } from "./editJedzenieThreadViewHandler"
 import { editThreadButtonHandler } from "./editThreadButtonHandler"
 import { jedzenieCommandHandler } from "./jedzenieCommandHandler"
+import { restauracjeCommandHandler } from "./restauracjeCommandHandler"
 import { showTawernaLunchMenuButtonHandler } from "./showTawernaLunchMenuButtonHandler"
 import { startJedzenieThreadViewHandler } from "./startJedzenieThreadViewHandler"
 import { tawernaCommandHandler } from "./tawernaCommandHandler"
@@ -18,5 +19,6 @@ export function handlers(dependencies: Dependencies) {
         startJedzenieThreadViewHandler: (args: ViewArgs) => startJedzenieThreadViewHandler(args, dependencies),
         editJedzenieThreadViewHandler: (args: ViewArgs) => editJedzenieThreadViewHandler(args, dependencies),
         appMentionHandler: (args: AppMentionArgs) => appMentionHandler(args, dependencies),
+        restauracjeCommandHandler: (args: CommandArgs) => restauracjeCommandHandler(args, dependencies),
     }
 }
