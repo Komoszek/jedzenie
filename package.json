@@ -15,7 +15,8 @@
     "playwright": "1.46.1",
     "reflect-metadata": "^0.2.2",
     "rxjs": "7.8.1",
-    "tslib": "^2.7.0"
+    "tslib": "^2.7.0",
+    "zod": "3.23.8"
   },
   "devDependencies": {
     "@formatjs/cli": "6.3.6",

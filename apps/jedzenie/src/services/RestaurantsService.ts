@@ -1,4 +1,5 @@
 import { readFileSync } from "fs"
+import { z } from "zod"
 
 export class RestaurantsService {
     private restaurants: Restaurant[]
@@ -11,20 +12,23 @@ export class RestaurantsService {
         try {
             const state = readFileSync(restaurantsPath, "utf8")
 
-            return JSON.parse(state)
+            return z.array(restaurantSchema).parse(JSON.parse(state))
         } catch (e) {
             console.error(e)
             return []
         }
     }
 
-    recognizeRestaurant(text: string): Restaurant | undefined {
+    matchRestaurant(text: string): Restaurant | undefined {
         return this.restaurants.find(({ patterns }) => patterns.some(pattern => new RegExp(pattern).test(text)))
     }
 }
 
-type Restaurant = {
-    id: string
-    patterns: string[]
-    links: string[]
-}
+const restaurantSchema = z.object({
+    id: z.string(),
+    name: z.string(),
+    patterns: z.array(z.string()),
+    links: z.array(z.string()),
+})
+
+type Restaurant = z.infer<typeof restaurantSchema>
