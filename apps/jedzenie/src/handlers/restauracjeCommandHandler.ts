@@ -5,9 +5,32 @@ export async function restauracjeCommandHandler(
     { ack, client, command }: CommandArgs,
     { restaurantsService, intlService }: Dependencies,
 ) {
+    if (command.text) {
+        const restaurant = restaurantsService.matchRestaurant(command.text)
+
+        await ack(
+            restaurant
+                ? {
+                      blocks: getResaurantDetailsBlocks(restaurant, intlService),
+                  }
+                : intlService.intl.formatMessage({
+                      defaultMessage: "Nie znaleziono restauracji :sob:",
+                      id: "restauracjeCommandHandler.error.resaturantNotFound",
+                  }),
+        )
+
+        return
+    }
+
     await ack()
 
-    const restaurants = restaurantsService.getRestaurants().sort((a, b) => a.name.localeCompare(b.name))
+    let restaurants = restaurantsService.getRestaurants().sort((a, b) => a.name.localeCompare(b.name))
+
+    // TODO: add pagination to restaurants
+    if (restaurants.length > restaurantsPerPage) {
+        restaurants = restaurants.slice(0, restaurantsPerPage)
+        console.error(`Too many restaurants to display, only first ${restaurantsPerPage} will be shown`)
+    }
 
     await client.views.open({
         trigger_id: command.trigger_id,
@@ -33,3 +56,5 @@ export async function restauracjeCommandHandler(
         },
     })
 }
+
+const restaurantsPerPage = 40
