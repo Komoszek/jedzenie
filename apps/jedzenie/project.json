@@ -44,6 +44,27 @@
     "docker-build": {
       "dependsOn": ["build"],
       "command": "docker build -f apps/jedzenie/Dockerfile . -t jedzenie"
+    },
+    "i18n": {
+      "executor": "nx:run-commands",
+      "defaultConfiguration": "full",
+      "configurations": {
+        "extract": {
+          "cwd": "apps/jedzenie/",
+          "command": "npx formatjs extract 'src/**/*.ts' --ignore='**/*.d.ts' --out-file src/i18n/terms.json"
+        },
+        "compile": {
+          "cwd": "apps/jedzenie/",
+          "command": "formatjs compile src/i18n/terms.json --out-file src/i18n/pl.json && rm src/i18n/terms.json"
+        },
+        "full": {
+          "commands": [
+            "nx run jedzenie:i18n:extract",
+            "nx run jedzenie:i18n:compile"
+          ],
+          "parallel": false
+        }
+      }
     }
   }
 }

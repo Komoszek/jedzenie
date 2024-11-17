@@ -1,5 +1,6 @@
 import { ensureDefined } from "@leancodepl/utils"
 import { WebClient } from "../handlers/types"
+import { IntlService } from "../services/IntlService"
 import { splitwiseService } from "../services/splitwise"
 import { State } from "../services/state"
 import { formatRankingPlace } from "./formatRankingPlace"
@@ -13,12 +14,14 @@ export async function getFormattedRankingOfConversation({
     client,
     state,
     additionalParticipants = [],
+    intlService,
 }: {
     channel: string
     ts: string
     client: WebClient
     state: State
     additionalParticipants?: string[]
+    intlService: IntlService
 }) {
     const { messages = [] } = await client.conversations.replies({
         channel,
@@ -56,10 +59,10 @@ export async function getFormattedRankingOfConversation({
         ?.filter(({ id }) => splitwiseParticipantIdsSet.has(ensureDefined(id)))
         .map<Balance>(member => getGroupMemberBalance(member))
         .sort((a, b) => a.balance - b.balance)
-        .map(formatRankingPlace)
+        .map((balance, index) => formatRankingPlace(balance, index + 1, intlService))
         .join("\n")
 
-    const formattedUnconnectedParticipants = formatUnconnectedParticipants(unconnectedParticipantIds)
+    const formattedUnconnectedParticipants = formatUnconnectedParticipants(unconnectedParticipantIds, intlService)
 
     return [formattedRanking, formattedUnconnectedParticipants].filter(Boolean).join("\n\n")
 }

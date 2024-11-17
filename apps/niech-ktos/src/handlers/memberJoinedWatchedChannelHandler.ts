@@ -1,4 +1,3 @@
-import { ensureDefined } from "@leancodepl/utils"
 import { splitwiseService } from "../services/splitwise"
 import { Dependencies, MemberJoinedChannelArgs } from "./types"
 
@@ -32,10 +31,17 @@ export async function memberJoinedWatchedChannelHandler(
         return
     }
 
+    const email = user.profile.email
+
+    if (!email) {
+        console.error("User is missing an email")
+        return
+    }
+
     const { data } = await splitwiseService.inviteUserToGroup({
         firstName: user.profile.first_name ?? "",
         lastName: user.profile.last_name ?? "",
-        email: ensureDefined(user.profile.email, "User email is missing"),
+        email,
     })
 
     if (!data.success) {
@@ -43,7 +49,9 @@ export async function memberJoinedWatchedChannelHandler(
         return
     }
 
-    if (data.user?.id) {
-        state.matchSplitwiseUserIds([{ slackId: userId, splitwiseId: data.user.id }])
-    }
+    const matches = data.user?.id
+        ? [{ slackId: userId, splitwiseId: data.user.id }]
+        : await splitwiseService.getUsersSplitwiseMatches([{ slackId: userId, email }])
+
+    await state.matchSplitwiseUserIds(matches)
 }

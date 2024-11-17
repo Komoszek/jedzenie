@@ -1,0 +1,16 @@
+{
+  "emptyThread.image.atl": "So lonely",
+  "messageIm.error.unknown_four": "Że co?",
+  "messageIm.error.unknown_one": "Gargamel, co ty mi tu bajdurzysz?",
+  "messageIm.error.unknown_three": "Co mam robić? Hyhy",
+  "messageIm.error.unknown_two": "Coooo?",
+  "nkCommand.error.invalidParams": "Niepoprawna komenda. Przykład użycia: /nk @user e-mail_ze_Splitwise'a",
+  "ranking.empty_one": "Nie ma tu nic ciekawego",
+  "ranking.empty_two": "Nic tu nie ma",
+  "rankingPlace": "{place, select, 1 {:first_place_medal:} 2 {:second_place_medal:} 3 {:third_place_medal:} other {{place}.}} {name} – {balance, number,:: currency/PLN}",
+  "silentNkView.close": "Fajno",
+  "silentNkView.title": "Niech ktoś",
+  "unconnectedParticipants": "Następujące osoby nie znalazły się w rankingu (brak połączenia konta ze Splitwisem :pepe_police:): {users}",
+  "usersMatch.error.one": "Nie znaleziono takiego e-maila na Splitwise'ie",
+  "usersMatch.success": "Zapisano zmiany"
+}

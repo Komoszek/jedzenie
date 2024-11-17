@@ -1,10 +1,14 @@
-import { ActionsBlock, RichTextBlock, View } from "@slack/bolt"
 import { ensureDefined } from "@leancodepl/utils"
+import { IntlService } from "../services/IntlService"
 import { getJedzenieDialogBlocks } from "../utils/getJedzenieDialogBlocks"
 import { JedzenieThreadBlocks } from "../utils/getJedzenieThreadBlock"
-import { ActionArgs } from "./types"
+import { ActionArgs, Dependencies } from "./types"
+import type { ActionsBlock, RichTextBlock, View } from "@slack/types"
 
-export async function editThreadButtonHandler({ ack, client, body, payload }: ActionArgs) {
+export async function editThreadButtonHandler(
+    { ack, client, body, payload }: ActionArgs,
+    { intlService }: Dependencies,
+) {
     await ack()
 
     if (body.type !== "block_actions" || payload.type !== "button" || !body.message) {
@@ -19,7 +23,7 @@ export async function editThreadButtonHandler({ ack, client, body, payload }: Ac
     if (body.user.id !== creatorId) {
         await client.views.open({
             trigger_id: body.trigger_id,
-            view: getUserUnauthorizedView(body.user.id),
+            view: getUserUnauthorizedView(body.user.id, intlService),
         })
         return
     }
@@ -43,27 +47,30 @@ export async function editThreadButtonHandler({ ack, client, body, payload }: Ac
             private_metadata: JSON.stringify(updateMetadata),
             type: "modal",
             blocks: [
-                ...getJedzenieDialogBlocks({ initialTime, initialDestination }),
+                ...getJedzenieDialogBlocks({ initialTime, initialDestination, intlService }),
                 getCancelButtonBlock(updateMetadata),
             ],
             title: {
                 type: "plain_text",
-                text: "Edytuj wątek",
+                text: intlService.intl.formatMessage({
+                    defaultMessage: "Edytuj wątek",
+                    id: "editJedzenieThreadView.title",
+                }),
             },
             close: {
                 type: "plain_text",
-                text: "Anuluj",
+                text: intlService.intl.formatMessage({ defaultMessage: "Anuluj", id: "editJedzenieThreadView.close" }),
             },
             callback_id: editJedzenieThreadViewId,
             submit: {
                 type: "plain_text",
-                text: "Zapisz",
+                text: intlService.intl.formatMessage({ defaultMessage: "Zapisz", id: "editJedzenieThreadView.submit" }),
             },
         },
     })
 }
 
-function getUserUnauthorizedView(userId: string): View {
+function getUserUnauthorizedView(userId: string, intlService: IntlService): View {
     return {
         type: "modal",
         blocks: [
@@ -71,17 +78,30 @@ function getUserUnauthorizedView(userId: string): View {
                 type: "section",
                 text: {
                     type: "mrkdwn",
-                    text: `<@${userId}> is not in the sudoers file :pepe_police:.  This incident will be reported.`,
+                    text: intlService.intl.formatMessage(
+                        {
+                            defaultMessage:
+                                "<@{userId}> is not in the sudoers file :pepe_police:.  This incident will be reported.",
+                            id: "userUnathorizedView.body",
+                        },
+                        { userId },
+                    ),
                 },
             },
         ],
         title: {
             type: "plain_text",
-            text: "Brak uprawnień",
+            text: intlService.intl.formatMessage({
+                defaultMessage: "Brak uprawnień",
+                id: "userUnathorizedView.title",
+            }),
         },
         close: {
             type: "plain_text",
-            text: ":scream:",
+            text: intlService.intl.formatMessage({
+                defaultMessage: ":scream:",
+                id: "userUnathorizedView.close",
+            }),
             emoji: true,
         },
     }

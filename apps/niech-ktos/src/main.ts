@@ -2,6 +2,7 @@ import { App } from "@slack/bolt"
 import path from "path"
 import { ensureDefined } from "@leancodepl/utils"
 import { handlers } from "./handlers"
+import { IntlService } from "./services/IntlService"
 import { State } from "./services/state"
 
 const state = new State(path.resolve(process.cwd(), ensureDefined(process.env.STATE_PATH)))
@@ -18,6 +19,7 @@ const { nkCommandHandler, appMentionHandler, messageImHandler, silentNkShortcutH
     handlers({
         state,
         watchedChannelIds,
+        intlService: new IntlService(),
     })
 
 app.command("/nk", nkCommandHandler)

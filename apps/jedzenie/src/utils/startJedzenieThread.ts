@@ -1,10 +1,11 @@
-import { KnownBlock } from "@slack/bolt"
 import { ensureDefined } from "@leancodepl/utils"
 import { WebClient } from "../handlers/types"
+import { IntlService } from "../services/IntlService"
 import { RestaurantsService } from "../services/RestaurantsService"
 import { DestinationBlock, attachEditThreadButton, getJedzenieThreadBlocks } from "./getJedzenieThreadBlock"
 import { Time } from "./getTimeFromString"
 import { tryScheduleNiechktosMessage } from "./tryScheduleNiechktosMessage"
+import type { KnownBlock } from "@slack/types"
 
 export async function startJedzenieThread({
     creatorId,
@@ -15,6 +16,7 @@ export async function startJedzenieThread({
     client,
     niechKtosBotId,
     restaurantsService,
+    intlService,
 }: {
     creatorId: string
     channel: string
@@ -24,8 +26,9 @@ export async function startJedzenieThread({
     client: WebClient
     niechKtosBotId: string
     restaurantsService: RestaurantsService
+    intlService: IntlService
 }) {
-    const blocks = getJedzenieThreadBlocks({ destination, time, creatorId, restaurantsService })
+    const blocks = getJedzenieThreadBlocks({ destination, time, creatorId, restaurantsService, intlService })
 
     const response = await client.chat.postMessage({
         channel,
@@ -55,6 +58,11 @@ export async function startJedzenieThread({
     await client.chat.update({
         channel,
         ts: ensureDefined(response.ts),
-        blocks: attachEditThreadButton({ blocks, creatorId, scheduledMessageId }) as unknown as KnownBlock[],
+        blocks: attachEditThreadButton({
+            blocks,
+            creatorId,
+            scheduledMessageId,
+            intlService,
+        }) as unknown as KnownBlock[],
     })
 }

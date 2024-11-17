@@ -1,33 +1,33 @@
-import { SectionBlock } from "@slack/bolt"
 import { TawernaMenuService } from "../services/TawernaMenuService"
 import { MenuItem } from "../types/MenuItem"
-import { CommandArgs, Dependencies, WebClient } from "./types"
+import { CommandArgs, Dependencies } from "./types"
+import type { SectionBlock } from "@slack/types"
 
 export async function tawernaCommandHandler(
     { client, ack, command: { channel_id, user_id, text } }: CommandArgs,
-    { tawernaMenuService }: Dependencies,
+    { tawernaMenuService, intlService }: Dependencies,
 ) {
     await ack()
 
-    let args: Parameters<WebClient["chat"]["postEphemeral"]>[0] = {
+    await client.chat.postEphemeral({
         channel: channel_id,
         user: user_id,
-    }
-
-    if (text.trim() === "menu") {
-        const menu = await tawernaMenuService.getMenu()
-
-        args.username = "Tawerna Grecka - Menu"
-        args.blocks = menu.map(mapMenuItemToSectionBlock)
-    } else {
-        args = {
-            ...args,
-            blocks: await getTawernaLunchMenuMessageBlocks(tawernaMenuService),
-            username: "Tawerna Grecka - Lunch Menu",
-        }
-    }
-
-    await client.chat.postEphemeral(args)
+        ...(text.trim() === "menu"
+            ? {
+                  username: intlService.intl.formatMessage({
+                      defaultMessage: "Tawerna Grecka - Menu",
+                      id: "tawernaCommandHandler.menu.username",
+                  }),
+                  blocks: (await tawernaMenuService.getMenu()).map(mapMenuItemToSectionBlock),
+              }
+            : {
+                  username: intlService.intl.formatMessage({
+                      defaultMessage: "Tawerna Grecka - Lunch Menu",
+                      id: "tawernaCommandHandler.lunchMenu.username",
+                  }),
+                  blocks: await getTawernaLunchMenuMessageBlocks(tawernaMenuService),
+              }),
+    })
 }
 
 export async function getTawernaLunchMenuMessageBlocks(tawernaMenuService: TawernaMenuService) {
