@@ -15,7 +15,8 @@ features:
           usage_hint: "[hh(:mm)] [opis]"
           should_escape: false
         - command: /restauracje
-          description: Wyświetl listę znanych restauracji
+          description: Wyświetl listę znanych restauracji lub wyszukaj znaną restaurację
+          usage_hint: "[restauracja]"
           should_escape: false
 oauth_config:
     scopes:
