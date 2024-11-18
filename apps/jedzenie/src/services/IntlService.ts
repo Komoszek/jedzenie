@@ -10,21 +10,17 @@ declare global {
 }
 
 export class IntlService {
-    private _intl: IntlShape
+    readonly intl: IntlShape
 
     constructor() {
         const cache = createIntlCache()
 
-        this._intl = createIntl(
+        this.intl = createIntl(
             {
                 locale: "pl",
                 messages: pl,
             },
             cache,
         )
-    }
-
-    get intl() {
-        return this._intl
     }
 }
