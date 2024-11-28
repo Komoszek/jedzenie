@@ -7,9 +7,6 @@ features:
         display_name: Jedzenie
         always_online: true
     slash_commands:
-        - command: /tawerna
-          description: Wyświetl aktualne lunch menu z Tawerny Greckiej
-          should_escape: false
         - command: /jedzenie
           description: Rozpocznij wątek jedzeniowy
           usage_hint: "[hh(:mm)] [opis]"
@@ -17,6 +14,9 @@ features:
         - command: /restauracje
           description: Wyświetl listę znanych restauracji lub wyszukaj znaną restaurację
           usage_hint: "[restauracja]"
+          should_escape: false
+        - command: /tawerna
+          description: Wyświetl aktualne lunch menu z Tawerny Greckiej
           should_escape: false
 oauth_config:
     scopes:

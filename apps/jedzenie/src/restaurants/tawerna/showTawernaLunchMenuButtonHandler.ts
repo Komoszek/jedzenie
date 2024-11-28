@@ -1,11 +1,12 @@
 import { firstValueFrom, forkJoin, map, timer } from "rxjs"
+import { ActionArgs } from "../../handlers/types"
 import { getTawernaLunchMenuMessageBlocks } from "./tawernaCommandHandler"
-import { ActionArgs, Dependencies } from "./types"
+import { TawernaDependencies } from "./types"
 import type { View } from "@slack/types"
 
 export async function showTawernaLunchMenuButtonHandler(
     { ack, client, body }: ActionArgs,
-    { tawernaMenuService, intlService }: Dependencies,
+    { tawernaMenuService, intlService }: TawernaDependencies,
 ) {
     await ack()
 

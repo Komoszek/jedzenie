@@ -11,15 +11,13 @@ export function getJedzenieThreadBlocks({
     time,
     creatorId,
     restaurantsService,
-    intlService,
 }: {
     destination: DestinationBlock
     time: Time
     creatorId: string
     restaurantsService: RestaurantsService
-    intlService: IntlService
 }) {
-    const restaurant = restaurantsService.matchRestaurant(knownBlockToText(destination))
+    const { actions, links } = restaurantsService.getBlockDetails(knownBlockToText(destination))
 
     return [
         destination,
@@ -27,36 +25,23 @@ export function getJedzenieThreadBlocks({
             type: "section",
             text: { type: "mrkdwn", text: `*${time[0]}:${time[1].toString().padStart(2, "0")}* ~ <@${creatorId}>` },
         },
-        ...((restaurant?.id === tawernaId
+        ...((actions.length > 0
             ? [
                   {
                       block_id: threadActionsBlockId,
                       type: "actions",
-                      elements: [
-                          {
-                              type: "button",
-                              text: {
-                                  type: "plain_text",
-                                  text: intlService.intl.formatMessage({
-                                      defaultMessage: "Pokaż menu lunchowe",
-                                      id: "jedzenieThreadBlocks.showTawernaLunchMenu",
-                                  }),
-                                  emoji: true,
-                              },
-                              action_id: showTawernaLunchMenuButtonId,
-                          },
-                      ],
+                      elements: actions,
                   },
               ]
             : []) as [] | [ActionsBlock]),
-        ...((restaurant && restaurant.links.length > 0
+        ...((links.length > 0
             ? [
                   {
                       type: "context",
                       elements: [
                           {
                               type: "mrkdwn",
-                              text: restaurant.links.join(" | "),
+                              text: links.join(" | "),
                           },
                       ],
                   },
@@ -121,10 +106,7 @@ export function attachEditThreadButton({
     ]
 }
 
-const tawernaId = "tawerna"
-
 const threadActionsBlockId = "thread_actions"
-export const showTawernaLunchMenuButtonId = "show_tawerna_lunch_menu"
 export const editThreadButtonId = "edit_thread"
 
 export type JedzenieThreadBlocks = ReturnType<typeof getJedzenieThreadBlocks>
