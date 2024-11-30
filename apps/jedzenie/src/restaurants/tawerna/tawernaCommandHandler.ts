@@ -1,11 +1,12 @@
-import { TawernaMenuService } from "../services/TawernaMenuService"
-import { MenuItem } from "../types/MenuItem"
-import { CommandArgs, Dependencies } from "./types"
+import { CommandArgs } from "../../handlers/types"
+import { TawernaMenuService } from "../../services/TawernaMenuService"
+import { MenuItem } from "../../types/MenuItem"
+import { TawernaDependencies } from "./types"
 import type { SectionBlock } from "@slack/types"
 
 export async function tawernaCommandHandler(
     { client, ack, command: { channel_id, user_id, text } }: CommandArgs,
-    { tawernaMenuService, intlService }: Dependencies,
+    { tawernaMenuService, intlService }: TawernaDependencies,
 ) {
     await ack()
 
