@@ -1,15 +1,15 @@
 import { App } from "@slack/bolt"
 import { ensureDefined } from "@leancodepl/utils"
 import { handlers } from "./handlers"
-import { cancelJedzenieThreadViewHandler } from "./handlers/cancelJedzenieThreadViewHandler"
 import { cancelJedzenieThreadViewId } from "./handlers/cancelThreadButtonHandler"
 import { cancelThreadButtonId, editJedzenieThreadViewId } from "./handlers/editThreadButtonHandler"
 import { startJedzenieThreadViewId } from "./handlers/jedzenieCommandHandler"
+import { restaurantEditorId } from "./handlers/threadOverflowActionsHandler"
 import { tawernaHandlers } from "./restaurants/tawerna"
 import { IntlService } from "./services/IntlService"
 import { RestaurantActionsMap, RestaurantsService } from "./services/RestaurantsService"
 import { TawernaMenuService } from "./services/TawernaMenuService"
-import { editThreadButtonId } from "./utils/getJedzenieThreadBlock"
+import { editThreadButtonId, threadOverflowActionsId } from "./utils/getJedzenieThreadBlock"
 
 const niechKtosBotId = ensureDefined(process.env.NIECH_KTOS_BOT_ID, "NIECH_KTOS_BOT_ID not defined")
 
@@ -49,7 +49,11 @@ const {
     editJedzenieThreadViewHandler,
     appMentionHandler,
     restauracjeCommandHandler,
+    threadOverflowActionsHandler,
+    cancelJedzenieThreadViewHandler,
+    restaurantEditorViewHandler,
 } = handlers({
+    jedzenieBotId: ensureDefined((await app.client.auth.test()).bot_id, "Couldn't fetch jedzenie bot id"),
     niechKtosBotId,
     restaurantsService: new RestaurantsService(
         ensureDefined(process.env.RESTAURANTS_PATH, "RESTAURANTS_PATH not defined"),
@@ -63,8 +67,10 @@ app.command("/restauracje", restauracjeCommandHandler)
 app.view(startJedzenieThreadViewId, startJedzenieThreadViewHandler)
 app.view(editJedzenieThreadViewId, editJedzenieThreadViewHandler)
 app.view(cancelJedzenieThreadViewId, cancelJedzenieThreadViewHandler)
+app.view(restaurantEditorId, restaurantEditorViewHandler)
 app.action(editThreadButtonId, editThreadButtonHandler)
 app.action(cancelThreadButtonId, cancelThreadButtonHandler)
+app.action(threadOverflowActionsId, threadOverflowActionsHandler)
 app.event("app_mention", appMentionHandler)
 
 // Tawerna handlers

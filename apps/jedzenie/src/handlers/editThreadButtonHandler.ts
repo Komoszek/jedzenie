@@ -33,7 +33,7 @@ export async function editThreadButtonHandler(
     const initialDestination: RichTextBlock =
         blocks[0].type === "rich_text" ? blocks[0] : getRichTextFromMrkdwn(blocks[0].text?.text ?? "")
 
-    const initialTime = blocks[1].text.text.match(/^\*(\d+:\d+)\*/)?.[1].padStart(5, "0")
+    const initialTime = getTimeFromThreadBlocks(blocks)
 
     const updateMetadata = {
         channel: ensureDefined(body.channel).id,
@@ -68,6 +68,10 @@ export async function editThreadButtonHandler(
             },
         },
     })
+}
+
+export function getTimeFromThreadBlocks(blocks: JedzenieThreadBlocks) {
+    return blocks[1].text.text.match(/^\*(\d+:\d+)\*/)?.[1].padStart(5, "0")
 }
 
 function getUserUnauthorizedView(userId: string, intlService: IntlService): View {
