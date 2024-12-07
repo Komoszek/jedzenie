@@ -28,7 +28,7 @@ export async function startJedzenieThread({
     restaurantsService: RestaurantsService
     intlService: IntlService
 }) {
-    const blocks = getJedzenieThreadBlocks({ destination, time, creatorId, restaurantsService })
+    const blocks = getJedzenieThreadBlocks({ destination, time, creatorId, restaurantsService, intlService })
 
     const response = await client.chat.postMessage({
         channel,
