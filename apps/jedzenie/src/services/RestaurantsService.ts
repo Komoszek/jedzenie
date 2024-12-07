@@ -35,7 +35,7 @@ export class RestaurantsService {
         const restaurant = this.matchRestaurant(text)
 
         if (!restaurant) {
-            return { actions: [], links: [] }
+            return undefined
         }
 
         const { links, id } = restaurant
