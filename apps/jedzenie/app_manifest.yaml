@@ -26,6 +26,8 @@ oauth_config:
             - im:write
             - chat:write.customize
             - app_mentions:read
+            - channels:read
+            - channels:history
 settings:
     event_subscriptions:
         bot_events:

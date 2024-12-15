@@ -17,6 +17,7 @@ export type ActionArgs = AllMiddlewareArgs & SlackActionMiddlewareArgs<SlackActi
 export type AppMentionArgs = AllMiddlewareArgs & SlackEventMiddlewareArgs<"app_mention">
 
 export type Dependencies = {
+    jedzenieBotId: string
     niechKtosBotId: string
     restaurantsService: RestaurantsService
     intlService: IntlService
