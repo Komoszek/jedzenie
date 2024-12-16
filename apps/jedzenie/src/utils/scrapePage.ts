@@ -2,7 +2,7 @@ import { Page, chromium } from "playwright"
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function scrapePage<TScraper extends (page: Page) => Promise<any>>(scraper: TScraper) {
-    const browser = await chromium.launch({ channel: "chromium" })
+    const browser = await chromium.launch()
     const context = await browser.newContext()
     const page = await context.newPage()
 
