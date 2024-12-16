@@ -12,6 +12,7 @@ export async function threadOverflowActionsHandler(
     }
 
     const action = overflowActionSchema.parse(JSON.parse(payload.selected_option.value))
+
     await ack()
 
     const destination = knownBlockToText(body.message.blocks.at(0))

@@ -13,6 +13,7 @@ import {
 import { DestinationBlock, attachEditThreadButton, getJedzenieThreadBlocks } from "../utils/getJedzenieThreadBlock"
 import { Time, getTimeFromString } from "../utils/getTimeFromString"
 import { tryScheduleNiechktosMessage } from "../utils/tryScheduleNiechktosMessage"
+import { threadMetadataSchema } from "./editThreadButtonHandler"
 import { Dependencies, ViewArgs, WebClient } from "./types"
 import type { ViewStateValue } from "@slack/bolt"
 import type { KnownBlock } from "@slack/types"
@@ -42,7 +43,7 @@ export async function editJedzenieThreadViewHandler(
         return
     }
 
-    const { channel, ts, scheduledMessageId } = JSON.parse(view.private_metadata)
+    const { channel, ts, scheduledMessageId } = threadMetadataSchema.parse(JSON.parse(view.private_metadata))
 
     await editJedzenieThread({
         ts,

@@ -1,7 +1,8 @@
+import { z } from "zod"
 import { ensureDefined } from "@leancodepl/utils"
 import { IntlService } from "../services/IntlService"
 import { getJedzenieDialogBlocks } from "../utils/getJedzenieDialogBlocks"
-import { JedzenieThreadBlocks } from "../utils/getJedzenieThreadBlock"
+import { JedzenieThreadBlocks, editButtonValueSchema } from "../utils/getJedzenieThreadBlock"
 import { ActionArgs, Dependencies } from "./types"
 import type { ActionsBlock, RichTextBlock, View } from "@slack/types"
 
@@ -15,10 +16,9 @@ export async function editThreadButtonHandler(
         return
     }
 
-    const { creatorId, scheduledMessageId = "" } = (payload.value ? JSON.parse(payload.value) : {}) as Record<
-        string,
-        string | undefined
-    >
+    const { creatorId, scheduledMessageId = "" } = payload.value
+        ? editButtonValueSchema.parse(JSON.parse(payload.value))
+        : {}
 
     if (body.user.id !== creatorId) {
         await client.views.open({
@@ -69,6 +69,14 @@ export async function editThreadButtonHandler(
         },
     })
 }
+
+export const threadMetadataSchema = z.object({
+    channel: z.string(),
+    ts: z.string(),
+    scheduledMessageId: z.string(),
+})
+
+type ThreadMetadata = z.infer<typeof threadMetadataSchema>
 
 export function getTimeFromThreadBlocks(blocks: JedzenieThreadBlocks) {
     return blocks[1].text.text.match(/^\*(\d+:\d+)\*/)?.[1].padStart(5, "0")
@@ -126,7 +134,7 @@ function getRichTextFromMrkdwn(mrkdwn: string): RichTextBlock {
     }
 }
 
-function getCancelButtonBlock(props: { scheduledMessageId: string; channel: string; ts: string }): ActionsBlock {
+function getCancelButtonBlock(threadMetadata: ThreadMetadata): ActionsBlock {
     return {
         type: "actions",
         elements: [
@@ -138,7 +146,7 @@ function getCancelButtonBlock(props: { scheduledMessageId: string; channel: stri
                     emoji: true,
                 },
                 style: "danger",
-                value: JSON.stringify(props),
+                value: JSON.stringify(threadMetadata),
                 action_id: cancelThreadButtonId,
             },
         ],

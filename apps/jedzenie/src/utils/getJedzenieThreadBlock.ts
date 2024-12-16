@@ -1,6 +1,7 @@
 import { z } from "zod"
 import { IntlService } from "../services/IntlService"
 import { RestaurantsService } from "../services/RestaurantsService"
+import { deepClone } from "./deepClone"
 import { Time } from "./getTimeFromString"
 import { knownBlockToText } from "./knownBlockToText"
 import type { ActionsBlock, Button, ContextBlock, KnownBlock, RichTextBlock, SectionBlock } from "@slack/types"
@@ -121,7 +122,7 @@ export function attachEditThreadButton({
     scheduledMessageId: string
     intlService: IntlService
 }) {
-    const newBlocks = JSON.parse(JSON.stringify(blocks)) as JedzenieThreadBlocks
+    const newBlocks = deepClone(blocks)
 
     const editThreadButton = getEditThreadButtonBlock({ creatorId, scheduledMessageId, intlService })
     const actions = newBlocks.find(
