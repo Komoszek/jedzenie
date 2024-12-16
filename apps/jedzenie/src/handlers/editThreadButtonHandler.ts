@@ -1,5 +1,5 @@
 import { z } from "zod"
-import { ensureDefined } from "@leancodepl/utils"
+import { ensureDefined } from "@jedzenie/utils"
 import { IntlService } from "../services/IntlService"
 import { getJedzenieDialogBlocks } from "../utils/getJedzenieDialogBlocks"
 import { JedzenieThreadBlocks, editButtonValueSchema } from "../utils/getJedzenieThreadBlock"

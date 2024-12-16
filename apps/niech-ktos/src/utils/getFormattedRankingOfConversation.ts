@@ -1,4 +1,4 @@
-import { ensureDefined } from "@leancodepl/utils"
+import { ensureDefined } from "@jedzenie/utils"
 import { WebClient } from "../handlers/types"
 import { IntlService } from "../services/IntlService"
 import { splitwiseService } from "../services/splitwise"

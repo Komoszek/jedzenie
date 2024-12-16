@@ -1,6 +1,6 @@
 import { App } from "@slack/bolt"
 import path from "path"
-import { ensureDefined } from "@leancodepl/utils"
+import { ensureDefined } from "@jedzenie/utils"
 import { handlers } from "./handlers"
 import { IntlService } from "./services/IntlService"
 import { State } from "./services/state"

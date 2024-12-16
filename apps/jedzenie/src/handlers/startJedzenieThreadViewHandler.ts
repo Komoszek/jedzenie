@@ -2,7 +2,6 @@ import { ViewStateValue } from "@slack/bolt"
 import dayjs from "dayjs"
 import timezone from "dayjs/plugin/timezone"
 import utc from "dayjs/plugin/utc"
-import { ensureDefined } from "@leancodepl/utils"
 import {
     departureBlockId,
     departureTimeId,
@@ -12,6 +11,7 @@ import {
 import { getTimeFromString } from "../utils/getTimeFromString"
 import { startJedzenieThread } from "../utils/startJedzenieThread"
 import { Dependencies, ViewArgs } from "./types"
+import { ensureDefined } from "@jedzenie/utils"
 
 dayjs.extend(utc)
 dayjs.extend(timezone)

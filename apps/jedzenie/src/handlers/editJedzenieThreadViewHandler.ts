@@ -1,7 +1,6 @@
 import dayjs from "dayjs"
 import timezone from "dayjs/plugin/timezone"
 import utc from "dayjs/plugin/utc"
-import { ensureDefined } from "@leancodepl/utils"
 import { IntlService } from "../services/IntlService"
 import { RestaurantsService } from "../services/RestaurantsService"
 import {
@@ -17,6 +16,7 @@ import { threadMetadataSchema } from "./editThreadButtonHandler"
 import { Dependencies, ViewArgs, WebClient } from "./types"
 import type { ViewStateValue } from "@slack/bolt"
 import type { KnownBlock } from "@slack/types"
+import { ensureDefined } from "@jedzenie/utils"
 
 dayjs.extend(utc)
 dayjs.extend(timezone)

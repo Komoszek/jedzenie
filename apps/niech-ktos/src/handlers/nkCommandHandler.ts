@@ -1,5 +1,5 @@
 import { defineMessages } from "@formatjs/intl"
-import { ensureDefined } from "@leancodepl/utils"
+import { ensureDefined } from "@jedzenie/utils"
 import { MatchSlackInfo, splitwiseService } from "../services/splitwise"
 import { formatRankingPlace } from "../utils/formatRankingPlace"
 import { getGroupMemberBalance } from "../utils/getMemberBalancec"

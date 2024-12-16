@@ -15,7 +15,8 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@jedzenie/splitwise": ["libs/splitwise/src/index.ts"]
+      "@jedzenie/splitwise": ["libs/splitwise/src/index.ts"],
+      "@jedzenie/utils": ["libs/utils/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

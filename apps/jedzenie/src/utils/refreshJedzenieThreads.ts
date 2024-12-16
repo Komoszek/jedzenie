@@ -1,5 +1,5 @@
 import dayjs from "dayjs"
-import { ensureDefined } from "@leancodepl/utils"
+import { ensureDefined } from "@jedzenie/utils"
 import { getTimeFromThreadBlocks } from "../handlers/editThreadButtonHandler"
 import { WebClient } from "../handlers/types"
 import { IntlService } from "../services/IntlService"
