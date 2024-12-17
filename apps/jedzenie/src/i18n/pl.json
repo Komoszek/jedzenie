@@ -1,7 +1,6 @@
 {
   "cancelThreadView.add.submit": "Dodaj",
   "cancelThreadView.close": "Wróć do edycji",
-  "cancelThreadView.edit.submit": "Zapisz",
   "cancelThreadView.submit": "Usuń to",
   "cancelThreadView.title": "Anuluj wątek",
   "editJedzenieThreadView.close": "Anuluj",
@@ -17,6 +16,7 @@
   "jedzenieThreadBlocks.editLinks": "Edytuj linki",
   "jedzenieThreadHandler.error.departureTimeIsRequired": "Godzina odjazdu jest wymagana",
   "resaurantDetails.noLinks": "Brak linków",
+  "resaurantDetailsBlocks.edit": "Edytuj",
   "restauracjeCommandHandler.error.resaturantNotFound": "Nie znaleziono restauracji :sob:",
   "restauracjeView.close": ":yum:",
   "restauracjeView.title": "Restauracje",
@@ -24,6 +24,7 @@
   "restaurantEditor.add.close": "Anuluj",
   "restaurantEditor.add.title": "Dodaj nową restaurację",
   "restaurantEditor.edit.close": "Anuluj",
+  "restaurantEditor.edit.submit": "Zapisz",
   "restaurantEditor.edit.title": "Edytuj restaurację",
   "restaurantEditor.error.restaurantAlreadyExists": "Wybierz inną nazwę restauracji",
   "restaurantEditor.links": "Linki",

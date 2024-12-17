@@ -48,6 +48,7 @@ export async function restaurantEditorViewHandler(
         }
     }
 
+    // TODO: also update ephemeral messages
     await refreshJedzenieThreads({
         client,
         jedzenieBotId,

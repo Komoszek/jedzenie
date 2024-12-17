@@ -7,15 +7,13 @@ export async function threadOverflowActionsHandler(
     { ack, client, body, payload }: ActionArgs,
     { intlService, restaurantsService }: Dependencies,
 ) {
+    await ack()
+
     if (body.type !== "block_actions" || payload.type !== "overflow" || !body.message) {
         return
     }
 
     const action = overflowActionSchema.parse(JSON.parse(payload.selected_option.value))
-
-    await ack()
-
-    const destination = knownBlockToText(body.message.blocks.at(0))
 
     await client.views.open({
         trigger_id: body.trigger_id,
@@ -25,10 +23,7 @@ export async function threadOverflowActionsHandler(
             ...(action.act === ThreadOverflowActions.AddRestaurant
                 ? {
                       blocks: getRestaurantEditorDialogBlocks({
-                          restaurant: {
-                              name: destination,
-                              patterns: [destination.toLowerCase()],
-                          },
+                          restaurant: getRestaurantLike(knownBlockToText(body.message.blocks.at(0))),
                           intlService,
                       }),
                       title: {
@@ -56,7 +51,7 @@ export async function threadOverflowActionsHandler(
                 : {
                       private_metadata: action.id,
                       blocks: getRestaurantEditorDialogBlocks({
-                          restaurant: restaurantsService.matchRestaurant(destination),
+                          restaurant: restaurantsService.getRestaurant(action.id),
                           intlService,
                       }),
                       title: {
@@ -77,7 +72,7 @@ export async function threadOverflowActionsHandler(
                           type: "plain_text",
                           text: intlService.intl.formatMessage({
                               defaultMessage: "Zapisz",
-                              id: "cancelThreadView.edit.submit",
+                              id: "restaurantEditor.edit.submit",
                           }),
                       },
                   }),
@@ -86,3 +81,10 @@ export async function threadOverflowActionsHandler(
 }
 
 export const restaurantEditorId = "restaurant_editor"
+
+function getRestaurantLike(destination: string) {
+    return {
+        name: destination,
+        patterns: [destination.toLowerCase()],
+    }
+}

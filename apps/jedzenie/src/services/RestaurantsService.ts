@@ -76,6 +76,10 @@ export class RestaurantsService {
         return { actions: this.restaurantActionsMap[id] ?? [], links, id }
     }
 
+    getRestaurant(restaurantId: string): Restaurant | undefined {
+        return this.restaurants.find(({ id }) => id === restaurantId)
+    }
+
     getRestaurants(): Restaurant[] {
         return this.restaurants
     }

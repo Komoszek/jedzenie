@@ -1,3 +1,4 @@
+import { z } from "zod"
 import { IntlService } from "../services/IntlService"
 import { Restaurant } from "../services/RestaurantsService"
 import { AppMentionArgs, Dependencies } from "./types"
@@ -28,6 +29,25 @@ export function getResaurantDetailsBlocks(restaurant: Restaurant, intlService: I
                 type: "plain_text",
                 text: restaurant.name,
             },
+            accessory: {
+                type: "overflow",
+                options: [
+                    {
+                        text: {
+                            type: "plain_text",
+                            text: intlService.intl.formatMessage({
+                                defaultMessage: "Edytuj",
+                                id: "resaurantDetailsBlocks.edit",
+                            }),
+                        },
+                        value: JSON.stringify({
+                            id: restaurant.id,
+                            act: RestaurantOverflowActions.Edit,
+                        } satisfies Action),
+                    },
+                ],
+                action_id: restaurantOverflowActionsId,
+            },
         },
         {
             type: "context",
@@ -46,3 +66,15 @@ export function getResaurantDetailsBlocks(restaurant: Restaurant, intlService: I
         },
     ]
 }
+
+export const restaurantOverflowActionsId = "restaurant_overflow_actions"
+export enum RestaurantOverflowActions {
+    Edit,
+}
+
+export const overflowActionSchema = z.object({
+    id: z.string(),
+    act: z.literal(RestaurantOverflowActions.Edit),
+})
+
+type Action = z.infer<typeof overflowActionSchema>

@@ -1,5 +1,7 @@
+import { ensureDefined } from "@jedzenie/utils"
 import { App } from "@slack/bolt"
 import { handlers } from "./handlers"
+import { restaurantOverflowActionsId } from "./handlers/appMentionHandler"
 import { cancelJedzenieThreadViewId } from "./handlers/cancelThreadButtonHandler"
 import { cancelThreadButtonId, editJedzenieThreadViewId } from "./handlers/editThreadButtonHandler"
 import { startJedzenieThreadViewId } from "./handlers/jedzenieCommandHandler"
@@ -9,7 +11,6 @@ import { IntlService } from "./services/IntlService"
 import { RestaurantActionsMap, RestaurantsService } from "./services/RestaurantsService"
 import { TawernaMenuService } from "./services/TawernaMenuService"
 import { editThreadButtonId, threadOverflowActionsId } from "./utils/getJedzenieThreadBlock"
-import { ensureDefined } from "@jedzenie/utils"
 
 const niechKtosBotId = ensureDefined(process.env.NIECH_KTOS_BOT_ID, "NIECH_KTOS_BOT_ID not defined")
 
@@ -52,6 +53,7 @@ const {
     threadOverflowActionsHandler,
     cancelJedzenieThreadViewHandler,
     restaurantEditorViewHandler,
+    restaurantOverflowActionsHandler,
 } = handlers({
     jedzenieBotId: ensureDefined((await app.client.auth.test()).bot_id, "Couldn't fetch jedzenie bot id"),
     niechKtosBotId,
@@ -71,6 +73,7 @@ app.view(restaurantEditorId, restaurantEditorViewHandler)
 app.action(editThreadButtonId, editThreadButtonHandler)
 app.action(cancelThreadButtonId, cancelThreadButtonHandler)
 app.action(threadOverflowActionsId, threadOverflowActionsHandler)
+app.action(restaurantOverflowActionsId, restaurantOverflowActionsHandler)
 app.event("app_mention", appMentionHandler)
 
 // Tawerna handlers
