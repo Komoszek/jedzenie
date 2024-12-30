@@ -29,6 +29,8 @@ function richTextElementsToText(richTextElements: RichTextElement[]) {
                 return accumulator + `:${current.name}:`
             case "text":
                 return accumulator + current.text
+            case "link":
+                return accumulator + (current.text ?? current.url)
             default:
                 return accumulator
         }
