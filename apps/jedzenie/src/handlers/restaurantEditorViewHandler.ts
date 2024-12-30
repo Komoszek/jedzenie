@@ -71,7 +71,7 @@ function getTextSectionElements(block: RichTextBlock | undefined): RichTextEleme
 }
 
 function getPatterns(value: string): string[] {
-    return value.split("\n").map(pattern => pattern.trim())
+    return value.split("\n").map(pattern => pattern.trim().toLowerCase())
 }
 
 function getLinks(block: RichTextBlock | undefined): string[] {
