@@ -77,7 +77,7 @@ function getPatterns(value: string): string[] {
 function getLinks(block: RichTextBlock | undefined): string[] {
     return getTextSectionElements(block).reduce<string[]>((acc, element) => {
         if (element.type === "link") {
-            return [...acc, `<${element.url}|${element.text?.trim()}>`]
+            return [...acc, `<${element.url}|${element.text?.trim() ?? element.url}>`]
         }
 
         if (element.type === "text") {
