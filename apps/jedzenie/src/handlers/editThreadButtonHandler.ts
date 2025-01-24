@@ -1,5 +1,5 @@
-import { z } from "zod"
 import { ensureDefined } from "@jedzenie/utils"
+import { z } from "zod"
 import { IntlService } from "../services/IntlService"
 import { getJedzenieDialogBlocks } from "../utils/getJedzenieDialogBlocks"
 import { JedzenieThreadBlocks, editButtonValueSchema } from "../utils/getJedzenieThreadBlock"
@@ -48,7 +48,7 @@ export async function editThreadButtonHandler(
             type: "modal",
             blocks: [
                 ...getJedzenieDialogBlocks({ initialTime, initialDestination, intlService }),
-                getCancelButtonBlock(updateMetadata),
+                getCancelButtonBlock(updateMetadata, intlService),
             ],
             title: {
                 type: "plain_text",
@@ -134,7 +134,7 @@ function getRichTextFromMrkdwn(mrkdwn: string): RichTextBlock {
     }
 }
 
-function getCancelButtonBlock(threadMetadata: ThreadMetadata): ActionsBlock {
+function getCancelButtonBlock(threadMetadata: ThreadMetadata, intlService: IntlService): ActionsBlock {
     return {
         type: "actions",
         elements: [
@@ -142,7 +142,10 @@ function getCancelButtonBlock(threadMetadata: ThreadMetadata): ActionsBlock {
                 type: "button",
                 text: {
                     type: "plain_text",
-                    text: "Anuluj wątek",
+                    text: intlService.intl.formatMessage({
+                        defaultMessage: "Anuluj wątek",
+                        id: "cancelThreadButton.label",
+                    }),
                     emoji: true,
                 },
                 style: "danger",

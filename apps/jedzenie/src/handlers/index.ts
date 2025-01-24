@@ -5,6 +5,7 @@ import { editJedzenieThreadViewHandler } from "./editJedzenieThreadViewHandler"
 import { editThreadButtonHandler } from "./editThreadButtonHandler"
 import { jedzenieCommandHandler } from "./jedzenieCommandHandler"
 import { restauracjeCommandHandler } from "./restauracjeCommandHandler"
+import { restauracjePaginationHandler } from "./restauracjePaginationHandler"
 import { restaurantEditorViewHandler } from "./restaurantEditorViewHandler"
 import { startJedzenieThreadViewHandler } from "./startJedzenieThreadViewHandler"
 import { threadOverflowActionsHandler } from "./threadOverflowActionsHandler"
@@ -20,6 +21,7 @@ export function handlers(dependencies: Dependencies) {
         appMentionHandler: (args: AppMentionArgs) => appMentionHandler(args, dependencies),
         restauracjeCommandHandler: (args: CommandArgs) => restauracjeCommandHandler(args, dependencies),
         threadOverflowActionsHandler: (args: ActionArgs) => threadOverflowActionsHandler(args, dependencies),
+        restauracjePaginationHandler: (args: ActionArgs) => restauracjePaginationHandler(args, dependencies),
         cancelJedzenieThreadViewHandler,
         restaurantEditorViewHandler: (args: ViewArgs) => restaurantEditorViewHandler(args, dependencies),
     }

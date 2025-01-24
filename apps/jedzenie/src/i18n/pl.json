@@ -1,4 +1,5 @@
 {
+  "cancelThreadButton.label": "Anuluj wątek",
   "cancelThreadView.add.submit": "Dodaj",
   "cancelThreadView.close": "Wróć do edycji",
   "cancelThreadView.edit.submit": "Zapisz",
@@ -29,6 +30,9 @@
   "restaurantEditor.links": "Linki",
   "restaurantEditor.name": "Nazwa restauracji",
   "restaurantEditor.patterns": "Wzorce do rozpoznania restauracji (regex)",
+  "restaurantsPage.nextPage.label": "Następna strona",
+  "restaurantsPage.previousPage.label": "Poprzednia strona",
+  "restaurantsPage.selectPage.placeholder": "Wybierz stronę",
   "showTawernaLunchMenuHandler.view.close": "Fajno",
   "showTawernaLunchMenuHandler.view.loader.alt": "Lołding",
   "showTawernaLunchMenuHandler.view.title": "Tawerna - Lunch Menu",
