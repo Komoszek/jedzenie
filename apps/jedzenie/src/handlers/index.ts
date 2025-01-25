@@ -1,3 +1,4 @@
+import { inject } from "@jedzenie/utils"
 import { appMentionHandler } from "./appMentionHandler"
 import { cancelJedzenieThreadViewHandler } from "./cancelJedzenieThreadViewHandler"
 import { cancelThreadButtonHandler } from "./cancelThreadButtonHandler"
@@ -9,20 +10,23 @@ import { restauracjePaginationHandler } from "./restauracjePaginationHandler"
 import { restaurantEditorViewHandler } from "./restaurantEditorViewHandler"
 import { startJedzenieThreadViewHandler } from "./startJedzenieThreadViewHandler"
 import { threadOverflowActionsHandler } from "./threadOverflowActionsHandler"
-import type { ActionArgs, AppMentionArgs, CommandArgs, Dependencies, ViewArgs } from "./types"
+import type { Dependencies } from "./types"
 
 export function handlers(dependencies: Dependencies) {
-    return {
-        editThreadButtonHandler: (args: ActionArgs) => editThreadButtonHandler(args, dependencies),
-        cancelThreadButtonHandler: (args: ActionArgs) => cancelThreadButtonHandler(args, dependencies),
-        jedzenieCommandHandler: (args: CommandArgs) => jedzenieCommandHandler(args, dependencies),
-        startJedzenieThreadViewHandler: (args: ViewArgs) => startJedzenieThreadViewHandler(args, dependencies),
-        editJedzenieThreadViewHandler: (args: ViewArgs) => editJedzenieThreadViewHandler(args, dependencies),
-        appMentionHandler: (args: AppMentionArgs) => appMentionHandler(args, dependencies),
-        restauracjeCommandHandler: (args: CommandArgs) => restauracjeCommandHandler(args, dependencies),
-        threadOverflowActionsHandler: (args: ActionArgs) => threadOverflowActionsHandler(args, dependencies),
-        restauracjePaginationHandler: (args: ActionArgs) => restauracjePaginationHandler(args, dependencies),
-        cancelJedzenieThreadViewHandler,
-        restaurantEditorViewHandler: (args: ViewArgs) => restaurantEditorViewHandler(args, dependencies),
-    }
+    return inject(
+        {
+            editThreadButtonHandler,
+            cancelThreadButtonHandler,
+            jedzenieCommandHandler,
+            startJedzenieThreadViewHandler,
+            editJedzenieThreadViewHandler,
+            appMentionHandler,
+            restauracjeCommandHandler,
+            threadOverflowActionsHandler,
+            restauracjePaginationHandler,
+            cancelJedzenieThreadViewHandler,
+            restaurantEditorViewHandler,
+        },
+        dependencies,
+    )
 }

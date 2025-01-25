@@ -1,6 +1,6 @@
+import { ensureDefined } from "@jedzenie/utils"
 import { App } from "@slack/bolt"
 import path from "path"
-import { ensureDefined } from "@jedzenie/utils"
 import { handlers } from "./handlers"
 import { IntlService } from "./services/IntlService"
 import { State } from "./services/state"
@@ -15,12 +15,17 @@ const app = new App({
 
 const watchedChannelIds = process.env.WATCHED_CHANNEL_IDS?.split(";") ?? []
 
-const { nkCommandHandler, appMentionHandler, messageImHandler, silentNkShortcutHandler, memberJoinedChannelHandler } =
-    handlers({
-        state,
-        watchedChannelIds,
-        intlService: new IntlService(),
-    })
+const {
+    nkCommandHandler,
+    appMentionHandler,
+    messageImHandler,
+    silentNkShortcutHandler,
+    memberJoinedWatchedChannelHandler,
+} = handlers({
+    state,
+    watchedChannelIds,
+    intlService: new IntlService(),
+})
 
 app.command("/nk", nkCommandHandler)
 app.shortcut("silent_nk", silentNkShortcutHandler)
@@ -28,7 +33,7 @@ app.event("app_mention", appMentionHandler)
 app.event("message", messageImHandler)
 
 if (watchedChannelIds.length > 0) {
-    app.event("member_joined_channel", memberJoinedChannelHandler)
+    app.event("member_joined_channel", memberJoinedWatchedChannelHandler)
 }
 
 await app.start()
