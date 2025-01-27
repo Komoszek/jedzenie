@@ -47,7 +47,7 @@ export function getRestaurantsPage({
     }
 }
 
-const pageSize = 45
+const pageSize = 30
 
 export const restaurantPagePaginationId = "restaurant_page_pagination"
 
