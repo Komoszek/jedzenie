@@ -1,5 +1,5 @@
+import { isObject } from "@jedzenie/utils"
 import { WebClient } from "../handlers/types"
-import { isObject } from "./isObject"
 
 export async function tryScheduleMessage({
     client,
@@ -18,10 +18,12 @@ export async function tryScheduleMessage({
 
         return response.scheduled_message_id
     } catch (e) {
-        // Shouldn't happen but you never know
         if (isTimeInPastError(e)) {
-            await client.chat.postMessage(message)
+            console.error(e)
+            return
         }
+
+        await client.chat.postMessage(message)
     }
 }
 

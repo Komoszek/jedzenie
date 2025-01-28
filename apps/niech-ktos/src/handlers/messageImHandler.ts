@@ -1,6 +1,6 @@
 import { defineMessages } from "@formatjs/intl"
+import { sample } from "@jedzenie/utils"
 import { getFormattedRankingOfConversation } from "../utils/getFormattedRankingOfConversation"
-import { sample } from "../utils/sample"
 import { getEmptyRankingResponse } from "./nkCommandHandler"
 import { Dependencies, MessageArgs } from "./types"
 

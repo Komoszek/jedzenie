@@ -1,5 +1,5 @@
+import { getRestaurantDetailsBlocks } from "../blocks/getRestaurantDetailsBlocks"
 import { getRestaurantsPage } from "../utils/getRestaurantsPage"
-import { getResaurantDetailsBlocks } from "./appMentionHandler"
 import { CommandArgs, Dependencies } from "./types"
 
 export async function restauracjeCommandHandler(
@@ -12,7 +12,7 @@ export async function restauracjeCommandHandler(
         await ack(
             restaurant
                 ? {
-                      blocks: getResaurantDetailsBlocks(restaurant, intlService),
+                      blocks: getRestaurantDetailsBlocks(restaurant, intlService),
                   }
                 : intlService.intl.formatMessage({
                       defaultMessage: "Nie znaleziono restauracji :sob:",

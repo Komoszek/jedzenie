@@ -1,5 +1,5 @@
+import { formatUserMention } from "@jedzenie/utils"
 import { IntlService } from "../services/IntlService"
-import { formatUserMention } from "./formatUserMention"
 import { Balance } from "./types/Balance"
 
 export function formatRankingPlace({ name, balance, slackId }: Balance, place: number, intlService: IntlService) {

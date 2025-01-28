@@ -17,7 +17,7 @@
   "jedzenieThreadBlocks.edit": "Edytuj",
   "jedzenieThreadBlocks.editLinks": "Edytuj linki",
   "jedzenieThreadHandler.error.departureTimeIsRequired": "Godzina odjazdu jest wymagana",
-  "resaurantDetails.noLinks": "Brak linków",
+  "restaurantDetails.noLinks": "Brak linków",
   "restauracjeCommandHandler.error.resaturantNotFound": "Nie znaleziono restauracji :sob:",
   "restauracjeView.close": ":yum:",
   "restauracjeView.title": "Restauracje",
@@ -41,7 +41,7 @@
   "startJedzenieThreadView.title": "Rozpocznij wątek",
   "tawernaCommandHandler.lunchMenu.username": "Tawerna Grecka - Lunch Menu",
   "tawernaCommandHandler.menu.username": "Tawerna Grecka - Menu",
-  "userUnathorizedView.body": "<@{userId}> is not in the sudoers file :pepe_police:. This incident will be reported.",
+  "userUnathorizedView.body": "{user} is not in the sudoers file :pepe_police:. This incident will be reported.",
   "userUnathorizedView.close": ":scream:",
   "userUnathorizedView.title": "Brak uprawnień"
 }

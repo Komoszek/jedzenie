@@ -1,8 +1,10 @@
-import { ensureDefined } from "@jedzenie/utils"
+import { formatUserMention } from "@jedzenie/utils"
 import { z } from "zod"
+import { ensureDefined } from "@leancodepl/utils"
+import { editButtonValueSchema } from "../blocks/getEditThreadButtonBlock"
+import { getJedzenieDialogBlocks } from "../blocks/getJedzenieDialogBlocks"
+import { JedzenieThreadBlocks } from "../blocks/getJedzenieThreadBlock"
 import { IntlService } from "../services/IntlService"
-import { getJedzenieDialogBlocks } from "../utils/getJedzenieDialogBlocks"
-import { JedzenieThreadBlocks, editButtonValueSchema } from "../utils/getJedzenieThreadBlock"
 import { ActionArgs, Dependencies } from "./types"
 import type { ActionsBlock, RichTextBlock, View } from "@slack/types"
 
@@ -93,10 +95,10 @@ function getUserUnauthorizedView(userId: string, intlService: IntlService): View
                     text: intlService.intl.formatMessage(
                         {
                             defaultMessage:
-                                "<@{userId}> is not in the sudoers file :pepe_police:.  This incident will be reported.",
+                                "{user} is not in the sudoers file :pepe_police:.  This incident will be reported.",
                             id: "userUnathorizedView.body",
                         },
-                        { userId },
+                        { user: formatUserMention(userId) },
                     ),
                 },
             },

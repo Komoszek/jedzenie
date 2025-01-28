@@ -1,5 +1,5 @@
-import { ThreadOverflowActions, overflowActionSchema } from "../utils/getJedzenieThreadBlock"
-import { getRestaurantEditorDialogBlocks } from "../utils/getRestaurantEditorDialogBlocks"
+import { ThreadOverflowActions, overflowActionSchema } from "../blocks/getJedzenieThreadBlock"
+import { getRestaurantEditorDialogBlocks } from "../blocks/getRestaurantEditorDialogBlocks"
 import { knownBlockToText } from "../utils/knownBlockToText"
 import { ActionArgs, Dependencies } from "./types"
 

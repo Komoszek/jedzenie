@@ -1,18 +1,12 @@
 import dayjs from "dayjs"
-import { ensureDefined } from "@jedzenie/utils"
+import { ensureDefined } from "@leancodepl/utils"
+import { EditButtonValue, editButtonValueSchema, editThreadButtonId } from "../blocks/getEditThreadButtonBlock"
+import { JedzenieThreadBlocks, getJedzenieThreadBlocks, threadActionsBlockId } from "../blocks/getJedzenieThreadBlock"
 import { getTimeFromThreadBlocks } from "../handlers/editThreadButtonHandler"
 import { WebClient } from "../handlers/types"
 import { IntlService } from "../services/IntlService"
 import { RestaurantsService } from "../services/RestaurantsService"
-import {
-    EditButtonValue,
-    JedzenieThreadBlocks,
-    attachEditThreadButton,
-    editButtonValueSchema,
-    editThreadButtonId,
-    getJedzenieThreadBlocks,
-    threadActionsBlockId,
-} from "./getJedzenieThreadBlock"
+import { attachEditThreadButton } from "./attachEditThreadButton"
 import { getTimeFromString } from "./getTimeFromString"
 import { knownBlockToText } from "./knownBlockToText"
 import type { KnownBlock } from "@slack/types"

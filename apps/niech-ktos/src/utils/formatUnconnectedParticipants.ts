@@ -1,5 +1,5 @@
+import { formatUserMention } from "@jedzenie/utils"
 import { IntlService } from "../services/IntlService"
-import { formatUserMention } from "./formatUserMention"
 
 export function formatUnconnectedParticipants(unconnectedParticipantIds: string[], intlService: IntlService) {
     if (unconnectedParticipantIds.length === 0) {

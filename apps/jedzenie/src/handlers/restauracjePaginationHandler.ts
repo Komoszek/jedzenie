@@ -1,4 +1,5 @@
-import { getRestaurantsPage, paginationSchema } from "../utils/getRestaurantsPage"
+import { getPaginationValue } from "../blocks/getPaginationBlocks"
+import { getRestaurantsPage } from "../utils/getRestaurantsPage"
 import { ActionArgs, Dependencies } from "./types"
 
 export async function restauracjePaginationHandler(
@@ -9,20 +10,11 @@ export async function restauracjePaginationHandler(
         return
     }
 
-    let value: string | undefined
+    const page = getPaginationValue(payload)
 
-    switch (payload.type) {
-        case "button":
-            value = payload.value
-            break
-        case "static_select":
-            value = payload.selected_option.value
-            break
-        default:
-            return
+    if (page === undefined) {
+        return
     }
-
-    const page = paginationSchema.parse(value)
 
     await ack()
 

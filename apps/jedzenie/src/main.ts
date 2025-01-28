@@ -1,5 +1,7 @@
-import { ensureDefined } from "@jedzenie/utils"
 import { App } from "@slack/bolt"
+import { ensureDefined } from "@leancodepl/utils"
+import { editThreadButtonId } from "./blocks/getEditThreadButtonBlock"
+import { threadOverflowActionsId } from "./blocks/getJedzenieThreadBlock"
 import { handlers } from "./handlers"
 import { cancelJedzenieThreadViewId } from "./handlers/cancelThreadButtonHandler"
 import { cancelThreadButtonId, editJedzenieThreadViewId } from "./handlers/editThreadButtonHandler"
@@ -9,7 +11,6 @@ import { tawernaHandlers } from "./restaurants/tawerna"
 import { IntlService } from "./services/IntlService"
 import { RestaurantActionsMap, RestaurantsService } from "./services/RestaurantsService"
 import { TawernaMenuService } from "./services/TawernaMenuService"
-import { editThreadButtonId, threadOverflowActionsId } from "./utils/getJedzenieThreadBlock"
 import { restaurantPagePaginationId } from "./utils/getRestaurantsPage"
 
 const niechKtosBotId = ensureDefined(process.env.NIECH_KTOS_BOT_ID, "NIECH_KTOS_BOT_ID not defined")

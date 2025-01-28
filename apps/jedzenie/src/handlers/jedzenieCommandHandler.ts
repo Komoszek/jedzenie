@@ -1,5 +1,5 @@
+import { getJedzenieDialogBlocks, jedzenieTimezone } from "../blocks/getJedzenieDialogBlocks"
 import { IntlService } from "../services/IntlService"
-import { getJedzenieDialogBlocks, jedzenieTimezone } from "../utils/getJedzenieDialogBlocks"
 import { getTimeFromString } from "../utils/getTimeFromString"
 import { startJedzenieThread } from "../utils/startJedzenieThread"
 import { CommandArgs, Dependencies, WebClient } from "./types"

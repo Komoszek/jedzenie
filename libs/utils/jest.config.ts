@@ -1,4 +1,4 @@
-export default {
+const config = {
     displayName: "utils",
     preset: "../../jest.preset.js",
     testEnvironment: "node",
@@ -8,3 +8,5 @@ export default {
     moduleFileExtensions: ["ts", "js", "html"],
     coverageDirectory: "../../coverage/libs/utils",
 }
+
+export default config

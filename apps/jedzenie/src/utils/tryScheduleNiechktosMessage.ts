@@ -1,3 +1,4 @@
+import { formatUserMention } from "@jedzenie/utils"
 import { WebClient } from "../handlers/types"
 import { getDepartureTime } from "./getDepartureTime"
 import { Time } from "./getTimeFromString"
@@ -21,7 +22,7 @@ export function tryScheduleNiechktosMessage({
     return tryScheduleMessage({
         client,
         message: {
-            text: `<@${niechKtosBotId}>`,
+            text: formatUserMention(niechKtosBotId),
             channel,
             thread_ts,
         },

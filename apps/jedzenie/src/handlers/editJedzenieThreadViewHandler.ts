@@ -1,22 +1,23 @@
 import dayjs from "dayjs"
 import timezone from "dayjs/plugin/timezone"
 import utc from "dayjs/plugin/utc"
-import { IntlService } from "../services/IntlService"
-import { RestaurantsService } from "../services/RestaurantsService"
+import { ensureDefined } from "@leancodepl/utils"
 import {
     departureBlockId,
     departureTimeId,
     destinationBlockId,
     destinationInputId,
-} from "../utils/getJedzenieDialogBlocks"
-import { DestinationBlock, attachEditThreadButton, getJedzenieThreadBlocks } from "../utils/getJedzenieThreadBlock"
+} from "../blocks/getJedzenieDialogBlocks"
+import { DestinationBlock, getJedzenieThreadBlocks } from "../blocks/getJedzenieThreadBlock"
+import { IntlService } from "../services/IntlService"
+import { RestaurantsService } from "../services/RestaurantsService"
+import { attachEditThreadButton } from "../utils/attachEditThreadButton"
 import { Time, getTimeFromString } from "../utils/getTimeFromString"
 import { tryScheduleNiechktosMessage } from "../utils/tryScheduleNiechktosMessage"
 import { threadMetadataSchema } from "./editThreadButtonHandler"
 import { Dependencies, ViewArgs, WebClient } from "./types"
 import type { ViewStateValue } from "@slack/bolt"
 import type { KnownBlock } from "@slack/types"
-import { ensureDefined } from "@jedzenie/utils"
 
 dayjs.extend(utc)
 dayjs.extend(timezone)

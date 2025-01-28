@@ -1,4 +1,4 @@
-import dayjs, { Dayjs } from "dayjs"
+import dayjs, { Dayjs, ManipulateType } from "dayjs"
 import { Locator } from "playwright"
 import { Observable, firstValueFrom, from, shareReplay } from "rxjs"
 import { MenuItem } from "../types/MenuItem"
@@ -7,28 +7,15 @@ import { scrapePage } from "../utils/scrapePage"
 export class TawernaMenuService {
     private imagePlaceholder = "https://tawernagrecka.pl/wp-content/uploads/2023/05/dinner-scaled.jpg"
 
-    private lunchCacheTime?: Dayjs
-    private $lunchPipe?: Observable<TawernaLunchMenuData>
+    private cachedLunchMenu = new CachedPromise(() => this.scrapeLunchMenu(), { value: 8, unit: "hours" })
+    private cachedMenu = new CachedPromise(() => this.scrapeMenu(), { value: 8, unit: "hours" })
 
-    private menuCacheTime?: Dayjs
-    private $menuPipe?: Observable<MenuItem[]>
-
-    async getLunchMenu(): Promise<TawernaLunchMenuData> {
-        if (!this.$lunchPipe || !this.lunchCacheTime || this.lunchCacheTime < dayjs()) {
-            this.$lunchPipe = from(this.scrapeLunchMenu()).pipe(shareReplay(1))
-            this.lunchCacheTime = dayjs().add(10, "minutes")
-        }
-
-        return await firstValueFrom(this.$lunchPipe)
+    async getLunchMenu() {
+        return await this.cachedLunchMenu.get()
     }
 
-    async getMenu(): Promise<MenuItem[]> {
-        if (!this.$menuPipe || !this.menuCacheTime || this.menuCacheTime < dayjs()) {
-            this.$menuPipe = from(this.scrapeMenu()).pipe(shareReplay(1))
-            this.menuCacheTime = dayjs().add(8, "hours")
-        }
-
-        return await firstValueFrom(this.$menuPipe)
+    async getMenu() {
+        return await this.cachedMenu.get()
     }
 
     private async scrapeLunchMenu(): Promise<TawernaLunchMenuData> {
@@ -113,3 +100,26 @@ export class TawernaMenuService {
 }
 
 type TawernaLunchMenuData = { title: string; menu: MenuItem[] }
+
+class CachedPromise<T> {
+    private cachingTime: CachingTime
+    private fetcher: () => Promise<T>
+    private cacheExpiration?: Dayjs
+    private $pipe?: Observable<T>
+
+    constructor(fetcher: () => Promise<T>, cachingTime: CachingTime) {
+        this.fetcher = fetcher
+        this.cachingTime = cachingTime
+    }
+
+    async get() {
+        if (!this.$pipe || !this.cacheExpiration || this.cacheExpiration.isBefore(dayjs())) {
+            this.$pipe = from(this.fetcher()).pipe(shareReplay(1))
+            this.cacheExpiration = dayjs().add(this.cachingTime.value, this.cachingTime.unit)
+        }
+
+        return await firstValueFrom(this.$pipe)
+    }
+}
+
+type CachingTime = { value: number; unit: ManipulateType }

@@ -5,7 +5,7 @@ import {
     restaurantNameId,
     restaurantPatternsBlockId,
     restaurantPatternsId,
-} from "../utils/getRestaurantEditorDialogBlocks"
+} from "../blocks/getRestaurantEditorDialogBlocks"
 import { refreshJedzenieThreads } from "../utils/refreshJedzenieThreads"
 import { Dependencies, ViewArgs } from "./types"
 import type { RichTextBlock, RichTextElement } from "@slack/web-api"

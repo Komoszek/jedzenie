@@ -1,2 +1,6 @@
-export * from "./lib/ensureDefined"
+export * from "./lib/clamp"
+export * from "./lib/deepClone"
+export * from "./lib/formatUserMention"
 export * from "./lib/inject"
+export * from "./lib/isObject"
+export * from "./lib/sample"

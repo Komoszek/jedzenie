@@ -1,9 +1,9 @@
 import { defineMessages } from "@formatjs/intl"
-import { ensureDefined } from "@jedzenie/utils"
+import { sample } from "@jedzenie/utils"
+import { ensureDefined } from "@leancodepl/utils"
 import { MatchSlackInfo, splitwiseService } from "../services/splitwise"
 import { formatRankingPlace } from "../utils/formatRankingPlace"
-import { getGroupMemberBalance } from "../utils/getMemberBalancec"
-import { sample } from "../utils/sample"
+import { getGroupMemberBalance } from "../utils/getGroupMemberBalance"
 import { Balance } from "../utils/types/Balance"
 import { CommandArgs, Dependencies } from "./types"
 

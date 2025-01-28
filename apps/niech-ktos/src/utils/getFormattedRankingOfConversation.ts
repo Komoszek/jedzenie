@@ -1,11 +1,11 @@
-import { ensureDefined } from "@jedzenie/utils"
+import { ensureDefined } from "@leancodepl/utils"
 import { WebClient } from "../handlers/types"
 import { IntlService } from "../services/IntlService"
 import { splitwiseService } from "../services/splitwise"
 import { State } from "../services/state"
 import { formatRankingPlace } from "./formatRankingPlace"
 import { formatUnconnectedParticipants } from "./formatUnconnectedParticipants"
-import { getGroupMemberBalance } from "./getMemberBalancec"
+import { getGroupMemberBalance } from "./getGroupMemberBalance"
 import { Balance } from "./types/Balance"
 
 export async function getFormattedRankingOfConversation({

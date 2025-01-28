@@ -1,16 +1,16 @@
+import { formatUserMention } from "@jedzenie/utils"
 import { z } from "zod"
 import { IntlService } from "../services/IntlService"
 import { RestaurantsService } from "../services/RestaurantsService"
-import { deepClone } from "./deepClone"
-import { Time } from "./getTimeFromString"
-import { knownBlockToText } from "./knownBlockToText"
-import type { ActionsBlock, Button, ContextBlock, KnownBlock, RichTextBlock, SectionBlock } from "@slack/types"
+import { Time } from "../utils/getTimeFromString"
+import { knownBlockToText } from "../utils/knownBlockToText"
+import type { ContextBlock, KnownBlock, RichTextBlock, SectionBlock } from "@slack/types"
 
 export type DestinationBlock = RichTextBlock | SectionBlock
 
 export function getJedzenieThreadBlocks({
     destination,
-    time,
+    time: { hour, minutes },
     creatorId,
     restaurantsService,
     intlService,
@@ -27,7 +27,10 @@ export function getJedzenieThreadBlocks({
         destination,
         {
             type: "section",
-            text: { type: "mrkdwn", text: `*${time[0]}:${time[1].toString().padStart(2, "0")}* ~ <@${creatorId}>` },
+            text: {
+                type: "mrkdwn",
+                text: `*${hour}:${minutes.toString().padStart(2, "0")}* ~ ${formatUserMention(creatorId)}`,
+            },
         },
         {
             block_id: threadActionsBlockId,
@@ -83,59 +86,7 @@ export function getJedzenieThreadBlocks({
     ] as const satisfies KnownBlock[]
 }
 
-export function getEditThreadButtonBlock({
-    creatorId,
-    scheduledMessageId,
-    intlService,
-}: {
-    creatorId: string
-    scheduledMessageId: string
-    intlService: IntlService
-}): Button {
-    return {
-        type: "button",
-        text: {
-            type: "plain_text",
-            text: intlService.intl.formatMessage({ defaultMessage: "Edytuj", id: "jedzenieThreadBlocks.edit" }),
-            emoji: true,
-        },
-        value: JSON.stringify({ creatorId, scheduledMessageId } satisfies EditButtonValue),
-        action_id: editThreadButtonId,
-    }
-}
-
-export const editButtonValueSchema = z.object({
-    creatorId: z.string(),
-    scheduledMessageId: z.string(),
-})
-
-export type EditButtonValue = z.infer<typeof editButtonValueSchema>
-
-export function attachEditThreadButton({
-    blocks,
-    creatorId,
-    scheduledMessageId,
-    intlService,
-}: {
-    blocks: JedzenieThreadBlocks
-    creatorId: string
-    scheduledMessageId: string
-    intlService: IntlService
-}) {
-    const newBlocks = deepClone(blocks)
-
-    const editThreadButton = getEditThreadButtonBlock({ creatorId, scheduledMessageId, intlService })
-    const actions = newBlocks.find(
-        block => block.type === "actions" && block.block_id === threadActionsBlockId,
-    ) as ActionsBlock
-
-    actions.elements = [editThreadButton, ...actions.elements]
-
-    return newBlocks
-}
-
 export const threadActionsBlockId = "thread_actions"
-export const editThreadButtonId = "edit_thread"
 export const threadOverflowActionsId = "thread_overflow_actions"
 export enum ThreadOverflowActions {
     EditRestaurant,

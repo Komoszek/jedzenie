@@ -1,7 +1,6 @@
-import { clamp } from "./clamp"
+import { clamp } from "@jedzenie/utils"
 
-// [hour, minutes]
-export type Time = [number, number]
+export type Time = { hour: number; minutes: number }
 
 // TODO: use regex?
 export function getTimeFromString(timeString: string): Time {
@@ -31,5 +30,5 @@ export function getTimeFromString(timeString: string): Time {
         ;[hour, minutes] = timeParts.map(part => parseInt(part))
     }
 
-    return [clamp(0, hour, 23), clamp(0, minutes, 59)]
+    return { hour: clamp(0, hour, 23), minutes: clamp(0, minutes, 59) }
 }
