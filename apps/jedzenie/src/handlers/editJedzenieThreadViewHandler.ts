@@ -1,6 +1,7 @@
 import dayjs from "dayjs"
 import timezone from "dayjs/plugin/timezone"
 import utc from "dayjs/plugin/utc"
+import * as v from "valibot"
 import { ensureDefined } from "@leancodepl/utils"
 import {
     departureBlockId,
@@ -44,7 +45,7 @@ export async function editJedzenieThreadViewHandler(
         return
     }
 
-    const { channel, ts, scheduledMessageId } = threadMetadataSchema.parse(JSON.parse(view.private_metadata))
+    const { channel, ts, scheduledMessageId } = v.parse(threadMetadataSchema, JSON.parse(view.private_metadata))
 
     await editJedzenieThread({
         ts,

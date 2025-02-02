@@ -1,5 +1,5 @@
 import { formatUserMention } from "@jedzenie/utils"
-import { z } from "zod"
+import * as v from "valibot"
 import { IntlService } from "../services/IntlService"
 import { RestaurantsService } from "../services/RestaurantsService"
 import { Time } from "../utils/getTimeFromString"
@@ -95,15 +95,14 @@ export enum ThreadOverflowActions {
 
 export type JedzenieThreadBlocks = ReturnType<typeof getJedzenieThreadBlocks>
 
-export const overflowActionSchema = z
-    .object({
-        act: z.literal(ThreadOverflowActions.AddRestaurant),
-    })
-    .or(
-        z.object({
-            id: z.string(),
-            act: z.literal(ThreadOverflowActions.EditRestaurant),
-        }),
-    )
+export const overflowActionSchema = v.union([
+    v.object({
+        act: v.literal(ThreadOverflowActions.AddRestaurant),
+    }),
+    v.object({
+        id: v.string(),
+        act: v.literal(ThreadOverflowActions.EditRestaurant),
+    }),
+])
 
-type Action = z.infer<typeof overflowActionSchema>
+type Action = v.InferOutput<typeof overflowActionSchema>

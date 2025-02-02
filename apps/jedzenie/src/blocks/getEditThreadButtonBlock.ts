@@ -1,4 +1,4 @@
-import { z } from "zod"
+import * as v from "valibot"
 import { IntlService } from "../services/IntlService"
 import type { Button } from "@slack/types"
 
@@ -23,10 +23,10 @@ export function getEditThreadButtonBlock({
     }
 }
 
-export const editButtonValueSchema = z.object({
-    creatorId: z.string(),
-    scheduledMessageId: z.string(),
+export const editButtonValueSchema = v.object({
+    creatorId: v.string(),
+    scheduledMessageId: v.string(),
 })
 
-export type EditButtonValue = z.infer<typeof editButtonValueSchema>
+export type EditButtonValue = v.InferInput<typeof editButtonValueSchema>
 export const editThreadButtonId = "edit_thread"

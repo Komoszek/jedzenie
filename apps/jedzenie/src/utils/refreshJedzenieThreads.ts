@@ -1,4 +1,5 @@
 import dayjs from "dayjs"
+import * as v from "valibot"
 import { ensureDefined } from "@leancodepl/utils"
 import { EditButtonValue, editButtonValueSchema, editThreadButtonId } from "../blocks/getEditThreadButtonBlock"
 import { JedzenieThreadBlocks, getJedzenieThreadBlocks, threadActionsBlockId } from "../blocks/getJedzenieThreadBlock"
@@ -89,7 +90,7 @@ export async function refreshJedzenieThreads({
         let editButtonValue: EditButtonValue
 
         try {
-            editButtonValue = editButtonValueSchema.parse(JSON.parse(editButton.value))
+            editButtonValue = v.parse(editButtonValueSchema, JSON.parse(editButton.value))
         } catch (error) {
             console.error(error)
             continue

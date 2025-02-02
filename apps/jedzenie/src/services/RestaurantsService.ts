@@ -1,6 +1,6 @@
 import { readFileSync } from "fs"
 import { writeFile } from "fs/promises"
-import { z } from "zod"
+import * as v from "valibot"
 import type { ActionsBlockElement } from "@slack/web-api"
 
 export type RestaurantActionsMap = Record<string, ActionsBlockElement[] | undefined>
@@ -19,7 +19,7 @@ export class RestaurantsService {
         try {
             const state = readFileSync(this.restaurantsPath, "utf8")
 
-            return z.array(restaurantSchema).parse(JSON.parse(state))
+            return v.parse(v.array(restaurantSchema), JSON.parse(state))
         } catch (e) {
             console.error(e)
             return []
@@ -85,11 +85,11 @@ export class RestaurantsService {
     }
 }
 
-const restaurantSchema = z.object({
-    id: z.string(),
-    name: z.string(),
-    patterns: z.array(z.string()),
-    links: z.array(z.string()),
+const restaurantSchema = v.object({
+    id: v.string(),
+    name: v.string(),
+    patterns: v.array(v.string()),
+    links: v.array(v.string()),
 })
 
-export type Restaurant = z.infer<typeof restaurantSchema>
+export type Restaurant = v.InferOutput<typeof restaurantSchema>

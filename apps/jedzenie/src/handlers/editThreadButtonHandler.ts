@@ -1,5 +1,5 @@
 import { formatUserMention } from "@jedzenie/utils"
-import { z } from "zod"
+import * as v from "valibot"
 import { ensureDefined } from "@leancodepl/utils"
 import { editButtonValueSchema } from "../blocks/getEditThreadButtonBlock"
 import { getJedzenieDialogBlocks } from "../blocks/getJedzenieDialogBlocks"
@@ -19,7 +19,7 @@ export async function editThreadButtonHandler(
     }
 
     const { creatorId, scheduledMessageId = "" } = payload.value
-        ? editButtonValueSchema.parse(JSON.parse(payload.value))
+        ? v.parse(editButtonValueSchema, JSON.parse(payload.value))
         : {}
 
     if (body.user.id !== creatorId) {
@@ -72,13 +72,13 @@ export async function editThreadButtonHandler(
     })
 }
 
-export const threadMetadataSchema = z.object({
-    channel: z.string(),
-    ts: z.string(),
-    scheduledMessageId: z.string(),
+export const threadMetadataSchema = v.object({
+    channel: v.string(),
+    ts: v.string(),
+    scheduledMessageId: v.string(),
 })
 
-type ThreadMetadata = z.infer<typeof threadMetadataSchema>
+type ThreadMetadata = v.InferOutput<typeof threadMetadataSchema>
 
 export function getTimeFromThreadBlocks(blocks: JedzenieThreadBlocks) {
     return blocks[1].text.text.match(/^\*(\d+:\d+)\*/)?.[1].padStart(5, "0")

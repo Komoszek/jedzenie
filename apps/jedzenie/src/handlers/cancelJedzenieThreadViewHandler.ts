@@ -1,8 +1,9 @@
+import * as v from "valibot"
 import { threadMetadataSchema } from "./editThreadButtonHandler"
 import { ViewArgs } from "./types"
 
 export async function cancelJedzenieThreadViewHandler({ ack, view, client }: ViewArgs) {
-    const { scheduledMessageId, ts, channel } = threadMetadataSchema.parse(JSON.parse(view.private_metadata))
+    const { scheduledMessageId, ts, channel } = v.parse(threadMetadataSchema, JSON.parse(view.private_metadata))
 
     try {
         await client.chat.deleteScheduledMessage({

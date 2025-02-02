@@ -1,4 +1,4 @@
-import { z } from "zod"
+import * as v from "valibot"
 import { ActionArgs } from "../handlers/types"
 import { IntlService } from "../services/IntlService"
 import type { ActionsBlock } from "@slack/types"
@@ -68,9 +68,9 @@ export function getPaginationBlocks({
     ]
 }
 
-export const paginationSchema = z.coerce.number().int().nonnegative()
+export const paginationSchema = v.pipe(v.unknown(), v.transform(Number), v.integer(), v.minValue(0))
 
-export type Pagination = z.infer<typeof paginationSchema>
+export type Pagination = v.InferOutput<typeof paginationSchema>
 
 function getPageOption(page: number) {
     return {
@@ -96,5 +96,5 @@ export function getPaginationValue(payload: ActionArgs["payload"]) {
             return
     }
 
-    return paginationSchema.parse(value)
+    return v.parse(paginationSchema, value)
 }

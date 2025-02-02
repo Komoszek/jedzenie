@@ -1,3 +1,4 @@
+import * as v from "valibot"
 import { ThreadOverflowActions, overflowActionSchema } from "../blocks/getJedzenieThreadBlock"
 import { knownBlockToText } from "../utils/knownBlockToText"
 import { openRestaurantEditor } from "../utils/openRestaurantEditor"
@@ -11,7 +12,7 @@ export async function threadOverflowActionsHandler(
         return
     }
 
-    const action = overflowActionSchema.parse(JSON.parse(payload.selected_option.value))
+    const action = v.parse(overflowActionSchema, JSON.parse(payload.selected_option.value))
 
     await ack()
 
