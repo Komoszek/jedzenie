@@ -2,7 +2,15 @@ import { IntlService } from "../services/IntlService"
 import { Restaurant } from "../services/RestaurantsService"
 import type { KnownBlock } from "@slack/types"
 
-export function getRestaurantDetailsBlocks(restaurant: Restaurant, intlService: IntlService): KnownBlock[] {
+export function getRestaurantDetailsBlocks({
+    showEdit,
+    restaurant,
+    intlService,
+}: {
+    showEdit?: boolean
+    restaurant: Restaurant
+    intlService: IntlService
+}): KnownBlock[] {
     return [
         {
             type: "section",
@@ -10,6 +18,19 @@ export function getRestaurantDetailsBlocks(restaurant: Restaurant, intlService: 
                 type: "plain_text",
                 text: restaurant.name,
             },
+            ...(showEdit
+                ? {
+                      accessory: {
+                          type: "button",
+                          text: {
+                              type: "plain_text",
+                              text: intlService.intl.formatMessage({ defaultMessage: "Edytuj", id: "common.edit" }),
+                          },
+                          action_id: editRestaurantButtonId,
+                          value: restaurant.id,
+                      },
+                  }
+                : {}),
         },
         {
             type: "context",
@@ -28,3 +49,5 @@ export function getRestaurantDetailsBlocks(restaurant: Restaurant, intlService: 
         },
     ]
 }
+
+export const editRestaurantButtonId = "edit_restaurant"

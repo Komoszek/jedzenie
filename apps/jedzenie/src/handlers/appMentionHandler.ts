@@ -14,6 +14,6 @@ export async function appMentionHandler(
     await client.chat.postMessage({
         channel,
         thread_ts: thread_ts ?? ts,
-        blocks: getRestaurantDetailsBlocks(restaurant, intlService),
+        blocks: getRestaurantDetailsBlocks({ restaurant, intlService }),
     })
 }

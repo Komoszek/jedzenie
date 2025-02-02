@@ -1,6 +1,6 @@
 import { ThreadOverflowActions, overflowActionSchema } from "../blocks/getJedzenieThreadBlock"
-import { getRestaurantEditorDialogBlocks } from "../blocks/getRestaurantEditorDialogBlocks"
 import { knownBlockToText } from "../utils/knownBlockToText"
+import { openRestaurantEditor } from "../utils/openRestaurantEditor"
 import { ActionArgs, Dependencies } from "./types"
 
 export async function threadOverflowActionsHandler(
@@ -15,74 +15,14 @@ export async function threadOverflowActionsHandler(
 
     await ack()
 
-    const destination = knownBlockToText(body.message.blocks.at(0))
-
-    await client.views.open({
-        trigger_id: body.trigger_id,
-        view: {
-            type: "modal",
-            callback_id: restaurantEditorId,
-            ...(action.act === ThreadOverflowActions.AddRestaurant
-                ? {
-                      blocks: getRestaurantEditorDialogBlocks({
-                          restaurant: {
-                              name: destination,
-                              patterns: [destination.toLowerCase()],
-                          },
-                          intlService,
-                      }),
-                      title: {
-                          type: "plain_text",
-                          text: intlService.intl.formatMessage({
-                              defaultMessage: "Dodaj nową restaurację",
-                              id: "restaurantEditor.add.title",
-                          }),
-                      },
-                      close: {
-                          type: "plain_text",
-                          text: intlService.intl.formatMessage({
-                              defaultMessage: "Anuluj",
-                              id: "restaurantEditor.add.close",
-                          }),
-                      },
-                      submit: {
-                          type: "plain_text",
-                          text: intlService.intl.formatMessage({
-                              defaultMessage: "Dodaj",
-                              id: "cancelThreadView.add.submit",
-                          }),
-                      },
-                  }
-                : {
-                      private_metadata: action.id,
-                      blocks: getRestaurantEditorDialogBlocks({
-                          restaurant: restaurantsService.matchRestaurant(destination),
-                          intlService,
-                      }),
-                      title: {
-                          type: "plain_text",
-                          text: intlService.intl.formatMessage({
-                              defaultMessage: "Edytuj restaurację",
-                              id: "restaurantEditor.edit.title",
-                          }),
-                      },
-                      close: {
-                          type: "plain_text",
-                          text: intlService.intl.formatMessage({
-                              defaultMessage: "Anuluj",
-                              id: "restaurantEditor.edit.close",
-                          }),
-                      },
-                      submit: {
-                          type: "plain_text",
-                          text: intlService.intl.formatMessage({
-                              defaultMessage: "Zapisz",
-                              id: "cancelThreadView.edit.submit",
-                          }),
-                      },
-                  }),
-        },
+    await openRestaurantEditor({
+        triggerId: body.trigger_id,
+        intlService,
+        restaurantsService,
+        client,
+        viewOpenType: "open",
+        ...(action.act === ThreadOverflowActions.EditRestaurant
+            ? { restaurantId: action.id }
+            : { destination: knownBlockToText(body.message.blocks.at(0)) }),
     })
 }
-
-export const restaurantEditorId = "restaurant_editor"

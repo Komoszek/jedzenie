@@ -34,6 +34,10 @@ export class RestaurantsService {
         return this.restaurants.findIndex(({ id }) => id === restaurantId)
     }
 
+    getRestaurant(restaurantId: string) {
+        return this.restaurants.find(({ id }) => id === restaurantId)
+    }
+
     async addRestaurant(restaurant: Restaurant) {
         const restaurantIndex = this.getRestaurantIndex(restaurant.id)
 

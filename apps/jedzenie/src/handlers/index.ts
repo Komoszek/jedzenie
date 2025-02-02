@@ -3,6 +3,7 @@ import { appMentionHandler } from "./appMentionHandler"
 import { cancelJedzenieThreadViewHandler } from "./cancelJedzenieThreadViewHandler"
 import { cancelThreadButtonHandler } from "./cancelThreadButtonHandler"
 import { editJedzenieThreadViewHandler } from "./editJedzenieThreadViewHandler"
+import { editRestaurantButtonHandler } from "./editRestaurantButtonHandler"
 import { editThreadButtonHandler } from "./editThreadButtonHandler"
 import { jedzenieCommandHandler } from "./jedzenieCommandHandler"
 import { restauracjeCommandHandler } from "./restauracjeCommandHandler"
@@ -26,6 +27,7 @@ export function handlers(dependencies: Dependencies) {
             restauracjePaginationHandler,
             cancelJedzenieThreadViewHandler,
             restaurantEditorViewHandler,
+            editRestaurantButtonHandler,
         },
         dependencies,
     )

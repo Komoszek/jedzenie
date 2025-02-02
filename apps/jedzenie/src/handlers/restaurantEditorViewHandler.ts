@@ -56,7 +56,9 @@ export async function restaurantEditorViewHandler(
         intlService,
     })
 
-    await ack()
+    await ack({
+        response_action: "clear",
+    })
 }
 
 function convertNameToId(name: string): string {

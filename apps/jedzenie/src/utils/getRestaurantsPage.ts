@@ -41,7 +41,9 @@ export function getRestaurantsPage({
             emoji: true,
         },
         blocks: [
-            ...restaurants.flatMap(restaurant => [...getRestaurantDetailsBlocks(restaurant, intlService)]),
+            ...restaurants.flatMap(restaurant => [
+                ...getRestaurantDetailsBlocks({ showEdit: true, restaurant, intlService }),
+            ]),
             ...(totalPages > 1
                 ? getPaginationBlocks({ page, totalPages, intlService, getActionId: getPaginationActionId })
                 : []),
