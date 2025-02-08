@@ -13,7 +13,7 @@ import { DestinationBlock, getJedzenieThreadBlocks } from "../blocks/getJedzenie
 import { IntlService } from "../services/IntlService"
 import { RestaurantsService } from "../services/RestaurantsService"
 import { attachEditThreadButton } from "../utils/attachEditThreadButton"
-import { Time, getTimeFromString } from "../utils/getTimeFromString"
+import { getTimeFromString, Time } from "../utils/getTimeFromString"
 import { tryScheduleNiechktosMessage } from "../utils/tryScheduleNiechktosMessage"
 import { threadMetadataSchema } from "./editThreadButtonHandler"
 import { Dependencies, ViewArgs, WebClient } from "./types"

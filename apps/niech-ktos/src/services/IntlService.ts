@@ -1,4 +1,4 @@
-import { IntlShape, createIntl, createIntlCache } from "@formatjs/intl"
+import { createIntl, createIntlCache, IntlShape } from "@formatjs/intl"
 import pl from "../i18n/pl.json"
 
 export type PlTranslationsKeys = keyof typeof pl

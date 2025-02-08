@@ -1,5 +1,5 @@
 import * as v from "valibot"
-import { ThreadOverflowActions, overflowActionSchema } from "../blocks/getJedzenieThreadBlock"
+import { overflowActionSchema, ThreadOverflowActions } from "../blocks/getJedzenieThreadBlock"
 import { knownBlockToText } from "../utils/knownBlockToText"
 import { openRestaurantEditor } from "../utils/openRestaurantEditor"
 import { ActionArgs, Dependencies } from "./types"

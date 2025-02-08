@@ -26,7 +26,6 @@ export function getTimeFromString(timeString: string): Time {
             minutes = parseInt(time.slice(-2))
         }
     } else {
-        // eslint-disable-next-line @typescript-eslint/no-extra-semi
         ;[hour, minutes] = timeParts.map(part => parseInt(part))
     }
 

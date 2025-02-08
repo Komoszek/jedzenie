@@ -1,7 +1,6 @@
 /**
  * Poor man's dependency injection
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function inject<TInjected, TFunctions extends Record<string, (arg: any, injected: TInjected) => void>>(
     functions: TFunctions,
     injected: TInjected,
