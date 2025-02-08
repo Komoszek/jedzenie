@@ -1,8 +1,7 @@
-import dayjs, { Dayjs, ManipulateType } from "dayjs"
+import { CachedPromise } from "@jedzenie/utils"
 import { Locator } from "playwright"
-import { Observable, firstValueFrom, from, shareReplay } from "rxjs"
-import { MenuItem } from "../types/MenuItem"
-import { scrapePage } from "../utils/scrapePage"
+import { MenuItem } from "../../types/MenuItem"
+import { scrapePage } from "../../utils/scrapePage"
 
 export class TawernaMenuService {
     private imagePlaceholder = "https://tawernagrecka.pl/wp-content/uploads/2023/05/dinner-scaled.jpg"
@@ -100,26 +99,3 @@ export class TawernaMenuService {
 }
 
 type TawernaLunchMenuData = { title: string; menu: MenuItem[] }
-
-class CachedPromise<T> {
-    private cachingTime: CachingTime
-    private fetcher: () => Promise<T>
-    private cacheExpiration?: Dayjs
-    private $pipe?: Observable<T>
-
-    constructor(fetcher: () => Promise<T>, cachingTime: CachingTime) {
-        this.fetcher = fetcher
-        this.cachingTime = cachingTime
-    }
-
-    async get() {
-        if (!this.$pipe || !this.cacheExpiration || this.cacheExpiration.isBefore(dayjs())) {
-            this.$pipe = from(this.fetcher()).pipe(shareReplay(1))
-            this.cacheExpiration = dayjs().add(this.cachingTime.value, this.cachingTime.unit)
-        }
-
-        return await firstValueFrom(this.$pipe)
-    }
-}
-
-type CachingTime = { value: number; unit: ManipulateType }

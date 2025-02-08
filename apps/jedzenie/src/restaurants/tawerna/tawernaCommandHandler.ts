@@ -1,6 +1,6 @@
 import { CommandArgs } from "../../handlers/types"
-import { TawernaMenuService } from "../../services/TawernaMenuService"
 import { MenuItem } from "../../types/MenuItem"
+import { TawernaMenuService } from "./TawernaMenuService"
 import { TawernaDependencies } from "./types"
 import type { SectionBlock } from "@slack/types"
 

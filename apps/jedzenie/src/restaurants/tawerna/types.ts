@@ -1,5 +1,5 @@
 import { IntlService } from "../../services/IntlService"
-import { TawernaMenuService } from "../../services/TawernaMenuService"
+import { TawernaMenuService } from "./TawernaMenuService"
 
 export type TawernaDependencies = {
     tawernaMenuService: TawernaMenuService

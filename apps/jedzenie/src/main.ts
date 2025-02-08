@@ -7,10 +7,11 @@ import { handlers } from "./handlers"
 import { cancelJedzenieThreadViewId } from "./handlers/cancelThreadButtonHandler"
 import { cancelThreadButtonId, editJedzenieThreadViewId } from "./handlers/editThreadButtonHandler"
 import { startJedzenieThreadViewId } from "./handlers/jedzenieCommandHandler"
-import { tawernaHandlers } from "./restaurants/tawerna"
+import { applyRestaurants } from "./restaurants"
+import { showTawernaLunchMenuButtonId, tawerna } from "./restaurants/tawerna"
+import { TawernaMenuService } from "./restaurants/tawerna/TawernaMenuService"
 import { IntlService } from "./services/IntlService"
 import { RestaurantActionsMap, RestaurantsService } from "./services/RestaurantsService"
-import { TawernaMenuService } from "./services/TawernaMenuService"
 import { restaurantPagePaginationId } from "./utils/getRestaurantsPage"
 import { restaurantEditorId } from "./utils/openRestaurantEditor"
 
@@ -23,8 +24,6 @@ const app = new App({
 })
 
 const intlService = new IntlService()
-
-const showTawernaLunchMenuButtonId = "show_tawerna_lunch_menu"
 
 const restaurantActions: RestaurantActionsMap = {
     tawerna: [
@@ -43,7 +42,8 @@ const restaurantActions: RestaurantActionsMap = {
     ],
 }
 
-// Global jedzenie handlers
+const jedzenieBotId = ensureDefined((await app.client.auth.test()).bot_id, "Couldn't fetch jedzenie bot id")
+
 const {
     editThreadButtonHandler,
     cancelThreadButtonHandler,
@@ -58,7 +58,7 @@ const {
     restauracjePaginationHandler,
     editRestaurantButtonHandler,
 } = handlers({
-    jedzenieBotId: ensureDefined((await app.client.auth.test()).bot_id, "Couldn't fetch jedzenie bot id"),
+    jedzenieBotId,
     niechKtosBotId,
     restaurantsService: new RestaurantsService(
         ensureDefined(process.env.RESTAURANTS_PATH, "RESTAURANTS_PATH not defined"),
@@ -80,14 +80,7 @@ app.action(threadOverflowActionsId, threadOverflowActionsHandler)
 app.action(new RegExp(`^${restaurantPagePaginationId}`), restauracjePaginationHandler)
 app.event("app_mention", appMentionHandler)
 
-// Tawerna handlers
-const { tawernaCommandHandler, showTawernaLunchMenuButtonHandler } = tawernaHandlers({
-    tawernaMenuService: new TawernaMenuService(),
-    intlService,
-})
-
-app.command("/tawerna", tawernaCommandHandler)
-app.action(showTawernaLunchMenuButtonId, showTawernaLunchMenuButtonHandler)
+applyRestaurants(app, tawerna({ intlService, tawernaMenuService: new TawernaMenuService() }))
 
 await app.start()
 
