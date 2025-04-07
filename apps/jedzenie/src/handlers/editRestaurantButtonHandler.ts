@@ -20,6 +20,6 @@ export async function editRestaurantButtonHandler(
         restaurantsService,
         client,
         restaurantId,
-        viewOpenType: "push",
+        viewOpenType: body.view ? "push" : "open",
     })
 }
