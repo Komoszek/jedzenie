@@ -12,7 +12,14 @@ export async function restauracjeCommandHandler(
         await ack(
             restaurant
                 ? {
-                      blocks: getRestaurantDetailsBlocks({ showEdit: true, restaurant, intlService }),
+                      blocks: getRestaurantDetailsBlocks({
+                          showEdit: true,
+                          restaurant: {
+                              ...restaurant,
+                              actions: restaurantsService.getRestaurantActions(restaurant.id),
+                          },
+                          intlService,
+                      }),
                   }
                 : intlService.intl.formatMessage({
                       defaultMessage: "Nie znaleziono restauracji :sob:",

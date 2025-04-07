@@ -68,6 +68,10 @@ export class RestaurantsService {
         )
     }
 
+    getRestaurantActions(restaurantId: string): ActionsBlockElement[] {
+        return this.restaurantActionsMap[restaurantId] ?? []
+    }
+
     getBlockDetails(text: string) {
         const restaurant = this.matchRestaurant(text)
 
@@ -77,7 +81,7 @@ export class RestaurantsService {
 
         const { links, id } = restaurant
 
-        return { actions: this.restaurantActionsMap[id] ?? [], links, id }
+        return { actions: this.getRestaurantActions(id), links, id }
     }
 
     getRestaurants(): Restaurant[] {
@@ -93,3 +97,6 @@ const restaurantSchema = v.object({
 })
 
 export type Restaurant = v.InferOutput<typeof restaurantSchema>
+export type RestaurantWithActions = {
+    actions: ActionsBlockElement[]
+} & Restaurant

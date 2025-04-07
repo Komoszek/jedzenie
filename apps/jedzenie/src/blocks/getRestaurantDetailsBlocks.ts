@@ -1,5 +1,5 @@
 import { IntlService } from "../services/IntlService"
-import { Restaurant } from "../services/RestaurantsService"
+import { RestaurantWithActions } from "../services/RestaurantsService"
 import type { KnownBlock } from "@slack/types"
 
 export function getRestaurantDetailsBlocks({
@@ -8,7 +8,7 @@ export function getRestaurantDetailsBlocks({
     intlService,
 }: {
     showEdit?: boolean
-    restaurant: Restaurant
+    restaurant: RestaurantWithActions
     intlService: IntlService
 }): KnownBlock[] {
     return [
@@ -32,6 +32,14 @@ export function getRestaurantDetailsBlocks({
                   }
                 : {}),
         },
+        ...(restaurant.actions.length > 0
+            ? ([
+                  {
+                      type: "actions",
+                      elements: restaurant.actions,
+                  },
+              ] as const)
+            : []),
         {
             type: "context",
             elements: [

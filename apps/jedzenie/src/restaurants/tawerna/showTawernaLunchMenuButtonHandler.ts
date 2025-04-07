@@ -5,7 +5,7 @@ import { TawernaDependencies } from "./types"
 import type { View } from "@slack/types"
 
 export async function showTawernaLunchMenuButtonHandler(
-    { ack, client, body }: ActionArgs,
+    { ack, client, body, payload }: ActionArgs,
     { tawernaMenuService, intlService }: TawernaDependencies,
 ) {
     await ack()
@@ -32,7 +32,7 @@ export async function showTawernaLunchMenuButtonHandler(
         },
     } as const satisfies Partial<View>
 
-    const { view } = await client.views.open({
+    const { view } = await client.views[body.view ? "push" : "open"]({
         trigger_id: body.trigger_id,
         view: {
             ...commonViewProps,

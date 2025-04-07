@@ -42,7 +42,11 @@ export function getRestaurantsPage({
         },
         blocks: [
             ...restaurants.flatMap(restaurant => [
-                ...getRestaurantDetailsBlocks({ showEdit: true, restaurant, intlService }),
+                ...getRestaurantDetailsBlocks({
+                    showEdit: true,
+                    restaurant: { ...restaurant, actions: restaurantsService.getRestaurantActions(restaurant.id) },
+                    intlService,
+                }),
             ]),
             ...(totalPages > 1
                 ? getPaginationBlocks({ page, totalPages, intlService, getActionId: getPaginationActionId })
