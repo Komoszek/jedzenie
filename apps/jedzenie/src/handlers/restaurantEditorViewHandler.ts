@@ -1,3 +1,4 @@
+import * as v from "valibot"
 import {
     restaurantLinksBlockId,
     restaurantLinksId,
@@ -6,19 +7,21 @@ import {
     restaurantPatternsBlockId,
     restaurantPatternsId,
 } from "../blocks/getRestaurantEditorDialogBlocks"
-import { refreshJedzenieThreads } from "../utils/refreshJedzenieThreads"
+import { editRestaurantValueSchema } from "../utils/openRestaurantEditor"
 import { Dependencies, ViewArgs } from "./types"
 import type { RichTextBlock, RichTextElement } from "@slack/web-api"
 
 export async function restaurantEditorViewHandler(
-    { ack, view, client }: ViewArgs,
+    { ack, view, client, ...rest }: ViewArgs,
     { restaurantsService, jedzenieBotId, intlService }: Dependencies,
 ) {
     const name = (view.state.values[restaurantNameBlockId]?.[restaurantNameId].value ?? "").trim()
     const patterns = getPatterns(view.state.values[restaurantPatternsBlockId]?.[restaurantPatternsId].value ?? "")
     const links = getLinks(view.state.values[restaurantLinksBlockId]?.[restaurantLinksId].rich_text_value)
 
-    let restaurantId = view.private_metadata
+    let { restaurantId, thread_ts } = v.parse(editRestaurantValueSchema, JSON.parse(view.private_metadata))
+
+    console.log()
 
     if (restaurantId) {
         await restaurantsService.editRestaurant({ id: restaurantId, name, patterns, links })
@@ -48,13 +51,13 @@ export async function restaurantEditorViewHandler(
         }
     }
 
-    await refreshJedzenieThreads({
-        client,
-        jedzenieBotId,
-        restaurantsFilter: [restaurantId],
-        restaurantsService,
-        intlService,
-    })
+    // await refreshJedzenieThreads({
+    //     client,
+    //     jedzenieBotId,
+    //     restaurantsFilter: [restaurantId],
+    //     restaurantsService,
+    //     intlService,
+    // })
 
     await ack({
         response_action: "clear",

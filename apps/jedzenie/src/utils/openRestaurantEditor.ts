@@ -1,8 +1,11 @@
+import * as v from "valibot"
 import { getRestaurantEditorDialogBlocks } from "../blocks/getRestaurantEditorDialogBlocks"
 import { WebClient } from "../handlers/types"
 import { IntlService } from "../services/IntlService"
 import { RestaurantsService } from "../services/RestaurantsService"
 import type { ModalView } from "@slack/types"
+
+type Thread
 
 type OpenRestaurantEditorArgs = {
     client: WebClient
@@ -10,6 +13,7 @@ type OpenRestaurantEditorArgs = {
     intlService: IntlService
     restaurantsService: RestaurantsService
     viewOpenType: "open" | "push"
+    thread?: string
 } & ({ destination: string; restaurantId?: undefined } | { destination?: undefined; restaurantId: string })
 
 export async function openRestaurantEditor({
@@ -20,15 +24,18 @@ export async function openRestaurantEditor({
     intlService,
     restaurantsService,
     viewOpenType,
+    thread_ts,
 }: OpenRestaurantEditorArgs) {
+    const private_metadata = JSON.stringify({ restaurantId, thread_ts } satisfies EditRestaurantValueSchema)
+
     const view = {
         trigger_id: triggerId,
         view: {
             type: "modal",
             callback_id: restaurantEditorId,
+            private_metadata,
             ...(restaurantId !== undefined
                 ? {
-                      private_metadata: restaurantId,
                       blocks: getRestaurantEditorDialogBlocks({
                           restaurant: restaurantsService.getRestaurant(restaurantId),
                           intlService,
@@ -97,3 +104,9 @@ export async function openRestaurantEditor({
 }
 
 export const restaurantEditorId = "restaurant_editor"
+
+export const editRestaurantValueSchema = v.object({
+    restaurantId: v.optional(v.string()),
+    thread_ts: v.optional(v.string()),
+})
+type EditRestaurantValueSchema = v.InferOutput<typeof editRestaurantValueSchema>

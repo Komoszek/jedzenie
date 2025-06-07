@@ -14,12 +14,15 @@ export async function editRestaurantButtonHandler(
 
     const restaurantId = ensureDefined(payload.value)
 
+    console.log(body.container)
+
     await openRestaurantEditor({
         triggerId: body.trigger_id,
         intlService,
         restaurantsService,
         client,
         restaurantId,
+        thread_ts: body.container.message_ts,
         viewOpenType: body.view ? "push" : "open",
     })
 }

@@ -16,12 +16,15 @@ export async function threadOverflowActionsHandler(
 
     await ack()
 
+    console.log(body.container)
+
     await openRestaurantEditor({
         triggerId: body.trigger_id,
         intlService,
         restaurantsService,
         client,
         viewOpenType: "open",
+        thread_ts: body.container.thread_ts,
         ...(action.act === ThreadOverflowActions.EditRestaurant
             ? { restaurantId: action.id }
             : { destination: knownBlockToText(body.message.blocks.at(0)) }),
