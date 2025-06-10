@@ -1,3 +1,4 @@
+import { mrkdwnToRichText } from "@jedzenie/utils"
 import { getJedzenieDialogBlocks, jedzenieTimezone } from "../blocks/getJedzenieDialogBlocks"
 import { IntlService } from "../services/IntlService"
 import { getTimeFromString } from "../utils/getTimeFromString"
@@ -41,13 +42,7 @@ export async function jedzenieCommandHandler(
         time: getTimeFromString(timeString),
         client,
         channel: command.channel_id,
-        destination: {
-            type: "section",
-            text: {
-                type: "mrkdwn",
-                text: destination,
-            },
-        },
+        destination: mrkdwnToRichText(destination),
         niechKtosBotId,
         timezone: jedzenieTimezone,
         restaurantsService,

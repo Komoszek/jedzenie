@@ -1,5 +1,5 @@
 import { ensureDefined } from "@leancodepl/utils"
-import { DestinationBlock, getJedzenieThreadBlocks } from "../blocks/getJedzenieThreadBlock"
+import { DestinationBlock, getJedzenieThreadBlocksAndText } from "../blocks/getJedzenieThreadBlock"
 import { WebClient } from "../handlers/types"
 import { IntlService } from "../services/IntlService"
 import { RestaurantsService } from "../services/RestaurantsService"
@@ -29,13 +29,20 @@ export async function startJedzenieThread({
     restaurantsService: RestaurantsService
     intlService: IntlService
 }) {
-    const blocks = getJedzenieThreadBlocks({ destination, time, creatorId, restaurantsService, intlService })
+    const { blocks, text } = getJedzenieThreadBlocksAndText({
+        destination,
+        time,
+        creatorId,
+        restaurantsService,
+        intlService,
+    })
 
     const response = await client.chat.postMessage({
         channel,
         unfurl_links: false,
         unfurl_media: false,
         blocks: blocks as unknown as KnownBlock[],
+        text,
     })
 
     if (!response.ok) {
@@ -65,5 +72,6 @@ export async function startJedzenieThread({
             scheduledMessageId,
             intlService,
         }) as unknown as KnownBlock[],
+        text,
     })
 }
