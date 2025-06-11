@@ -9,7 +9,7 @@ import {
     destinationBlockId,
     destinationInputId,
 } from "../blocks/getJedzenieDialogBlocks"
-import { DestinationBlock, getJedzenieThreadBlocks } from "../blocks/getJedzenieThreadBlock"
+import { DestinationBlock, getJedzenieThreadBlocksAndText } from "../blocks/getJedzenieThreadBlock"
 import { IntlService } from "../services/IntlService"
 import { RestaurantsService } from "../services/RestaurantsService"
 import { attachEditThreadButton } from "../utils/attachEditThreadButton"
@@ -111,12 +111,19 @@ async function editJedzenieThread({
 
     await ack()
 
-    const blocks = getJedzenieThreadBlocks({ destination, time, creatorId, restaurantsService, intlService })
+    const { blocks, text } = getJedzenieThreadBlocksAndText({
+        destination,
+        time,
+        creatorId,
+        restaurantsService,
+        intlService,
+    })
 
     const response = await client.chat.update({
         channel,
         ts,
         blocks: blocks as unknown as KnownBlock[],
+        text,
     })
 
     if (!response.ok) {
@@ -146,5 +153,6 @@ async function editJedzenieThread({
             scheduledMessageId: newScheduledMessageId,
             intlService,
         }) as unknown as KnownBlock[],
+        text,
     })
 }

@@ -31,6 +31,12 @@ function richTextElementsToText(richTextElements: RichTextElement[]) {
                 return accumulator + current.text
             case "link":
                 return accumulator + (current.text ?? current.url)
+            case "broadcast":
+                return accumulator + `@${current.range}`
+            case "user":
+                return accumulator + `<@${current.user_id}>`
+            case "usergroup":
+                return accumulator + `<!subteam^${current.usergroup_id}>`
             default:
                 return accumulator
         }

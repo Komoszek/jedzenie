@@ -2,7 +2,11 @@ import dayjs from "dayjs"
 import * as v from "valibot"
 import { ensureDefined } from "@leancodepl/utils"
 import { EditButtonValue, editButtonValueSchema, editThreadButtonId } from "../blocks/getEditThreadButtonBlock"
-import { getJedzenieThreadBlocks, JedzenieThreadBlocks, threadActionsBlockId } from "../blocks/getJedzenieThreadBlock"
+import {
+    getJedzenieThreadBlocksAndText,
+    JedzenieThreadBlocks,
+    threadActionsBlockId,
+} from "../blocks/getJedzenieThreadBlock"
 import { getTimeFromThreadBlocks } from "../handlers/editThreadButtonHandler"
 import { WebClient } from "../handlers/types"
 import { IntlService } from "../services/IntlService"
@@ -115,21 +119,24 @@ export async function refreshJedzenieThreads({
 
         const { creatorId, scheduledMessageId } = editButtonValue
 
+        const { blocks, text } = getJedzenieThreadBlocksAndText({
+            destination,
+            time: getTimeFromString(ensureDefined(getTimeFromThreadBlocks(oldBlocks))),
+            creatorId,
+            restaurantsService,
+            intlService,
+        })
+
         await client.chat.update({
             channel: message.channel,
             ts: ensureDefined(message.ts),
             blocks: attachEditThreadButton({
-                blocks: getJedzenieThreadBlocks({
-                    destination,
-                    time: getTimeFromString(ensureDefined(getTimeFromThreadBlocks(oldBlocks))),
-                    creatorId,
-                    restaurantsService,
-                    intlService,
-                }),
+                blocks,
                 creatorId,
                 scheduledMessageId,
                 intlService,
             }) as unknown as KnownBlock[],
+            text,
         })
     }
 }

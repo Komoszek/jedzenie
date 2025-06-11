@@ -6,7 +6,7 @@ import { getJedzenieDialogBlocks } from "../blocks/getJedzenieDialogBlocks"
 import { JedzenieThreadBlocks } from "../blocks/getJedzenieThreadBlock"
 import { IntlService } from "../services/IntlService"
 import { ActionArgs, Dependencies } from "./types"
-import type { ActionsBlock, RichTextBlock, View } from "@slack/types"
+import type { ActionsBlock, View } from "@slack/types"
 
 export async function editThreadButtonHandler(
     { ack, client, body, payload }: ActionArgs,
@@ -32,9 +32,6 @@ export async function editThreadButtonHandler(
 
     const blocks = body.message.blocks as JedzenieThreadBlocks
 
-    const initialDestination: RichTextBlock =
-        blocks[0].type === "rich_text" ? blocks[0] : getRichTextFromMrkdwn(blocks[0].text?.text ?? "")
-
     const initialTime = getTimeFromThreadBlocks(blocks)
 
     const updateMetadata = {
@@ -49,7 +46,7 @@ export async function editThreadButtonHandler(
             private_metadata: JSON.stringify(updateMetadata),
             type: "modal",
             blocks: [
-                ...getJedzenieDialogBlocks({ initialTime, initialDestination, intlService }),
+                ...getJedzenieDialogBlocks({ initialTime, initialDestination: blocks[0], intlService }),
                 getCancelButtonBlock(updateMetadata, intlService),
             ],
             title: {
@@ -122,19 +119,6 @@ function getUserUnauthorizedView(userId: string, intlService: IntlService): View
 }
 
 export const editJedzenieThreadViewId = "edit-jedzenie-thread-view"
-
-// TODO: It doesn't really work because it treats mrkdwn as plain_text but it is good enough for now
-function getRichTextFromMrkdwn(mrkdwn: string): RichTextBlock {
-    return {
-        type: "rich_text",
-        elements: [
-            {
-                type: "rich_text_section",
-                elements: [{ type: "text", text: mrkdwn }],
-            },
-        ],
-    }
-}
 
 function getCancelButtonBlock(threadMetadata: ThreadMetadata, intlService: IntlService): ActionsBlock {
     return {

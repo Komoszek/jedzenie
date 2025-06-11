@@ -4,9 +4,17 @@ import { IntlService } from "../services/IntlService"
 import { RestaurantsService } from "../services/RestaurantsService"
 import { Time } from "../utils/getTimeFromString"
 import { knownBlockToText } from "../utils/knownBlockToText"
-import type { ContextBlock, KnownBlock, RichTextBlock, SectionBlock } from "@slack/types"
+import type { ContextBlock, KnownBlock, RichTextBlock } from "@slack/types"
 
-export type DestinationBlock = RichTextBlock | SectionBlock
+export type DestinationBlock = RichTextBlock
+
+type GetJedzenieTheadBlocksProps = {
+    destination: DestinationBlock
+    time: Time
+    creatorId: string
+    restaurantsService: RestaurantsService
+    intlService: IntlService
+}
 
 export function getJedzenieThreadBlocks({
     destination,
@@ -14,13 +22,7 @@ export function getJedzenieThreadBlocks({
     creatorId,
     restaurantsService,
     intlService,
-}: {
-    destination: DestinationBlock
-    time: Time
-    creatorId: string
-    restaurantsService: RestaurantsService
-    intlService: IntlService
-}) {
+}: GetJedzenieTheadBlocksProps) {
     const restaurant = restaurantsService.getBlockDetails(knownBlockToText(destination))
 
     return [
@@ -106,3 +108,13 @@ export const overflowActionSchema = v.union([
 ])
 
 type Action = v.InferOutput<typeof overflowActionSchema>
+
+export function getJedzenieThreadText(blocks: JedzenieThreadBlocks) {
+    return blocks.slice(0, 2).map(knownBlockToText).join(" ")
+}
+
+export function getJedzenieThreadBlocksAndText(props: GetJedzenieTheadBlocksProps) {
+    const blocks = getJedzenieThreadBlocks(props)
+
+    return { blocks, text: getJedzenieThreadText(blocks) }
+}
