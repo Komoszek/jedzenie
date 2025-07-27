@@ -141,6 +141,6 @@ export async function refreshJedzenieThreads({
     }
 }
 
-type Message = { channel: string } & NonNullable<
+type Message = NonNullable<
     Awaited<ReturnType<WebClient["conversations"]["history"]>>["messages"]
->[number]
+>[number] & { channel: string }

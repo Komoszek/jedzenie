@@ -7,17 +7,13 @@
   "targets": {
     "build": {
       "executor": "@nx/js:swc",
-      "outputs": [
-        "{options.outputPath}"
-      ],
+      "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/libs/splitwise",
         "tsConfig": "libs/splitwise/tsconfig.lib.json",
         "packageJson": "libs/splitwise/package.json",
         "main": "libs/splitwise/src/index.ts",
-        "assets": [
-          "libs/splitwise/*.md"
-        ]
+        "assets": ["libs/splitwise/*.md"]
       }
     },
     "lint": {
@@ -25,9 +21,7 @@
     },
     "test": {
       "executor": "@nx/jest:jest",
-      "outputs": [
-        "{workspaceRoot}/coverage/{projectRoot}"
-      ],
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
         "jestConfig": "libs/splitwise/jest.config.ts"
       }

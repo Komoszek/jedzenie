@@ -61,7 +61,7 @@ async function handleUsersRanking({ respond }: CommandArgs, { state, intlService
 }
 
 async function handleUsersMatch(
-    { respond, normalizedText, client }: { normalizedText: string } & CommandArgs,
+    { respond, normalizedText, client }: CommandArgs & { normalizedText: string },
     { state, intlService }: Dependencies,
 ) {
     let usersToMatch: MatchSlackInfo[] | undefined

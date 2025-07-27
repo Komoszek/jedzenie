@@ -97,6 +97,6 @@ const restaurantSchema = v.object({
 })
 
 export type Restaurant = v.InferOutput<typeof restaurantSchema>
-export type RestaurantWithActions = {
+export type RestaurantWithActions = Restaurant & {
     actions: ActionsBlockElement[]
-} & Restaurant
+}

@@ -54,7 +54,6 @@
       "dependsOn": ["build"],
       "command": "docker build -f apps/niech-ktos/Dockerfile . -t niech-ktos"
     },
-
     "i18n": {
       "executor": "nx:run-commands",
       "defaultConfiguration": "full",
@@ -68,10 +67,7 @@
           "command": "formatjs compile src/i18n/terms.json --out-file src/i18n/pl.json && rm src/i18n/terms.json"
         },
         "full": {
-          "commands": [
-            "nx run niech-ktos:i18n:extract",
-            "nx run niech-ktos:i18n:compile"
-          ],
+          "commands": ["nx run niech-ktos:i18n:extract", "nx run niech-ktos:i18n:compile"],
           "parallel": false
         }
       }
