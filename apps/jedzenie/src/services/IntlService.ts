@@ -4,23 +4,23 @@ import pl from "../i18n/pl.json"
 export type PlTranslationsKeys = keyof typeof pl
 
 declare global {
-    interface FormatjsIntlMessage {
-        ids: PlTranslationsKeys
-    }
+  interface FormatjsIntlMessage {
+    ids: PlTranslationsKeys
+  }
 }
 
 export class IntlService {
-    readonly intl: IntlShape
+  readonly intl: IntlShape
 
-    constructor() {
-        const cache = createIntlCache()
+  constructor() {
+    const cache = createIntlCache()
 
-        this.intl = createIntl(
-            {
-                locale: "pl",
-                messages: pl,
-            },
-            cache,
-        )
-    }
+    this.intl = createIntl(
+      {
+        locale: "pl",
+        messages: pl,
+      },
+      cache,
+    )
+  }
 }

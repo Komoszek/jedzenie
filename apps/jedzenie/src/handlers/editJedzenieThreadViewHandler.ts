@@ -1,3 +1,4 @@
+import { ViewArgs, WebClient } from "@jedzenie/utils"
 import dayjs from "dayjs"
 import timezone from "dayjs/plugin/timezone"
 import utc from "dayjs/plugin/utc"
@@ -16,7 +17,7 @@ import { attachEditThreadButton } from "../utils/attachEditThreadButton"
 import { getTimeFromString, Time } from "../utils/getTimeFromString"
 import { tryScheduleNiechktosMessage } from "../utils/tryScheduleNiechktosMessage"
 import { threadMetadataSchema } from "./editThreadButtonHandler"
-import { Dependencies, ViewArgs, WebClient } from "./types"
+import { Dependencies } from "./types"
 import type { ViewStateValue } from "@slack/bolt"
 import type { KnownBlock } from "@slack/types"
 

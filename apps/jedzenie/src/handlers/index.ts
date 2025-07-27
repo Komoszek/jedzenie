@@ -14,21 +14,21 @@ import { threadOverflowActionsHandler } from "./threadOverflowActionsHandler"
 import type { Dependencies } from "./types"
 
 export function handlers(dependencies: Dependencies) {
-    return inject(
-        {
-            editThreadButtonHandler,
-            cancelThreadButtonHandler,
-            jedzenieCommandHandler,
-            startJedzenieThreadViewHandler,
-            editJedzenieThreadViewHandler,
-            appMentionHandler,
-            restauracjeCommandHandler,
-            threadOverflowActionsHandler,
-            restauracjePaginationHandler,
-            cancelJedzenieThreadViewHandler,
-            restaurantEditorViewHandler,
-            editRestaurantButtonHandler,
-        },
-        dependencies,
-    )
+  return inject(
+    {
+      editThreadButtonHandler,
+      cancelThreadButtonHandler,
+      jedzenieCommandHandler,
+      startJedzenieThreadViewHandler,
+      editJedzenieThreadViewHandler,
+      appMentionHandler,
+      restauracjeCommandHandler,
+      threadOverflowActionsHandler,
+      restauracjePaginationHandler,
+      cancelJedzenieThreadViewHandler,
+      restaurantEditorViewHandler,
+      editRestaurantButtonHandler,
+    },
+    dependencies,
+  )
 }

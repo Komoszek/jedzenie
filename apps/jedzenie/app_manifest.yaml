@@ -1,39 +1,39 @@
 display_information:
-    name: Jedzenie
-    description: ":peepo_fat:"
-    background_color: "#2c2d30"
+  name: Jedzenie
+  description: ":peepo_fat:"
+  background_color: "#2c2d30"
 features:
-    bot_user:
-        display_name: Jedzenie
-        always_online: true
-    slash_commands:
-        - command: /jedzenie
-          description: Rozpocznij wątek jedzeniowy
-          usage_hint: "[hh(:mm)] [opis]"
-          should_escape: false
-        - command: /restauracje
-          description: Wyświetl listę znanych restauracji lub wyszukaj znaną restaurację
-          usage_hint: "[restauracja]"
-          should_escape: false
-        - command: /tawerna
-          description: Wyświetl aktualne lunch menu z Tawerny Greckiej
-          should_escape: false
+  bot_user:
+    display_name: Jedzenie
+    always_online: true
+  slash_commands:
+    - command: /jedzenie
+      description: Rozpocznij wątek jedzeniowy
+      usage_hint: "[hh(:mm)] [opis]"
+      should_escape: false
+    - command: /restauracje
+      description: Wyświetl listę znanych restauracji lub wyszukaj znaną restaurację
+      usage_hint: "[restauracja]"
+      should_escape: false
+    - command: /tawerna
+      description: Wyświetl aktualne lunch menu z Tawerny Greckiej
+      should_escape: false
 oauth_config:
-    scopes:
-        bot:
-            - chat:write
-            - commands
-            - im:write
-            - chat:write.customize
-            - app_mentions:read
-            - channels:read
-            - channels:history
+  scopes:
+    bot:
+      - chat:write
+      - commands
+      - im:write
+      - chat:write.customize
+      - app_mentions:read
+      - channels:read
+      - channels:history
 settings:
-    event_subscriptions:
-        bot_events:
-            - app_mention
-    interactivity:
-        is_enabled: true
-    org_deploy_enabled: false
-    socket_mode_enabled: true
-    token_rotation_enabled: false
+  event_subscriptions:
+    bot_events:
+      - app_mention
+  interactivity:
+    is_enabled: true
+  org_deploy_enabled: false
+  socket_mode_enabled: true
+  token_rotation_enabled: false

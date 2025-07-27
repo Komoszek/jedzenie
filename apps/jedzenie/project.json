@@ -58,10 +58,7 @@
           "command": "formatjs compile src/i18n/terms.json --out-file src/i18n/pl.json && rm src/i18n/terms.json"
         },
         "full": {
-          "commands": [
-            "nx run jedzenie:i18n:extract",
-            "nx run jedzenie:i18n:compile"
-          ],
+          "commands": ["nx run jedzenie:i18n:extract", "nx run jedzenie:i18n:compile"],
           "parallel": false
         }
       }

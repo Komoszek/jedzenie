@@ -4,50 +4,48 @@ import { SplitwiseMatch } from "../splitwise"
 import defaultState from "./defaultState.json"
 
 type StateSchema = {
-    splitwiseIdMap: Record<string, number | undefined>
+  splitwiseIdMap: Record<string, number | undefined>
 }
 
 export class State {
-    private statePath: string
-    private value: StateSchema
+  private statePath: string
+  private value: StateSchema
 
-    constructor(statePath: string) {
-        this.statePath = statePath
-        this.value = this.readState()
+  constructor(statePath: string) {
+    this.statePath = statePath
+    this.value = this.readState()
+  }
+
+  private readState(): StateSchema {
+    try {
+      const state = readFileSync(this.statePath, "utf8")
+
+      return JSON.parse(state)
+    } catch (e) {
+      writeFileSync(this.statePath, JSON.stringify(defaultState))
+
+      console.error(e)
+      return defaultState
     }
+  }
 
-    private readState(): StateSchema {
-        try {
-            const state = readFileSync(this.statePath, "utf8")
+  private async saveState() {
+    await writeFile(this.statePath, JSON.stringify(this.value))
+  }
 
-            return JSON.parse(state)
-        } catch (e) {
-            writeFileSync(this.statePath, JSON.stringify(defaultState))
+  getSpltwiseIdToSlackIdMap() {
+    return new Map(Object.entries(this.value.splitwiseIdMap).map(([slackId, splitwiseId]) => [splitwiseId, slackId]))
+  }
 
-            console.error(e)
-            return defaultState
-        }
-    }
+  getSplitwiseUserId(slackUserId: string) {
+    return this.value.splitwiseIdMap[slackUserId]
+  }
 
-    private async saveState() {
-        await writeFile(this.statePath, JSON.stringify(this.value))
-    }
+  async matchSplitwiseUserIds(matches: SplitwiseMatch[]) {
+    matches.forEach(({ slackId, splitwiseId }) => {
+      this.value.splitwiseIdMap[slackId] = splitwiseId
+    })
 
-    getSpltwiseIdToSlackIdMap() {
-        return new Map(
-            Object.entries(this.value.splitwiseIdMap).map(([slackId, splitwiseId]) => [splitwiseId, slackId]),
-        )
-    }
-
-    getSplitwiseUserId(slackUserId: string) {
-        return this.value.splitwiseIdMap[slackUserId]
-    }
-
-    async matchSplitwiseUserIds(matches: SplitwiseMatch[]) {
-        matches.forEach(({ slackId, splitwiseId }) => {
-            this.value.splitwiseIdMap[slackId] = splitwiseId
-        })
-
-        await this.saveState()
-    }
+    await this.saveState()
+  }
 }

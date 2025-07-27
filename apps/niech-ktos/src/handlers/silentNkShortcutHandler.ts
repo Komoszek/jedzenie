@@ -1,6 +1,7 @@
+import { ShortcutArgs } from "@jedzenie/utils"
 import { getFormattedRankingOfConversation } from "../utils/getFormattedRankingOfConversation"
 import { getEmptyRankingResponse } from "./nkCommandHandler"
-import { Dependencies, ShortcutArgs } from "./types"
+import { Dependencies } from "./types"
 
 export async function silentNkShortcutHandler(
   { ack, client, shortcut }: ShortcutArgs,

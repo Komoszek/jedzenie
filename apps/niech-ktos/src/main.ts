@@ -8,23 +8,23 @@ import { State } from "./services/state"
 const state = new State(path.resolve(process.cwd(), ensureDefined(process.env.STATE_PATH)))
 
 const app = new App({
-    token: ensureDefined(process.env.SLACK_BOT_TOKEN, "SLACK_BOT_TOKEN not defined"),
-    socketMode: true,
-    appToken: ensureDefined(process.env.SLACK_APP_TOKEN, "SLACK_APP_TOKEN not defined"),
+  token: ensureDefined(process.env.SLACK_BOT_TOKEN, "SLACK_BOT_TOKEN not defined"),
+  socketMode: true,
+  appToken: ensureDefined(process.env.SLACK_APP_TOKEN, "SLACK_APP_TOKEN not defined"),
 })
 
 const watchedChannelIds = process.env.WATCHED_CHANNEL_IDS?.split(";") ?? []
 
 const {
-    nkCommandHandler,
-    appMentionHandler,
-    messageImHandler,
-    silentNkShortcutHandler,
-    memberJoinedWatchedChannelHandler,
+  nkCommandHandler,
+  appMentionHandler,
+  messageImHandler,
+  silentNkShortcutHandler,
+  memberJoinedWatchedChannelHandler,
 } = handlers({
-    state,
-    watchedChannelIds,
-    intlService: new IntlService(),
+  state,
+  watchedChannelIds,
+  intlService: new IntlService(),
 })
 
 app.command("/nk", nkCommandHandler)
@@ -33,7 +33,7 @@ app.event("app_mention", appMentionHandler)
 app.event("message", messageImHandler)
 
 if (watchedChannelIds.length > 0) {
-    app.event("member_joined_channel", memberJoinedWatchedChannelHandler)
+  app.event("member_joined_channel", memberJoinedWatchedChannelHandler)
 }
 
 await app.start()

@@ -1,8 +1,8 @@
 import { defineMessages } from "@formatjs/intl"
-import { sample } from "@jedzenie/utils"
+import { MessageArgs, sample } from "@jedzenie/utils"
 import { getFormattedRankingOfConversation } from "../utils/getFormattedRankingOfConversation"
 import { getEmptyRankingResponse } from "./nkCommandHandler"
-import { Dependencies, MessageArgs } from "./types"
+import { Dependencies } from "./types"
 
 export async function messageImHandler({ event, say, client }: MessageArgs, { state, intlService }: Dependencies) {
   if (event.channel_type !== "im" || event.subtype !== undefined) {

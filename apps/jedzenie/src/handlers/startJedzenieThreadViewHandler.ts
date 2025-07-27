@@ -1,3 +1,4 @@
+import { ViewArgs } from "@jedzenie/utils"
 import { ViewStateValue } from "@slack/bolt"
 import dayjs from "dayjs"
 import timezone from "dayjs/plugin/timezone"
@@ -11,7 +12,7 @@ import {
 } from "../blocks/getJedzenieDialogBlocks"
 import { getTimeFromString } from "../utils/getTimeFromString"
 import { startJedzenieThread } from "../utils/startJedzenieThread"
-import { Dependencies, ViewArgs } from "./types"
+import { Dependencies } from "./types"
 
 dayjs.extend(utc)
 dayjs.extend(timezone)

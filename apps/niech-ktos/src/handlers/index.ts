@@ -7,14 +7,14 @@ import { silentNkShortcutHandler } from "./silentNkShortcutHandler"
 import { Dependencies } from "./types"
 
 export function handlers(dependencies: Dependencies) {
-    return inject(
-        {
-            appMentionHandler,
-            nkCommandHandler,
-            messageImHandler,
-            silentNkShortcutHandler,
-            memberJoinedWatchedChannelHandler,
-        },
-        dependencies,
-    )
+  return inject(
+    {
+      appMentionHandler,
+      nkCommandHandler,
+      messageImHandler,
+      silentNkShortcutHandler,
+      memberJoinedWatchedChannelHandler,
+    },
+    dependencies,
+  )
 }
