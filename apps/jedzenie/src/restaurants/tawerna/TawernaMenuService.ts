@@ -3,9 +3,9 @@ import { Locator } from "playwright"
 import { MenuItem } from "../../types/MenuItem"
 import { scrapePage } from "../../utils/scrapePage"
 
-export class TawernaMenuService {
-  private imagePlaceholder = "https://tawernagrecka.pl/wp-content/uploads/2023/05/dinner-scaled.jpg"
+const imagePlaceholder = "https://tawernagrecka.pl/wp-content/uploads/2023/05/dinner-scaled.jpg"
 
+export class TawernaMenuService {
   private cachedLunchMenu = new CachedPromise(() => this.scrapeLunchMenu(), { value: 10, unit: "minutes" })
   private cachedMenu = new CachedPromise(() => this.scrapeMenu(), { value: 8, unit: "hours" })
 
@@ -48,14 +48,16 @@ export class TawernaMenuService {
   }
 
   private async getLunchMenuItemImage(locator: Locator) {
+    let image: string | undefined
+
     try {
       const imageLocator = (await locator.locator(".the-feature").all()).at(0)
-      const image = await imageLocator?.evaluate(el => el.style.backgroundImage.slice(5, -2))
-
-      return image ?? this.imagePlaceholder
+      image = await imageLocator?.evaluate(el => el.style.backgroundImage.slice(5, -2))
     } catch {
-      return this.imagePlaceholder
+      /* empty */
     }
+
+    return image ?? imagePlaceholder
   }
 
   private async scrapeMenu(): Promise<MenuItem[]> {
@@ -78,7 +80,7 @@ export class TawernaMenuService {
           ).map<MenuItem>(([title, price, image]) => ({
             title,
             price,
-            image: image ?? this.imagePlaceholder,
+            image: image ?? imagePlaceholder,
           })),
         )
 

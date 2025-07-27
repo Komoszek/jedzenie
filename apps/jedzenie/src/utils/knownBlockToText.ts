@@ -1,25 +1,26 @@
 import type { KnownBlock, RichTextElement } from "@slack/types"
 
 export function knownBlockToText(block: KnownBlock): string {
-  if (block.type === "rich_text") {
-    return block.elements
-      .flatMap(element => {
-        switch (element.type) {
-          case "rich_text_section":
-          case "rich_text_quote":
-            return richTextElementsToText(element.elements)
-          case "rich_text_list":
-            return element.elements.map(({ elements }) => richTextElementsToText(elements))
-          case "rich_text_preformatted":
-            return element.elements.map(r => r.text)
-        }
-      })
-      .join(" ")
-  } else if (block.type === "section") {
-    return block.fields?.map(v => v.text).join(" ") ?? block.text?.text ?? ""
+  switch (block.type) {
+    case "rich_text":
+      return block.elements
+        .flatMap(element => {
+          switch (element.type) {
+            case "rich_text_section":
+            case "rich_text_quote":
+              return richTextElementsToText(element.elements)
+            case "rich_text_list":
+              return element.elements.map(({ elements }) => richTextElementsToText(elements))
+            case "rich_text_preformatted":
+              return element.elements.map(r => r.text)
+          }
+        })
+        .join(" ")
+    case "section":
+      return block.fields?.map(v => v.text).join(" ") ?? block.text?.text ?? ""
+    default:
+      return ""
   }
-
-  return ""
 }
 
 function richTextElementsToText(richTextElements: RichTextElement[]) {

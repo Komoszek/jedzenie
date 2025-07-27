@@ -88,12 +88,7 @@ export async function openRestaurantEditor({
     } satisfies ModalView,
   }
 
-  switch (viewOpenType) {
-    case "open":
-      return client.views.open(view)
-    case "push":
-      return client.views.push(view)
-  }
+  return client.views[viewOpenType](view)
 }
 
 export const restaurantEditorId = "restaurant_editor"

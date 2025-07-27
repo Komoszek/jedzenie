@@ -69,7 +69,9 @@ export function mrkdwnToRichText(mrkdwn: string): RichTextBlock {
         })
         i = endIndex + 1
         return true
-      } else if (mrkdwn.startsWith(subteamPrefix, i + 1)) {
+      }
+
+      if (mrkdwn.startsWith(subteamPrefix, i + 1)) {
         const [usergroupId, ...rest] = mrkdwn.slice(subteamPrefix.length + i + 1).split("|")
 
         if (!usergroupId || rest.length !== 1) {
@@ -150,12 +152,18 @@ export function mrkdwnToRichText(mrkdwn: string): RichTextBlock {
     if (char in charToStyle) {
       matchStyle(char as StyleChar)
       continue
-    } else if (char === "<" && matchLinkOrUserOrUserGroup()) {
-      continue
-    } else if (char === ":" && matchEmoji()) {
-      continue
-    } else if (char === "@" && matchBroadcast()) {
-      continue
+    }
+
+    switch (char) {
+      case "<":
+        if (matchLinkOrUserOrUserGroup()) continue
+        break
+      case ":":
+        if (matchEmoji()) continue
+        break
+      case "@":
+        if (matchBroadcast()) continue
+        break
     }
 
     currentText += char
