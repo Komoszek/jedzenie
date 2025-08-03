@@ -1,4 +1,5 @@
 import { CommandArgs } from "@jedzenie/utils"
+import { IntlService } from "../../services/IntlService"
 import { MenuItem } from "../../types/MenuItem"
 import { TawernaMenuService } from "./TawernaMenuService"
 import { TawernaDependencies } from "./types"
@@ -21,14 +22,18 @@ export async function tawernaCommandHandler(
           }),
           blocks: (await tawernaMenuService.getMenu()).map(mapMenuItemToSectionBlock),
         }
-      : {
-          username: intlService.intl.formatMessage({
-            defaultMessage: "Tawerna Grecka - Lunch Menu",
-            id: "tawernaCommandHandler.lunchMenu.username",
-          }),
-          blocks: await getTawernaLunchMenuMessageBlocks(tawernaMenuService),
-        }),
+      : await getTawernaLunchMenuMessage(intlService, tawernaMenuService)),
   })
+}
+
+export async function getTawernaLunchMenuMessage(intlService: IntlService, tawernaMenuService: TawernaMenuService) {
+  return {
+    username: intlService.intl.formatMessage({
+      defaultMessage: "Tawerna Grecka - Lunch Menu",
+      id: "tawernaCommandHandler.lunchMenu.username",
+    }),
+    blocks: await getTawernaLunchMenuMessageBlocks(tawernaMenuService),
+  }
 }
 
 export async function getTawernaLunchMenuMessageBlocks(tawernaMenuService: TawernaMenuService) {

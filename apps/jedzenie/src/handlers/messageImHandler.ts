@@ -2,24 +2,25 @@ import { defineMessages } from "@formatjs/intl"
 import { MessageArgs, sample } from "@jedzenie/utils"
 import { Dependencies } from "./types"
 
-export async function messageImHandler({ event, say }: MessageArgs, { intlService, restaurantsService }: Dependencies) {
+export async function messageImHandler(props: MessageArgs, { intlService, restaurantsService }: Dependencies) {
+  const { event, say } = props
   if (event.channel_type !== "im" || event.subtype !== undefined) {
     return
   }
 
-  const { ts: threadTs, text = "" } = event
-
-  const message = text.trim()
-
   for (const { handler } of restaurantsService.getRestaurantImHandlers()) {
-    const result = await handler(message)
+    try {
+      const result = await handler(props)
 
-    if (result) {
-      return
+      if (result) {
+        return
+      }
+    } catch (error) {
+      console.error(error)
     }
   }
 
-  await say({ thread_ts: threadTs, text: intlService.intl.formatMessage(getInvalidMessageResponse()) })
+  await say({ thread_ts: event.ts, text: intlService.intl.formatMessage(getInvalidMessageResponse()) })
 }
 
 function getInvalidMessageResponse() {

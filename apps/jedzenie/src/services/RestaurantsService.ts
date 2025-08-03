@@ -1,10 +1,14 @@
+import { MessageArgs } from "@jedzenie/utils"
 import { readFileSync } from "fs"
 import { writeFile } from "fs/promises"
 import * as v from "valibot"
 import type { ActionsBlockElement } from "@slack/web-api"
 
 export type RestaurantActionsMap = Record<string, ActionsBlockElement[] | undefined>
-export type RestaurantImHandler = { restaurantId: string; handler: (messasge: string) => Promise<boolean> }
+export type RestaurantImHandler = {
+  restaurantId: string
+  handler: (props: MessageArgs) => Promise<boolean>
+}
 export class RestaurantsService {
   private restaurantsPath: string
   private restaurants: Restaurant[]

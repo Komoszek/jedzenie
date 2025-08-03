@@ -2,14 +2,16 @@ import { ApplyRestaurant } from ".."
 import { tawernaHandlers } from "./handlers"
 import { TawernaDependencies } from "./types"
 
+const restaurantId = "tawerna"
+
 export function tawerna(dependencies: TawernaDependencies): ApplyRestaurant {
   return ({ app, restaurantsService }) => {
-    const { tawernaCommandHandler, showTawernaLunchMenuButtonHandler } = tawernaHandlers(dependencies)
+    const { tawernaCommandHandler, showTawernaLunchMenuButtonHandler, imMessageHandler } = tawernaHandlers(dependencies)
 
     app.command("/tawerna", tawernaCommandHandler)
     app.action(showTawernaLunchMenuButtonId, showTawernaLunchMenuButtonHandler)
 
-    restaurantsService.setRestaurantActions("tawerna", [
+    restaurantsService.setRestaurantActions(restaurantId, [
       {
         type: "button",
         text: {
@@ -23,6 +25,8 @@ export function tawerna(dependencies: TawernaDependencies): ApplyRestaurant {
         action_id: showTawernaLunchMenuButtonId,
       },
     ])
+
+    restaurantsService.upsertRestaurantImHandler({ restaurantId, handler: imMessageHandler })
   }
 }
 
