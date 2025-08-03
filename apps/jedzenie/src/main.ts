@@ -8,10 +8,10 @@ import { cancelJedzenieThreadViewId } from "./handlers/cancelThreadButtonHandler
 import { cancelThreadButtonId, editJedzenieThreadViewId } from "./handlers/editThreadButtonHandler"
 import { startJedzenieThreadViewId } from "./handlers/jedzenieCommandHandler"
 import { applyRestaurants } from "./restaurants"
-import { showTawernaLunchMenuButtonId, tawerna } from "./restaurants/tawerna"
+import { tawerna } from "./restaurants/tawerna"
 import { TawernaMenuService } from "./restaurants/tawerna/TawernaMenuService"
 import { IntlService } from "./services/IntlService"
-import { RestaurantActionsMap, RestaurantsService } from "./services/RestaurantsService"
+import { RestaurantsService } from "./services/RestaurantsService"
 import { restaurantPagePaginationId } from "./utils/getRestaurantsPage"
 import { restaurantEditorId } from "./utils/openRestaurantEditor"
 
@@ -23,26 +23,12 @@ const app = new App({
   appToken: ensureDefined(process.env.SLACK_APP_TOKEN, "SLACK_APP_TOKEN not defined"),
 })
 
-const intlService = new IntlService()
-
-const restaurantActions: RestaurantActionsMap = {
-  tawerna: [
-    {
-      type: "button",
-      text: {
-        type: "plain_text",
-        text: intlService.intl.formatMessage({
-          defaultMessage: "Pokaż menu lunchowe",
-          id: "restaurantActions.tawerna.showTawernaLunchMenu",
-        }),
-        emoji: true,
-      },
-      action_id: showTawernaLunchMenuButtonId,
-    },
-  ],
-}
-
 const jedzenieBotId = ensureDefined((await app.client.auth.test()).bot_id, "Couldn't fetch jedzenie bot id")
+
+const intlService = new IntlService()
+const restaurantsService = new RestaurantsService({
+  restaurantsPath: ensureDefined(process.env.RESTAURANTS_PATH, "RESTAURANTS_PATH not defined"),
+})
 
 const {
   editThreadButtonHandler,
@@ -57,13 +43,11 @@ const {
   restaurantEditorViewHandler,
   restauracjePaginationHandler,
   editRestaurantButtonHandler,
+  messageImHandler,
 } = handlers({
   jedzenieBotId,
   niechKtosBotId,
-  restaurantsService: new RestaurantsService(
-    ensureDefined(process.env.RESTAURANTS_PATH, "RESTAURANTS_PATH not defined"),
-    restaurantActions,
-  ),
+  restaurantsService,
   intlService,
 })
 
@@ -79,8 +63,9 @@ app.action(cancelThreadButtonId, cancelThreadButtonHandler)
 app.action(threadOverflowActionsId, threadOverflowActionsHandler)
 app.action(new RegExp(`^${restaurantPagePaginationId}`), restauracjePaginationHandler)
 app.event("app_mention", appMentionHandler)
+app.event("message", messageImHandler)
 
-applyRestaurants(app, tawerna({ intlService, tawernaMenuService: new TawernaMenuService() }))
+applyRestaurants({ app, restaurantsService }, [tawerna({ intlService, tawernaMenuService: new TawernaMenuService() })])
 
 await app.start()
 

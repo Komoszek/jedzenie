@@ -6,6 +6,7 @@ import { editJedzenieThreadViewHandler } from "./editJedzenieThreadViewHandler"
 import { editRestaurantButtonHandler } from "./editRestaurantButtonHandler"
 import { editThreadButtonHandler } from "./editThreadButtonHandler"
 import { jedzenieCommandHandler } from "./jedzenieCommandHandler"
+import { messageImHandler } from "./messageImHandler"
 import { restauracjeCommandHandler } from "./restauracjeCommandHandler"
 import { restauracjePaginationHandler } from "./restauracjePaginationHandler"
 import { restaurantEditorViewHandler } from "./restaurantEditorViewHandler"
@@ -28,6 +29,7 @@ export function handlers(dependencies: Dependencies) {
       cancelJedzenieThreadViewHandler,
       restaurantEditorViewHandler,
       editRestaurantButtonHandler,
+      messageImHandler,
     },
     dependencies,
   )

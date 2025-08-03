@@ -4,15 +4,26 @@ import * as v from "valibot"
 import type { ActionsBlockElement } from "@slack/web-api"
 
 export type RestaurantActionsMap = Record<string, ActionsBlockElement[] | undefined>
+export type RestaurantImHandler = { restaurantId: string; handler: (messasge: string) => Promise<boolean> }
 export class RestaurantsService {
   private restaurantsPath: string
   private restaurants: Restaurant[]
   private restaurantActionsMap: RestaurantActionsMap
+  private restaurantImHandler: RestaurantImHandler[]
 
-  constructor(restaurantsPath: string, restaurantActionsMap: RestaurantActionsMap) {
+  constructor({
+    restaurantsPath,
+    restaurantActionsMap = {},
+    restaurantImHandler = [],
+  }: {
+    restaurantsPath: string
+    restaurantActionsMap?: RestaurantActionsMap
+    restaurantImHandler?: RestaurantImHandler[]
+  }) {
     this.restaurantsPath = restaurantsPath
     this.restaurants = this.readState()
     this.restaurantActionsMap = restaurantActionsMap
+    this.restaurantImHandler = restaurantImHandler
   }
 
   private readState(): Restaurant[] {
@@ -68,6 +79,26 @@ export class RestaurantsService {
 
   getRestaurantActions(restaurantId: string): ActionsBlockElement[] {
     return this.restaurantActionsMap[restaurantId] ?? []
+  }
+
+  setRestaurantActions(restaurantId: string, actions: ActionsBlockElement[]) {
+    this.restaurantActionsMap[restaurantId] = actions
+  }
+
+  upsertRestaurantImHandler(handler: RestaurantImHandler) {
+    const existingHandlerIndex = this.restaurantImHandler.findIndex(
+      ({ restaurantId }) => restaurantId === handler.restaurantId,
+    )
+
+    if (existingHandlerIndex !== -1) {
+      this.restaurantImHandler[existingHandlerIndex] = handler
+    } else {
+      this.restaurantImHandler.push(handler)
+    }
+  }
+
+  getRestaurantImHandlers() {
+    return this.restaurantImHandler
   }
 
   getBlockDetails(text: string) {
