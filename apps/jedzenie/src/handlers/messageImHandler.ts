@@ -4,7 +4,7 @@ import { Dependencies } from "./types"
 
 export async function messageImHandler(props: MessageArgs, { intlService, restaurantsService }: Dependencies) {
   const { event, say } = props
-  if (event.channel_type !== "im" || event.subtype !== undefined) {
+  if (event.channel_type !== "im") {
     return
   }
 

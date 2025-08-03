@@ -7,7 +7,7 @@ export async function imMessageHandler(
   { payload, client }: MessageArgs,
   { intlService, tawernaMenuService }: TawernaDependencies,
 ) {
-  assert(payload.subtype === undefined)
+  assert("text" in payload)
 
   const message = payload.text?.trim() ?? ""
 
