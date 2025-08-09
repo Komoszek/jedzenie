@@ -1,5 +1,4 @@
 import { MessageArgs } from "@jedzenie/utils"
-import assert from "assert"
 import { getTawernaLunchMenuMessage } from "./tawernaCommandHandler"
 import { TawernaDependencies } from "./types"
 
@@ -7,11 +6,11 @@ export async function imMessageHandler(
   { payload, client }: MessageArgs,
   { intlService, tawernaMenuService }: TawernaDependencies,
 ) {
-  assert("text" in payload)
+  if (!("text" in payload)) {
+    return false
+  }
 
-  const message = payload.text?.trim() ?? ""
-
-  const match = message.match(/^tawerna (\S+)$/)
+  const match = payload.text?.trim().match(/^tawerna (\S+)$/)
 
   if (!match) {
     return false
