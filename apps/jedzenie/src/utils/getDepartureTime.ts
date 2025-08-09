@@ -1,14 +1,14 @@
-import dayjs from "dayjs"
+import { Temporal } from "@js-temporal/polyfill"
 import { Time } from "./getTimeFromString"
 
 export function getDepartureTime({ hour, minutes }: Time, timezone: string): number {
-  const now = dayjs().tz(timezone)
+  const now = Temporal.Now.zonedDateTimeISO(timezone)
 
-  let departureTime = now.clone().set("hours", hour).set("minutes", minutes).startOf("minute")
+  let departureTime = now.with({ hour: hour, minute: minutes }).round({ smallestUnit: "minute", roundingMode: "floor" })
 
-  if (departureTime.isBefore(now)) {
-    departureTime = departureTime.add(1, "days")
+  if (Temporal.ZonedDateTime.compare(departureTime, now) == -1) {
+    departureTime = departureTime.add({ days: 1 })
   }
 
-  return departureTime.unix()
+  return Math.floor(departureTime.toInstant().epochMilliseconds / 1000)
 }

@@ -1,23 +1,25 @@
-import dayjs, { Dayjs, ManipulateType } from "dayjs"
+import { Temporal } from "@js-temporal/polyfill"
 import { firstValueFrom, from, Observable, shareReplay } from "rxjs"
 
-type CachingTime = { value: number; unit: ManipulateType }
-
 export class CachedPromise<T> {
-  private cachingTime: CachingTime
+  private cachingTime: Temporal.DurationLike
   private fetcher: () => Promise<T>
-  private cacheExpiration?: Dayjs
+  private cacheExpiration?: Temporal.Instant
   private $pipe?: Observable<T>
 
-  constructor(fetcher: () => Promise<T>, cachingTime: CachingTime) {
+  constructor(fetcher: () => Promise<T>, cachingTime: Temporal.DurationLike) {
     this.fetcher = fetcher
     this.cachingTime = cachingTime
   }
 
   async get() {
-    if (!this.$pipe || !this.cacheExpiration || this.cacheExpiration.isBefore(dayjs())) {
+    if (
+      !this.$pipe ||
+      !this.cacheExpiration ||
+      Temporal.Instant.compare(this.cacheExpiration, Temporal.Now.instant()) === -1
+    ) {
       this.$pipe = from(this.fetcher()).pipe(shareReplay(1))
-      this.cacheExpiration = dayjs().add(this.cachingTime.value, this.cachingTime.unit)
+      this.cacheExpiration = Temporal.Now.instant().add(this.cachingTime)
     }
 
     return await firstValueFrom(this.$pipe)

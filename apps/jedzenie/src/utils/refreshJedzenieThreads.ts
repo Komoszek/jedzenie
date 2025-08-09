@@ -1,5 +1,5 @@
 import { WebClient } from "@jedzenie/utils"
-import dayjs from "dayjs"
+import { Temporal } from "@js-temporal/polyfill"
 import * as v from "valibot"
 import { ensureDefined } from "@leancodepl/utils"
 import { EditButtonValue, editButtonValueSchema, editThreadButtonId } from "../blocks/getEditThreadButtonBlock"
@@ -30,7 +30,7 @@ export async function refreshJedzenieThreads({
   intlService: IntlService
 }) {
   let messages: Message[] = []
-  const oldestMessage = dayjs().subtract(12, "hour").unix().toString()
+  const oldestMessage = Math.floor(Temporal.Now.instant().subtract({ hours: 12 }).epochMilliseconds / 1000).toString()
 
   const result = await client.users.conversations({})
 

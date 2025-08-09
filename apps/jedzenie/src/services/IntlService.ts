@@ -1,11 +1,11 @@
 import { createIntl, createIntlCache, IntlShape } from "@formatjs/intl"
 import pl from "../i18n/pl.json"
 
-export type PlTranslationsKeys = keyof typeof pl
+export type TranslationsKeys = keyof typeof pl
 
 declare global {
   interface FormatjsIntlMessage {
-    ids: PlTranslationsKeys
+    ids: TranslationsKeys
   }
 }
 

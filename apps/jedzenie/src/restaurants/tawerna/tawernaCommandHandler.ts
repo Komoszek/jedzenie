@@ -56,7 +56,7 @@ function mapMenuItemToSectionBlock({ title, extra, price, image }: MenuItem): Se
     type: "section",
     text: {
       type: "mrkdwn",
-      text: `${[`*${title}*`, extra].filter(Boolean).join(" ")}\n_${price}_`,
+      text: `${[`*${title}*`, ...(extra ? [extra] : [])].join(" ")}\n_${price}_`,
     },
     accessory: {
       type: "image",

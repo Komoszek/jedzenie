@@ -6,8 +6,8 @@ import { scrapePage } from "../../utils/scrapePage"
 const imagePlaceholder = "https://tawernagrecka.pl/wp-content/uploads/2023/05/dinner-scaled.jpg"
 
 export class TawernaMenuService {
-  private cachedLunchMenu = new CachedPromise(() => this.scrapeLunchMenu(), { value: 10, unit: "minutes" })
-  private cachedMenu = new CachedPromise(() => this.scrapeMenu(), { value: 8, unit: "hours" })
+  private cachedLunchMenu = new CachedPromise(() => this.scrapeLunchMenu(), { minutes: 10 })
+  private cachedMenu = new CachedPromise(() => this.scrapeMenu(), { hours: 8 })
 
   async getLunchMenu() {
     return await this.cachedLunchMenu.get()

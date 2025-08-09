@@ -1,7 +1,4 @@
 import { ViewArgs, WebClient } from "@jedzenie/utils"
-import dayjs from "dayjs"
-import timezone from "dayjs/plugin/timezone"
-import utc from "dayjs/plugin/utc"
 import * as v from "valibot"
 import { ensureDefined } from "@leancodepl/utils"
 import {
@@ -20,9 +17,6 @@ import { threadMetadataSchema } from "./editThreadButtonHandler"
 import { Dependencies } from "./types"
 import type { ViewStateValue } from "@slack/bolt"
 import type { KnownBlock } from "@slack/types"
-
-dayjs.extend(utc)
-dayjs.extend(timezone)
 
 export async function editJedzenieThreadViewHandler(
   { ack, view, client, body }: ViewArgs,

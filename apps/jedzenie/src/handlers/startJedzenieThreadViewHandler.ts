@@ -1,8 +1,5 @@
 import { ViewArgs } from "@jedzenie/utils"
 import { ViewStateValue } from "@slack/bolt"
-import dayjs from "dayjs"
-import timezone from "dayjs/plugin/timezone"
-import utc from "dayjs/plugin/utc"
 import { ensureDefined } from "@leancodepl/utils"
 import {
   departureBlockId,
@@ -13,9 +10,6 @@ import {
 import { getTimeFromString } from "../utils/getTimeFromString"
 import { startJedzenieThread } from "../utils/startJedzenieThread"
 import { Dependencies } from "./types"
-
-dayjs.extend(utc)
-dayjs.extend(timezone)
 
 export async function startJedzenieThreadViewHandler(
   { ack, view, client, body }: ViewArgs,
