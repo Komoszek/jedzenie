@@ -32,11 +32,14 @@ export async function getTawernaLunchMenuMessage(intlService: IntlService, tawer
       defaultMessage: "Tawerna Grecka - Lunch Menu",
       id: "tawernaCommandHandler.lunchMenu.username",
     }),
-    blocks: await getTawernaLunchMenuMessageBlocks(tawernaMenuService),
+    blocks: await getTawernaLunchMenuMessageBlocks(intlService, tawernaMenuService),
   }
 }
 
-export async function getTawernaLunchMenuMessageBlocks(tawernaMenuService: TawernaMenuService) {
+export async function getTawernaLunchMenuMessageBlocks(
+  intlService: IntlService,
+  tawernaMenuService: TawernaMenuService,
+) {
   const { title, menu } = await tawernaMenuService.getLunchMenu()
 
   return [
@@ -47,7 +50,25 @@ export async function getTawernaLunchMenuMessageBlocks(tawernaMenuService: Tawer
         text: title,
       },
     },
-    ...menu.map(mapMenuItemToSectionBlock),
+    ...(menu.length
+      ? menu.map(mapMenuItemToSectionBlock)
+      : [
+          {
+            type: "image",
+            title: {
+              type: "plain_text",
+              text: intlService.intl.formatMessage({
+              defaultMessage: "Dzisiaj nie ma lunchu",
+              id: "tawernaLunchMenu.empty_menu",
+            }),
+            },
+            image_url: "https://i.imgur.com/gYeqYM5.gif",
+            alt_text: intlService.intl.formatMessage({
+              defaultMessage: "Kot płacze, bo nie ma co jeść w tawernia",
+              id: "tawernaLunchMenu.empy_menu.image.alt",
+            }),
+          },
+        ]),
   ]
 }
 

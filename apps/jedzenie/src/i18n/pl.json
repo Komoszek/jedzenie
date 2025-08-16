@@ -46,6 +46,8 @@
   "startJedzenieThreadView.title": "Rozpocznij wątek",
   "tawernaCommandHandler.lunchMenu.username": "Tawerna Grecka - Lunch Menu",
   "tawernaCommandHandler.menu.username": "Tawerna Grecka - Menu",
+  "tawernaLunchMenu.empty_menu": "Dzisiaj nie ma lunchu",
+  "tawernaLunchMenu.empy_menu.image.alt": "Kot płacze, bo nie ma co jeść w tawernia",
   "userUnathorizedView.body": "{user} is not in the sudoers file :pepe_police:. This incident will be reported.",
   "userUnathorizedView.close": ":scream:",
   "userUnathorizedView.title": "Brak uprawnień"

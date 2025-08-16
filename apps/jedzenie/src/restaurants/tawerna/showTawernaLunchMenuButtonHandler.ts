@@ -58,7 +58,7 @@ export async function showTawernaLunchMenuButtonHandler(
     view: {
       ...commonViewProps,
       blocks: await firstValueFrom(
-        forkJoin({ blocks: getTawernaLunchMenuMessageBlocks(tawernaMenuService), timer: timer(200) }).pipe(
+        forkJoin({ blocks: getTawernaLunchMenuMessageBlocks(intlService, tawernaMenuService), timer: timer(200) }).pipe(
           map(({ blocks }) => blocks),
         ),
       ),
