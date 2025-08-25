@@ -10,6 +10,7 @@ import { messageImHandler } from "./messageImHandler"
 import { restauracjeCommandHandler } from "./restauracjeCommandHandler"
 import { restauracjePaginationHandler } from "./restauracjePaginationHandler"
 import { restaurantEditorViewHandler } from "./restaurantEditorViewHandler"
+import { startJedzenieThreadButtonHandler } from "./startJedzenieThreadButtonHandler"
 import { startJedzenieThreadViewHandler } from "./startJedzenieThreadViewHandler"
 import { threadOverflowActionsHandler } from "./threadOverflowActionsHandler"
 import type { Dependencies } from "./types"
@@ -30,6 +31,7 @@ export function handlers(dependencies: Dependencies) {
       restaurantEditorViewHandler,
       editRestaurantButtonHandler,
       messageImHandler,
+      startJedzenieThreadButtonHandler,
     },
     dependencies,
   )

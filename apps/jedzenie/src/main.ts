@@ -3,6 +3,7 @@ import { ensureDefined } from "@leancodepl/utils"
 import { editThreadButtonId } from "./blocks/getEditThreadButtonBlock"
 import { threadOverflowActionsId } from "./blocks/getJedzenieThreadBlock"
 import { editRestaurantButtonId } from "./blocks/getRestaurantDetailsBlocks"
+import { startJedzenieThreadButtonId } from "./blocks/getStartThreadButtonBlock"
 import { handlers } from "./handlers"
 import { cancelJedzenieThreadViewId } from "./handlers/cancelThreadButtonHandler"
 import { cancelThreadButtonId, editJedzenieThreadViewId } from "./handlers/editThreadButtonHandler"
@@ -43,6 +44,7 @@ const {
   restaurantEditorViewHandler,
   restauracjePaginationHandler,
   editRestaurantButtonHandler,
+  startJedzenieThreadButtonHandler,
   messageImHandler,
 } = handlers({
   jedzenieBotId,
@@ -59,6 +61,7 @@ app.view(cancelJedzenieThreadViewId, cancelJedzenieThreadViewHandler)
 app.view(restaurantEditorId, restaurantEditorViewHandler)
 app.action(editRestaurantButtonId, editRestaurantButtonHandler)
 app.action(editThreadButtonId, editThreadButtonHandler)
+app.action(startJedzenieThreadButtonId, startJedzenieThreadButtonHandler)
 app.action(cancelThreadButtonId, cancelThreadButtonHandler)
 app.action(threadOverflowActionsId, threadOverflowActionsHandler)
 app.action(new RegExp(`^${restaurantPagePaginationId}`), restauracjePaginationHandler)

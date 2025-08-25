@@ -4,6 +4,7 @@ import { IntlService } from "../services/IntlService"
 import { getTimeFromString } from "../utils/getTimeFromString"
 import { startJedzenieThread } from "../utils/startJedzenieThread"
 import { Dependencies } from "./types"
+import type { RichTextBlock } from "@slack/types"
 
 export async function jedzenieCommandHandler(
   { ack, client, command, respond }: CommandArgs,
@@ -52,15 +53,17 @@ export async function jedzenieCommandHandler(
 
 export const startJedzenieThreadViewId = "start-jedzenie-thread-view"
 
-function openJedzenieDialog({
+export function openJedzenieDialog({
   client,
   triggerId,
   channel,
+  initialDestination,
   intlService,
 }: {
   client: WebClient
   channel: string
   triggerId: string
+  initialDestination?: RichTextBlock
   intlService: IntlService
 }) {
   return client.views.open({
@@ -90,7 +93,7 @@ function openJedzenieDialog({
           id: "startJedzenieThreadView.cancel",
         }),
       },
-      blocks: getJedzenieDialogBlocks({ intlService }),
+      blocks: getJedzenieDialogBlocks({ intlService, initialDestination }),
     },
   })
 }

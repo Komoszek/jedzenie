@@ -1,4 +1,5 @@
 import { MessageArgs } from "@jedzenie/utils"
+import { getStartThreadButtonBlock } from "../../blocks/getStartThreadButtonBlock"
 import { getTawernaLunchMenuMessage } from "./tawernaCommandHandler"
 import { TawernaDependencies } from "./types"
 
@@ -17,10 +18,13 @@ export async function imMessageHandler(
   }
 
   const [channel] = match.slice(1)
+  
+  const messageProps = await getTawernaLunchMenuMessage(intlService, tawernaMenuService)
 
   await client.chat.postMessage({
     channel,
-    ...(await getTawernaLunchMenuMessage(intlService, tawernaMenuService)),
+    ...messageProps,
+    blocks: [...messageProps.blocks, getStartThreadButtonBlock({initialDestination: "Tawerna", intlService})],
   })
 
   return true
