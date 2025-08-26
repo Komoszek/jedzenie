@@ -37,7 +37,7 @@ function richTextElementsToText(richTextElements: RichTextElement[]) {
       case "user":
         return accumulator + `<@${current.user_id}>`
       case "usergroup":
-        return accumulator + `<!subteam^${current.usergroupId}>`
+        return accumulator + `<!subteam^${current.usergroup_id}>`
       default:
         return accumulator
     }

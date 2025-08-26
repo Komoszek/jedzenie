@@ -82,7 +82,7 @@ export function mrkdwnToRichText(mrkdwn: string): RichTextBlock {
 
         elements.push({
           type: "usergroup",
-          usergroupId,
+          usergroup_id: usergroupId,
         })
         i = endIndex + 1
         return true
