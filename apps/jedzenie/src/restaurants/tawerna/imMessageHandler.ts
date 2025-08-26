@@ -18,13 +18,19 @@ export async function imMessageHandler(
   }
 
   const [channel] = match.slice(1)
-  
+
   const messageProps = await getTawernaLunchMenuMessage(intlService, tawernaMenuService)
 
   await client.chat.postMessage({
     channel,
     ...messageProps,
-    blocks: [...messageProps.blocks, getStartThreadButtonBlock({initialDestination: "Tawerna", intlService})],
+    blocks: [
+      ...messageProps.blocks,
+      {
+        type: "actions",
+        elements: [getStartThreadButtonBlock({ initialDestination: "Tawerna", intlService })],
+      },
+    ],
   })
 
   return true
