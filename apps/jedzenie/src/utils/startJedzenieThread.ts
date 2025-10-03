@@ -1,4 +1,5 @@
 import { WebClient } from "@jedzenie/utils"
+import { Logger } from "@slack/bolt"
 import { ensureDefined } from "@leancodepl/utils"
 import { DestinationBlock, getJedzenieThreadBlocksAndText } from "../blocks/getJedzenieThreadBlock"
 import { IntlService } from "../services/IntlService"
@@ -18,6 +19,7 @@ export async function startJedzenieThread({
   niechKtosBotId,
   restaurantsService,
   intlService,
+  logger
 }: {
   creatorId: string
   channel: string
@@ -28,6 +30,7 @@ export async function startJedzenieThread({
   niechKtosBotId: string
   restaurantsService: RestaurantsService
   intlService: IntlService
+  logger: Logger
 }) {
   const { blocks, text } = getJedzenieThreadBlocksAndText({
     destination,
@@ -46,7 +49,7 @@ export async function startJedzenieThread({
   })
 
   if (!response.ok) {
-    console.error(response.error)
+    logger.error(response.error)
     return
   }
 

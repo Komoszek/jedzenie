@@ -3,7 +3,7 @@ import { splitwiseService } from "../services/splitwise"
 import { Dependencies } from "./types"
 
 export async function memberJoinedWatchedChannelHandler(
-  { event, client }: MemberJoinedChannelArgs,
+  { event, client, logger }: MemberJoinedChannelArgs,
   { state, watchedChannelIds }: Dependencies,
 ) {
   if (!watchedChannelIds.includes(event.channel)) {
@@ -19,7 +19,7 @@ export async function memberJoinedWatchedChannelHandler(
   const { user, ok } = await client.users.info({ user: event.user })
 
   if (!ok || !user) {
-    console.error("Failed to fetch user info")
+    logger.error("Failed to fetch user info")
     return
   }
 
@@ -28,14 +28,14 @@ export async function memberJoinedWatchedChannelHandler(
   }
 
   if (!user.profile) {
-    console.error("User profile is missing")
+    logger.error("User profile is missing")
     return
   }
 
   const email = user.profile.email
 
   if (!email) {
-    console.error("User is missing an email")
+    logger.error("User is missing an email")
     return
   }
 
@@ -46,7 +46,7 @@ export async function memberJoinedWatchedChannelHandler(
   })
 
   if (!data.success) {
-    console.error("Failed to invite user to Splitwise", data.errors)
+    logger.error("Failed to invite user to Splitwise", data.errors)
     return
   }
 

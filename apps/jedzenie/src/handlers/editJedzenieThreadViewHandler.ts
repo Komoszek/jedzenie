@@ -15,11 +15,11 @@ import { getTimeFromString, Time } from "../utils/getTimeFromString"
 import { tryScheduleNiechktosMessage } from "../utils/tryScheduleNiechktosMessage"
 import { threadMetadataSchema } from "./editThreadButtonHandler"
 import { Dependencies } from "./types"
-import type { ViewStateValue } from "@slack/bolt"
+import type { Logger, ViewStateValue } from "@slack/bolt"
 import type { KnownBlock } from "@slack/types"
 
 export async function editJedzenieThreadViewHandler(
-  { ack, view, client, body }: ViewArgs,
+  { ack, view, client, body, logger }: ViewArgs,
   { niechKtosBotId, restaurantsService, intlService }: Dependencies,
 ) {
   // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -56,6 +56,7 @@ export async function editJedzenieThreadViewHandler(
     ack,
     restaurantsService,
     intlService,
+    logger
   })
 }
 
@@ -72,6 +73,7 @@ async function editJedzenieThread({
   ack,
   restaurantsService,
   intlService,
+  logger
 }: {
   ts: string
   creatorId: string
@@ -85,6 +87,7 @@ async function editJedzenieThread({
   ack: ViewArgs["ack"]
   restaurantsService: RestaurantsService
   intlService: IntlService
+  logger: Logger
 }) {
   try {
     await client.chat.deleteScheduledMessage({
@@ -92,7 +95,7 @@ async function editJedzenieThread({
       scheduled_message_id: scheduledMessageId,
     })
   } catch (e) {
-    console.error(e)
+    logger.error(e)
     await ack({
       response_action: "errors",
       errors: {
@@ -123,7 +126,7 @@ async function editJedzenieThread({
   })
 
   if (!response.ok) {
-    console.error(response.error)
+    logger.error(response.error)
     return
   }
 

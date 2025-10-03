@@ -2,7 +2,7 @@ import { ActionArgs } from "@jedzenie/utils"
 import { Dependencies } from "./types"
 
 export async function cancelThreadButtonHandler(
-  { ack, client, body, payload }: ActionArgs,
+  { ack, client, body, payload, logger }: ActionArgs,
   { intlService }: Dependencies,
 ) {
   await ack()
@@ -43,7 +43,7 @@ export async function cancelThreadButtonHandler(
       },
     })
   } catch (error) {
-    console.error("Error while pushing cancel thread view", error)
+    logger.error("Error while pushing cancel thread view", error)
   }
 }
 

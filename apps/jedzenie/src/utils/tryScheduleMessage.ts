@@ -1,13 +1,16 @@
 import { isObject, WebClient } from "@jedzenie/utils"
+import { Logger } from "@slack/bolt"
 
 export async function tryScheduleMessage({
   client,
   message,
   post_at,
+  logger
 }: {
   client: WebClient
   message: Message
   post_at: number | string
+  logger: Logger
 }) {
   try {
     const response = await client.chat.scheduleMessage({
@@ -18,7 +21,7 @@ export async function tryScheduleMessage({
     return response.scheduled_message_id
   } catch (e) {
     if (isTimeInPastError(e)) {
-      console.error(e)
+      logger.error(e)
       return
     }
 

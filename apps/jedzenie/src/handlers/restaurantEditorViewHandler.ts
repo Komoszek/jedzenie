@@ -12,7 +12,7 @@ import { Dependencies } from "./types"
 import type { RichTextBlock, RichTextElement } from "@slack/web-api"
 
 export async function restaurantEditorViewHandler(
-  { ack, view, client }: ViewArgs,
+  { ack, view, client, logger }: ViewArgs,
   { restaurantsService, jedzenieBotId, intlService }: Dependencies,
 ) {
   const name = (view.state.values[restaurantNameBlockId]?.[restaurantNameId].value ?? "").trim()
@@ -34,7 +34,7 @@ export async function restaurantEditorViewHandler(
         links,
       })
     } catch (error) {
-      console.error(error)
+      logger.error(error)
       await ack({
         response_action: "errors",
         errors: {

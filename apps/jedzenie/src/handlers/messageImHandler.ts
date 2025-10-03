@@ -3,7 +3,7 @@ import { MessageArgs, sample } from "@jedzenie/utils"
 import { Dependencies } from "./types"
 
 export async function messageImHandler(props: MessageArgs, { intlService, restaurantsService }: Dependencies) {
-  const { event, say } = props
+  const { event, say, logger } = props
   if (event.channel_type !== "im") {
     return
   }
@@ -16,7 +16,7 @@ export async function messageImHandler(props: MessageArgs, { intlService, restau
         return
       }
     } catch (error) {
-      console.error(error)
+      logger.error(error)
     }
   }
 
