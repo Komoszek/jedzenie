@@ -15,6 +15,7 @@
   "jedzenieThreadBlocks.addRestaurant": "Dodaj restaurację",
   "jedzenieThreadBlocks.edit": "Edytuj",
   "jedzenieThreadBlocks.editLinks": "Edytuj linki",
+  "jedzenieThreadBlocks.start": "Otwórz wątek",
   "jedzenieThreadHandler.error.departureTimeIsRequired": "Godzina odjazdu jest wymagana",
   "messageIm.error.unknown_four": "Że co?",
   "messageIm.error.unknown_one": "Gargamel, co ty mi tu bajdurzysz?",
