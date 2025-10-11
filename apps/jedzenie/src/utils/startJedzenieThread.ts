@@ -60,6 +60,7 @@ export async function startJedzenieThread({
     thread_ts: ensureDefined(response.ts),
     time,
     timezone,
+    logger,
   })
 
   if (!scheduledMessageId) {

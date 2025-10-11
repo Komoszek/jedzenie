@@ -137,6 +137,7 @@ async function editJedzenieThread({
     thread_ts: ensureDefined(response.ts),
     time,
     timezone,
+    logger,
   })
 
   if (!newScheduledMessageId) {

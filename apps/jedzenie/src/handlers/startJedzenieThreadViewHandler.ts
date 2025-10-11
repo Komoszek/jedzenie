@@ -12,7 +12,7 @@ import { startJedzenieThread } from "../utils/startJedzenieThread"
 import { Dependencies } from "./types"
 
 export async function startJedzenieThreadViewHandler(
-  { ack, view, client, body }: ViewArgs,
+  { ack, view, client, body, logger }: ViewArgs,
   { niechKtosBotId, restaurantsService, intlService }: Dependencies,
 ) {
   // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -47,5 +47,6 @@ export async function startJedzenieThreadViewHandler(
     niechKtosBotId,
     restaurantsService,
     intlService,
+    logger,
   })
 }

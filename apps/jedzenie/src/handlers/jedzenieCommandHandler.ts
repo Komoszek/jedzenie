@@ -7,7 +7,7 @@ import { Dependencies } from "./types"
 import type { RichTextBlock } from "@slack/types"
 
 export async function jedzenieCommandHandler(
-  { ack, client, command, respond }: CommandArgs,
+  { ack, client, command, respond, logger }: CommandArgs,
   { niechKtosBotId, restaurantsService, intlService }: Dependencies,
 ) {
   await ack()
@@ -48,6 +48,7 @@ export async function jedzenieCommandHandler(
     timezone: jedzenieTimezone,
     restaurantsService,
     intlService,
+    logger,
   })
 }
 

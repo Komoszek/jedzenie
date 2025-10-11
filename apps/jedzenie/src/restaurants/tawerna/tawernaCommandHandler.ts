@@ -3,7 +3,7 @@ import { IntlService } from "../../services/IntlService"
 import { MenuItem } from "../../types/MenuItem"
 import { TawernaMenuService } from "./TawernaMenuService"
 import { TawernaDependencies } from "./types"
-import type { SectionBlock } from "@slack/types"
+import type { KnownBlock, SectionBlock } from "@slack/types"
 
 export async function tawernaCommandHandler(
   { client, ack, command: { channel_id, user_id, text } }: CommandArgs,
@@ -48,19 +48,20 @@ export async function getTawernaLunchMenuMessageBlocks(
       text: {
         type: "plain_text",
         text: title,
+        emoji: false,
       },
     },
     ...(menu.length
       ? menu.map(mapMenuItemToSectionBlock)
-      : [
+      : ([
           {
             type: "image",
             title: {
               type: "plain_text",
               text: intlService.intl.formatMessage({
-              defaultMessage: "Dzisiaj nie ma lunchu",
-              id: "tawernaLunchMenu.empty_menu",
-            }),
+                defaultMessage: "Dzisiaj nie ma lunchu",
+                id: "tawernaLunchMenu.empty_menu",
+              }),
             },
             image_url: "https://i.imgur.com/gYeqYM5.gif",
             alt_text: intlService.intl.formatMessage({
@@ -68,8 +69,8 @@ export async function getTawernaLunchMenuMessageBlocks(
               id: "tawernaLunchMenu.empy_menu.image.alt",
             }),
           },
-        ]),
-  ]
+        ] as const)),
+  ] satisfies KnownBlock[]
 }
 
 function mapMenuItemToSectionBlock({ title, extra, price, image }: MenuItem): SectionBlock {
