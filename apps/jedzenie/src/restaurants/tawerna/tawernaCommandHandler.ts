@@ -44,12 +44,18 @@ export async function getTawernaLunchMenuMessageBlocks(
 
   return [
     {
-      type: "section",
-      text: {
-        type: "plain_text",
-        text: title,
-        emoji: false,
-      },
+      type: "rich_text",
+      elements: [
+        {
+          type: "rich_text_section",
+          elements: [
+            {
+              type: "text",
+              text: title,
+            },
+          ],
+        },
+      ],
     },
     ...(menu.length
       ? menu.map(mapMenuItemToSectionBlock)

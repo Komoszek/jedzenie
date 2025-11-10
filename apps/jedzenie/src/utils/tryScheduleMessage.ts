@@ -1,22 +1,20 @@
 import { isObject, WebClient } from "@jedzenie/utils"
 import { Logger } from "@slack/bolt"
+import type { ChatPostMessageArguments, ChatScheduleMessageArguments } from "@slack/web-api"
 
 export async function tryScheduleMessage({
   client,
   message,
   post_at,
-  logger
+  logger,
 }: {
   client: WebClient
-  message: Message
+  message: ChatPostMessageArguments
   post_at: number | string
   logger: Logger
 }) {
   try {
-    const response = await client.chat.scheduleMessage({
-      ...message,
-      post_at,
-    })
+    const response = await client.chat.scheduleMessage({ ...message, post_at } as ChatScheduleMessageArguments)
 
     return response.scheduled_message_id
   } catch (e) {
@@ -28,8 +26,6 @@ export async function tryScheduleMessage({
     await client.chat.postMessage(message)
   }
 }
-
-type Message = NonNullable<Parameters<WebClient["chat"]["postMessage"]>[0]>
 
 function isTimeInPastError(e: unknown) {
   return isObject(e) && "data" in e && isObject(e.data) && "error" in e.data && e.data.error === "time_in_past"
