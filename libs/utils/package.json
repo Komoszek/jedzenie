@@ -4,7 +4,8 @@
   "dependencies": {
     "tslib": "^2.3.0",
     "rxjs": "*",
-    "@slack/bolt": "*"
+    "@slack/bolt": "*",
+    "@js-temporal/polyfill": "*"
   },
   "type": "commonjs",
   "main": "./src/index.js",

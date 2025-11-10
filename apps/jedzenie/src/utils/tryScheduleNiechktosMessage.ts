@@ -1,8 +1,8 @@
 import { formatUserMention, WebClient } from "@jedzenie/utils"
+import { Logger } from "@slack/bolt"
 import { getDepartureTime } from "./getDepartureTime"
 import { Time } from "./getTimeFromString"
 import { tryScheduleMessage } from "./tryScheduleMessage"
-import { Logger } from "@slack/bolt"
 
 export function tryScheduleNiechktosMessage({
   client,
