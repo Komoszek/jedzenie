@@ -80,16 +80,16 @@ export function getRestaurantEditorDialogBlocks({
 }
 
 function getLinkElement(text: string): RichTextLink | undefined {
-  const match = text.match(/^<(.*)\|(.*)>$/)
+  const groups = text.match(/^<(?<url>.*)\|(?<text>.*)>$/)?.groups
 
-  if (!match) {
+  if (!groups) {
     return undefined
   }
 
   return {
     type: "link",
-    text: match[2],
-    url: match[1],
+    text: groups.text,
+    url: groups.url,
   }
 }
 

@@ -129,7 +129,7 @@ export function mrkdwnToRichText(mrkdwn: string): RichTextBlock {
   }
 
   const matchBroadcast = () => {
-    const match = mrkdwn.slice(i + 1).match(/^(here|channel)(\s|$)/)
+    const match = mrkdwn.slice(i + 1).match(/^(here|channel)(?:\s|$)/)
 
     if (!match) {
       return false

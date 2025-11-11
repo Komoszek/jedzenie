@@ -24,9 +24,9 @@ export async function jedzenieCommandHandler(
     return
   }
 
-  const match = normalizedText.match(/^(\d{1,4}|\d{1,2}:\d{2})\s+(.+)$/)
+  const { groups } = normalizedText.match(/^(?<time>\d{1,4}|\d{1,2}:\d{2})\s+(?<destination>.+)$/) ?? {}
 
-  if (!match) {
+  if (!groups) {
     await respond(
       intlService.intl.formatMessage({
         defaultMessage: "Niepoprawne parametry. Przykład użycia: /jedzenie 12:00 :flag-gr:",
@@ -36,11 +36,11 @@ export async function jedzenieCommandHandler(
     return
   }
 
-  const [timeString, destination] = match.slice(1)
+  const { time, destination } = groups
 
   await startJedzenieThread({
     creatorId: command.user_id,
-    time: getTimeFromString(timeString),
+    time: getTimeFromString(time),
     client,
     channel: command.channel_id,
     destination: mrkdwnToRichText(destination),

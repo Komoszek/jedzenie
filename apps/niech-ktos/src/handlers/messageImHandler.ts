@@ -11,14 +11,14 @@ export async function messageImHandler({ event, say, client }: MessageArgs, { st
 
   const { ts: threadTs, text } = event
 
-  const match = (text ?? "").trim().match(/^nk (\S+) (\S+)$/)
+  const { groups } = (text ?? "").trim().match(/^nk (?<nkChannel>\S+) (?<nkTs>\S+)$/) ?? {}
 
-  if (!match) {
+  if (!groups) {
     await say({ thread_ts: threadTs, text: intlService.intl.formatMessage(getInvalidMessageResponse()) })
     return
   }
 
-  const [nkChannel, nkTs] = match.slice(1)
+  const { nkChannel, nkTs } = groups
 
   const formattedRanking = await getFormattedRankingOfConversation({
     channel: nkChannel,

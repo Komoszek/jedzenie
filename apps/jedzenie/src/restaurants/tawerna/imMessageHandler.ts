@@ -11,13 +11,11 @@ export async function imMessageHandler(
     return false
   }
 
-  const match = payload.text?.trim().match(/^tawerna (\S+)$/)
+  const channel = payload.text?.trim().match(/^tawerna (\S+)$/)?.[1]
 
-  if (!match) {
+  if (!channel) {
     return false
   }
-
-  const [channel] = match.slice(1)
 
   const messageProps = await getTawernaLunchMenuMessage(intlService, tawernaMenuService)
 
