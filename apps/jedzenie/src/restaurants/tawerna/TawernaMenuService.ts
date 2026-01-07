@@ -24,7 +24,7 @@ export class TawernaMenuService {
       const title = (
         await page
           .locator(".ct-section-inner-wrap .ct-div-block", {
-            has: page.locator("h3", { hasText: "Lunch menu" }),
+            hasText: "Lunch menu",
           })
           .last()
           .innerText()
