@@ -5,24 +5,6 @@
   "projectType": "application",
   "tags": [],
   "targets": {
-    "build": {
-      "executor": "@nx/webpack:webpack",
-      "outputs": ["{options.outputPath}"],
-      "defaultConfiguration": "production",
-      "options": {
-        "target": "node",
-        "compiler": "tsc",
-        "outputPath": "dist/apps/jedzenie",
-        "main": "apps/jedzenie/src/main.ts",
-        "tsConfig": "apps/jedzenie/tsconfig.app.json",
-        "webpackConfig": "apps/jedzenie/webpack.config.js",
-        "generatePackageJson": true
-      },
-      "configurations": {
-        "development": {},
-        "production": {}
-      }
-    },
     "serve": {
       "executor": "@nx/js:node",
       "defaultConfiguration": "development",
@@ -60,6 +42,28 @@
         "full": {
           "commands": ["nx run jedzenie:i18n:extract", "nx run jedzenie:i18n:compile"],
           "parallel": false
+        }
+      }
+    },
+    "build": {
+      "executor": "@nx/esbuild:esbuild",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "main": "apps/jedzenie/src/main.ts",
+        "outputPath": "dist/apps/jedzenie",
+        "outputFileName": "main.js",
+        "tsConfig": "apps/jedzenie/tsconfig.app.json",
+        "platform": "node",
+        "format": ["esm"],
+        "assets": []
+      },
+      "configurations": {
+        "development": {
+          "minify": false
+        },
+        "production": {
+          "minify": true
         }
       }
     }

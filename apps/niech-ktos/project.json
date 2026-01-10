@@ -5,26 +5,6 @@
   "projectType": "application",
   "tags": [],
   "targets": {
-    "build": {
-      "executor": "@nx/webpack:webpack",
-      "outputs": ["{options.outputPath}"],
-      "defaultConfiguration": "production",
-      "options": {
-        "target": "node",
-        "compiler": "tsc",
-        "outputPath": "dist/apps/niech-ktos",
-        "main": "apps/niech-ktos/src/main.ts",
-        "tsConfig": "apps/niech-ktos/tsconfig.app.json",
-        "webpackConfig": "apps/niech-ktos/webpack.config.js",
-        "generatePackageJson": true
-      },
-      "configurations": {
-        "development": {},
-        "production": {
-          "optimization": true
-        }
-      }
-    },
     "serve": {
       "executor": "@nx/js:node",
       "defaultConfiguration": "development",
@@ -69,6 +49,28 @@
         "full": {
           "commands": ["nx run niech-ktos:i18n:extract", "nx run niech-ktos:i18n:compile"],
           "parallel": false
+        }
+      }
+    },
+    "build": {
+      "executor": "@nx/esbuild:esbuild",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "main": "apps/niech-ktos/src/main.ts",
+        "outputPath": "dist/apps/niech-ktos",
+        "outputFileName": "main.js",
+        "tsConfig": "apps/niech-ktos/tsconfig.app.json",
+        "platform": "node",
+        "format": ["esm"],
+        "assets": []
+      },
+      "configurations": {
+        "development": {
+          "minify": false
+        },
+        "production": {
+          "minify": true
         }
       }
     }
