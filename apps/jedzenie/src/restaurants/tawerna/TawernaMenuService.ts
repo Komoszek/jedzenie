@@ -23,12 +23,11 @@ export class TawernaMenuService {
 
       const title = (
         await page
-          .locator(".ct-section-inner-wrap .ct-div-block", {
-            hasText: "Lunch menu",
-          })
+          .locator(".ct-section-inner-wrap .ct-div-block .ct-text-block")
+          .getByText("Lunch menu")
           .last()
           .innerText()
-      ).replace(/\n\n/g, " ")
+      ).trim()
 
       const menu = (
         await Promise.all(
