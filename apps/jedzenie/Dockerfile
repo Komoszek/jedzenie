@@ -6,6 +6,6 @@ ENV PLAYWRIGHT_BROWSERS_PATH=/app/jedzenie/playwright
 
 RUN npx playwright install --with-deps chromium --only-shell
 
-COPY dist/apps/jedzenie .
+COPY . .
 
 CMD [ "node", "main.js" ]
