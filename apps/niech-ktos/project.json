@@ -63,7 +63,8 @@
         "tsConfig": "apps/niech-ktos/tsconfig.app.json",
         "platform": "node",
         "format": ["esm"],
-        "assets": []
+        "assets": [],
+        "generatePackageJson": true
       },
       "configurations": {
         "development": {
