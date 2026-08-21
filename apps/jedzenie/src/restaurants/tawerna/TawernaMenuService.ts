@@ -1,9 +1,11 @@
 import { CachedPromise } from "@jedzenie/utils"
-import { Locator } from "playwright"
+import { Locator, Page } from "playwright"
 import { MenuItem } from "../../types/MenuItem"
 import { scrapePage } from "../../utils/scrapePage"
 
 const imagePlaceholder = "https://tawernagrecka.pl/wp-content/uploads/2023/05/dinner-scaled.jpg"
+const titlePlaceholder = "Lunch menu"
+const titleTimeout = 5000
 
 export class TawernaMenuService {
   private cachedLunchMenu = new CachedPromise(() => this.scrapeLunchMenu(), { minutes: 10 })
@@ -21,13 +23,7 @@ export class TawernaMenuService {
     return await scrapePage(async page => {
       await page.goto("https://tawernagrecka.pl/lunchmenu/")
 
-      const title = (
-        await page
-          .locator(".ct-section-inner-wrap .ct-div-block .ct-text-block")
-          .getByText("Lunch menu")
-          .last()
-          .innerText()
-      ).trim()
+      const title = await this.getLunchMenuTitle(page)
 
       const menu = (
         await Promise.all(
@@ -44,6 +40,21 @@ export class TawernaMenuService {
 
       return { title, menu }
     })
+  }
+
+  private async getLunchMenuTitle(page: Page) {
+    try {
+      const title = await page
+        .locator(".ct-section-inner-wrap .ct-div-block")
+        .locator(".ct-headline, .ct-text-block")
+        .filter({ hasText: "Lunch menu" })
+        .last()
+        .innerText({ timeout: titleTimeout })
+
+      return title.trim()
+    } catch {
+      return titlePlaceholder
+    }
   }
 
   private async getLunchMenuItemImage(locator: Locator) {
