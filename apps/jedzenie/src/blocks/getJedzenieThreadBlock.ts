@@ -1,9 +1,8 @@
-import { formatUserMention } from "@jedzenie/utils"
+import { formatUserMention, knownBlockToText } from "@jedzenie/utils"
 import * as v from "valibot"
 import { IntlService } from "../services/IntlService"
 import { RestaurantsService } from "../services/RestaurantsService"
 import { Time } from "../utils/getTimeFromString"
-import { knownBlockToText } from "../utils/knownBlockToText"
 import type { ContextBlock, KnownBlock, RichTextBlock } from "@slack/types"
 
 export type DestinationBlock = RichTextBlock
@@ -110,7 +109,10 @@ export const overflowActionSchema = v.union([
 type Action = v.InferOutput<typeof overflowActionSchema>
 
 export function getJedzenieThreadText(blocks: JedzenieThreadBlocks) {
-  return blocks.slice(0, 2).map(knownBlockToText).join(" ")
+  return blocks
+    .slice(0, 2)
+    .map(block => knownBlockToText(block))
+    .join(" ")
 }
 
 export function getJedzenieThreadBlocksAndText(props: GetJedzenieTheadBlocksProps) {

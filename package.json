@@ -6,6 +6,7 @@
   "private": true,
   "dependencies": {
     "@formatjs/intl": "4.0.9",
+    "@internationalized/number": "3.6.8",
     "@js-temporal/polyfill": "0.5.1",
     "@leancodepl/utils": "9.7.0",
     "@playwright/browser-chromium": "1.57.0",

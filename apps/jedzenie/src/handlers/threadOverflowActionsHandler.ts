@@ -1,7 +1,6 @@
-import { ActionArgs } from "@jedzenie/utils"
+import { ActionArgs, knownBlockToText } from "@jedzenie/utils"
 import * as v from "valibot"
 import { overflowActionSchema, ThreadOverflowActions } from "../blocks/getJedzenieThreadBlock"
-import { knownBlockToText } from "../utils/knownBlockToText"
 import { openRestaurantEditor } from "../utils/openRestaurantEditor"
 import { Dependencies } from "./types"
 

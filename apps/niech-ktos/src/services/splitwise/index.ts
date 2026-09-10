@@ -1,15 +1,20 @@
-import { Configuration, GroupsApiFactory } from "@jedzenie/splitwise"
+import { Configuration, ExpensesApiFactory, GroupsApiFactory } from "@jedzenie/splitwise"
+import { getExpenseFields } from "./getExpenseFields"
+import { getErrorMessages, getRequestFailureDetails } from "./getFailureDetails"
+import { ExpenseFailure, ExpenseInfo, MatchSlackInfo, SplitwiseMatch } from "./types"
 
 class SplitwiseService {
   private groupsApi
+  private expensesApi
   private groupId
 
   constructor(groupId: number) {
-    this.groupsApi = GroupsApiFactory(
-      new Configuration({
-        accessToken: process.env.SPLITWISE_API_KEY,
-      }),
-    )
+    const configuration = new Configuration({
+      accessToken: process.env.SPLITWISE_API_KEY,
+    })
+
+    this.groupsApi = GroupsApiFactory(configuration)
+    this.expensesApi = ExpensesApiFactory(configuration)
     this.groupId = groupId
   }
 
@@ -35,6 +40,24 @@ class SplitwiseService {
     }, [])
   }
 
+  async createExpense({ description, cost, details, shares }: ExpenseInfo): Promise<ExpenseFailure | undefined> {
+    try {
+      const { data } = await this.expensesApi.createExpensePost({
+        group_id: this.groupId,
+        description,
+        details,
+        ...getExpenseFields(cost, shares),
+      })
+
+      // Splitwise answers with `200 OK` and a non-empty `errors` object even when it rejected the expense
+      const error = getErrorMessages(data.errors)
+
+      return error || !data.expenses?.length ? { details: error, cause: data.errors } : undefined
+    } catch (e) {
+      return { details: getRequestFailureDetails(e), cause: e }
+    }
+  }
+
   async inviteUserToGroup({ firstName, lastName, email }: { firstName: string; lastName: string; email: string }) {
     return this.groupsApi.addUserToGroupPost({
       group_id: this.groupId,
@@ -45,14 +68,6 @@ class SplitwiseService {
   }
 }
 
-export type MatchSlackInfo = {
-  slackId: string
-  email: string
-}
-
-export type SplitwiseMatch = {
-  slackId: string
-  splitwiseId: number
-}
+export * from "./types"
 
 export const splitwiseService = new SplitwiseService(Number(process.env.SPLITWISE_GROUP_ID))

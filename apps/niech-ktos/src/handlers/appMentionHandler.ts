@@ -1,12 +1,26 @@
-import { AppMentionArgs } from "@jedzenie/utils"
+import { AppMentionArgs, getMessageText } from "@jedzenie/utils"
 import { getFormattedRankingOfConversation } from "../utils/getFormattedRankingOfConversation"
+import { tryAddBill } from "../utils/tryAddBill"
 import { Dependencies } from "./types"
 
 export async function appMentionHandler(
-  { event: { channel, thread_ts }, client }: AppMentionArgs,
+  { event, client, logger }: AppMentionArgs,
   { state, intlService }: Dependencies,
 ) {
-  if (thread_ts === undefined) {
+  const { channel, ts, thread_ts } = event
+
+  const wasBill = await tryAddBill({
+    text: getMessageText(event),
+    channel,
+    ts,
+    threadTs: thread_ts,
+    client,
+    logger,
+    state,
+    intlService,
+  })
+
+  if (wasBill || thread_ts === undefined) {
     return
   }
 
