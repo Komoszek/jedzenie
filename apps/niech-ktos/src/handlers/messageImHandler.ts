@@ -1,15 +1,34 @@
 import { defineMessages } from "@formatjs/intl"
-import { MessageArgs, sample } from "@jedzenie/utils"
+import { getMessageText, MessageArgs, sample } from "@jedzenie/utils"
 import { getFormattedRankingOfConversation } from "../utils/getFormattedRankingOfConversation"
+import { tryAddBill } from "../utils/tryAddBill"
 import { getEmptyRankingResponse } from "./nkCommandHandler"
 import { Dependencies } from "./types"
 
-export async function messageImHandler({ event, say, client }: MessageArgs, { state, intlService }: Dependencies) {
+export async function messageImHandler(
+  { event, say, client, logger }: MessageArgs,
+  { state, intlService }: Dependencies,
+) {
   if (event.channel_type !== "im" || event.subtype !== undefined) {
     return
   }
 
-  const { ts: threadTs, text } = event
+  const { channel, ts: threadTs, text } = event
+
+  const wasBill = await tryAddBill({
+    text: getMessageText(event),
+    channel,
+    ts: threadTs,
+    threadTs: event.thread_ts,
+    client,
+    logger,
+    state,
+    intlService,
+  })
+
+  if (wasBill) {
+    return
+  }
 
   const { groups } = (text ?? "").trim().match(/^nk (?<nkChannel>\S+) (?<nkTs>\S+)$/) ?? {}
 

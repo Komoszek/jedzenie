@@ -41,6 +41,24 @@ export class State {
     return this.value.splitwiseIdMap[slackUserId]
   }
 
+  getSplitwiseUserIds(slackUserIds: Iterable<string>) {
+    const splitwiseIdsMap = new Map<string, number>()
+    const unconnectedSlackIds: string[] = []
+
+    for (const slackId of slackUserIds) {
+      const splitwiseId = this.getSplitwiseUserId(slackId)
+
+      if (splitwiseId === undefined) {
+        unconnectedSlackIds.push(slackId)
+        continue
+      }
+
+      splitwiseIdsMap.set(slackId, splitwiseId)
+    }
+
+    return { splitwiseIdsMap, unconnectedSlackIds }
+  }
+
   async matchSplitwiseUserIds(matches: SplitwiseMatch[]) {
     matches.forEach(({ slackId, splitwiseId }) => {
       this.value.splitwiseIdMap[slackId] = splitwiseId

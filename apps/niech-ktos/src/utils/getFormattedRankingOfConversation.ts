@@ -37,19 +37,9 @@ export async function getFormattedRankingOfConversation({
     return
   }
 
-  const unconnectedParticipantIds: string[] = []
+  const { splitwiseIdsMap: splitwiseIds, unconnectedSlackIds } = state.getSplitwiseUserIds(participantIdsSet)
 
-  const splitwiseParticipantIdsSet = new Set<number>()
-
-  for (const participantId of participantIdsSet) {
-    const splitwiseParticipantId = state.getSplitwiseUserId(participantId)
-
-    if (splitwiseParticipantId) {
-      splitwiseParticipantIdsSet.add(splitwiseParticipantId)
-    } else {
-      unconnectedParticipantIds.push(participantId)
-    }
-  }
+  const splitwiseParticipantIdsSet = new Set(splitwiseIds.values())
 
   const {
     data: { group },
@@ -62,7 +52,7 @@ export async function getFormattedRankingOfConversation({
     .map((balance, index) => formatRankingPlace(balance, index + 1, intlService))
     .join("\n")
 
-  const formattedUnconnectedParticipants = formatUnconnectedParticipants(unconnectedParticipantIds, intlService)
+  const formattedUnconnectedParticipants = formatUnconnectedParticipants(unconnectedSlackIds, intlService)
 
   return [formattedRanking, formattedUnconnectedParticipants].filter(Boolean).join("\n\n")
 }

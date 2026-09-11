@@ -1,4 +1,4 @@
-import { WebClient } from "@jedzenie/utils"
+import { knownBlockToText, WebClient } from "@jedzenie/utils"
 import { Temporal } from "@js-temporal/polyfill"
 import * as v from "valibot"
 import { ensureDefined } from "@leancodepl/utils"
@@ -13,7 +13,6 @@ import { IntlService } from "../services/IntlService"
 import { RestaurantsService } from "../services/RestaurantsService"
 import { attachEditThreadButton } from "./attachEditThreadButton"
 import { getTimeFromString } from "./getTimeFromString"
-import { knownBlockToText } from "./knownBlockToText"
 import type { KnownBlock } from "@slack/types"
 
 export async function refreshJedzenieThreads({
